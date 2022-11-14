@@ -30,6 +30,7 @@ public class ElevatorSimulation extends Application {
 		NUM_FLOORS = controller.getNumFloors();
 		NUM_ELEVATORS = controller.getNumElevators();
 		currFloor = controller.getCurrentFloor();
+		
 	}
 
 	/**
