@@ -54,11 +54,136 @@ public class Passengers {
 	// TODO: Write the constructor for this class
 	//       Remember to appropriately adjust the onFloor and destFloor to account  
 	//       to convert from American to European numbering...
+		id = ID;
+		ID++;
+		this.time = time;
+		this.numPass = numPass;
+		onFloor = on-1;
+		destFloor = dest-1;
+		this.polite = polite;
+		this.waitTime = waitTime;
+		if ( on-dest<0) {
+			direction = UP;
+		}
+		else {
+			direction = DOWN;
+		}
+		timeWillGiveUp = time + waitTime;
 		
 	}
 	
 	
 	// TODO: Write any required getters/setters for this class
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	public int getTime() {
+		return time;
+	}
+
+
+	public void setTime(int time) {
+		this.time = time;
+	}
+
+
+	public int getNumPass() {
+		return numPass;
+	}
+
+
+	public void setNumPass(int numPass) {
+		this.numPass = numPass;
+	}
+
+
+	public int getOnFloor() {
+		return onFloor;
+	}
+
+
+	public void setOnFloor(int onFloor) {
+		this.onFloor = onFloor;
+	}
+
+
+	public int getDestFloor() {
+		return destFloor;
+	}
+
+
+	public void setDestFloor(int destFloor) {
+		this.destFloor = destFloor;
+	}
+
+
+	public boolean isPolite() {
+		return polite;
+	}
+
+
+	public void setPolite(boolean polite) {
+		this.polite = polite;
+	}
+
+
+	public int getWaitTime() {
+		return waitTime;
+	}
+
+
+	public void setWaitTime(int waitTime) {
+		this.waitTime = waitTime;
+	}
+
+
+	public int getDirection() {
+		return direction;
+	}
+
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+
+	public int getTimeWillGiveUp() {
+		return timeWillGiveUp;
+	}
+
+
+	public void setTimeWillGiveUp(int timeWillGiveUp) {
+		this.timeWillGiveUp = timeWillGiveUp;
+	}
+
+
+	public int getBoardTime() {
+		return boardTime;
+	}
+
+
+	public void setBoardTime(int boardTime) {
+		this.boardTime = boardTime;
+	}
+
+
+	public int getTimeArrived() {
+		return timeArrived;
+	}
+
+
+	public void setTimeArrived(int timeArrived) {
+		this.timeArrived = timeArrived;
+	}
+
 
 	// 
 	/**

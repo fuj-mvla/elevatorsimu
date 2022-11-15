@@ -1,5 +1,6 @@
 
 import building.Elevator;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -12,6 +13,7 @@ public class ElevatorSimulation extends Application {
 	private int currFloor;
 	private int passengers;
 	private int time;
+	private Timeline t;
 
 	/** Local copies of the states for tracking purposes */
 	private final int STOP = Elevator.STOP;
@@ -31,7 +33,9 @@ public class ElevatorSimulation extends Application {
 		NUM_ELEVATORS = controller.getNumElevators();
 		currFloor = controller.getCurrentFloor();
 	}
-
+	public void initTimeline() {
+		
+	}
 	/**
 	 * Start.
 	 *
