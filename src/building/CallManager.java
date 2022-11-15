@@ -1,5 +1,6 @@
 package building;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class CallManager. This class models all of the calls on each floor,
  * and then provides methods that allow the building to determine what needs
@@ -25,13 +26,31 @@ public class CallManager {
 	/** The down calls array indicates whether or not there is a down call on each floor. */
 	private boolean[] downCalls;
 	
-	/** The up call pending - true if any up calls exist */
+	/**  The up call pending - true if any up calls exist. */
 	private boolean upCallPending;
 	
-	/** The down call pending - true if any down calls exit */
+	/**  The down call pending - true if any down calls exit. */
 	private boolean downCallPending;
 	
 	//TODO: Add any additional fields here..
+	
+	/**
+	 * Checks if is up call pending.
+	 *
+	 * @return true, if is up call pending
+	 */
+	public boolean isUpCallPending() {
+		return upCallPending;
+	}
+	
+	/**
+	 * Checks if is down call pending.
+	 *
+	 * @return true, if is down call pending
+	 */
+	public boolean isDownCallPending() {
+		return downCallPending;
+	}
 	
 	/**
 	 * Instantiates a new call manager.
@@ -62,7 +81,7 @@ public class CallManager {
 	}
 
 	/**
-	 * Prioritize passenger calls from STOP STATE
+	 * Prioritize passenger calls from STOP STATE.
 	 *
 	 * @param floor the floor
 	 * @return the passengers

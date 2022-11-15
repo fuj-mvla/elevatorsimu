@@ -16,12 +16,21 @@ import genericqueue.GenericQueue;
 public class Floor {
 	/**  Constant for representing direction. */
 	private static final int UP = 1;
+	
+	/** The Constant DOWN. */
 	private static final int DOWN = -1;
 
-	/** The queues to represent Passengers going UP or DOWN */	
+	/**  The queues to represent Passengers going UP or DOWN. */	
 	private GenericQueue<Passengers> down;
+	
+	/** The up. */
 	private GenericQueue<Passengers> up;
 
+	/**
+	 * Instantiates a new floor.
+	 *
+	 * @param qSize the q size
+	 */
 	public Floor(int qSize) {
 		down = new GenericQueue<Passengers>(qSize);
 		up = new GenericQueue<Passengers>(qSize);
@@ -30,7 +39,81 @@ public class Floor {
 	// TODO: Write the helper methods needed for this class. 
 	// You probably will only be accessing one queue at any
 	// given time based upon direction - you could choose to 
+	
+	/**
+	 * Going up empty.
+	 *
+	 * @return true, if successful
+	 */
 	// account for this in your methods.
+	public boolean goingUpEmpty() {
+		return up.isEmpty();
+	}
+	
+	/**
+	 * Adds the to up.
+	 *
+	 * @param p the p
+	 * @return true, if successful
+	 */
+	public boolean addToUp(Passengers p) {
+		return up.add(p);
+	}
+	
+	/**
+	 * Peek from up.
+	 *
+	 * @return the passengers
+	 */
+	public Passengers peekFromUp() {
+		return up.peek();
+	}
+	
+	/**
+	 * Poll from up.
+	 *
+	 * @return the passengers
+	 */
+	public Passengers pollFromUp() {
+		return up.poll();
+	}
+	
+	/**
+	 * Going down empty.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean goingDownEmpty() {
+		return down.isEmpty();
+	}
+	
+	/**
+	 * Adds the to down.
+	 *
+	 * @param p the p
+	 * @return true, if successful
+	 */
+	public boolean addToDown(Passengers p) {
+		return down.add(p);
+	}
+	
+	/**
+	 * Peek from down.
+	 *
+	 * @return the passengers
+	 */
+	public Passengers peekFromDown() {
+		return down.peek();
+	}
+	
+	/**
+	 * Poll from down.
+	 *
+	 * @return the passengers
+	 */
+	public Passengers pollFromDown() {
+		return down.poll();
+	}
 	
 	/**
 	 * Queue string. This method provides visibility into the queue
