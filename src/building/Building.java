@@ -15,6 +15,7 @@ import genericqueue.GenericQueue;
 // TODO: Auto-generated Javadoc
 /**
  * The Class Building.
+ * @author tohar
  */
 // TODO: Auto-generated Javadoc
 public class Building {
@@ -106,6 +107,19 @@ public class Building {
 	// TODO: Place all of your code HERE - state methods and helpers...
 	
 	/**
+	 * Elevator state changed.
+	 *
+	 * @param lift the lift
+	 * @return true, if successful
+	 */
+	public boolean elevatorStateChanged(Elevator lift) {
+		if (lift.getPrevState() != lift.getCurrState()) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * Adds the passengers to queue.
 	 *
 	 * @param time the time
@@ -138,64 +152,95 @@ public class Building {
 	
 	/**
 	 * Stop state.
-	 *
+	 * If there are no calls in any direction - @STOP
+	 * If there is a call down or up - @OPENDR
+	 * If there are no calls on this floor, but there are calls on other floors - @MVTOFLOOR
 	 * @return the int
 	 */
-	public int stopState() {
+	public int currStateStop(int time, Elevator lift) {
 		return Elevator.STOP;
 	}
 	
 	/**
 	 * Close dr state.
-	 *
+	 * Closes the elevator doors, decrements door state variable
+	 * Passengers arrive on current floor in same direction and are NOT polite - @OPENDR
+	 * Doors are not closed yet - @CLOSEDR
+	 * Elevator is empty and no calls in any direction - @STOP
+	 * There are passengers in the elevator to get off on other floors in the current direction or there
+	 * are calls on floors moving in the current direction waiting to be serviced. Elevator direction could change
+	 * if no calls on floors moving in curr direction, but there are calls on floors moving in opp direction - @MV1FLR
 	 * @return the int
 	 */
-	public int closeDrState() {
+	public int currStateCloseDr(int time, Elevator lift) {
 		return Elevator.STOP;
 	}
 	
 	/**
 	 * Board state.
-	 *
+	 * Boards all waiting passengers in current direction
+	 * Based upon number of boarders, wait time needs to continually
+	 * be re-evaluated, since new boarders can arrive
+	 * Floor queue needs to be examined for new arrivals every tick in this state
+	 * There is capacity in the elevator and not enough time has passed
+	 * to board all waiting passengers - @BOARD
+	 * All passengers have boarded or no room for more - @CLOSEDR
 	 * @return the int
 	 */
-	public int boardState() {
+	public int currStateBoard(int time, Elevator lift) {
 		return Elevator.STOP;
 	}
 	
 	/**
 	 * Open dr state.
-	 *
+	 * Opens the door for off-loading or boarding
+	 * Opens the door, increments door state variable
+	 * If the doors are not fully open - @OPENDR
+	 * If the doors are open and there are passengers waiting to get off - @OFFLD
+	 * If the doors are open, no passengers getting off, and passengers want to get on in the
+	 * current direction - @BOARD
 	 * @return the int
 	 */
-	public int openDrState() {
+	public int currStateOpenDr(int time, Elevator lift) {
 		return Elevator.STOP;
 	}
 	
 	/**
 	 * Mvto flr state.
-	 *
+	 * Move the elevator
+	 * Once it reaches the target floor, change the elevator direction
+	 * If the elevator has not reached the target floor - @MVTOFLR
+	 * If the elevator has reached the target floor - @OPENDR
 	 * @return the int
 	 */
-	public int mvtoFlrState() {
+	public int currStateMvToFlr(int time, Elevator lift) {
 		return Elevator.STOP;
 	}
 	
 	/**
 	 * Off ld state.
-	 *
+	 * Models the time for passengers to leave the elevator
+	 * Rate is specified by passPerTick
+	 * Passengers leave the elevator, all passengers are assumed to leave in the first cycle in this state,
+	 * May change directions in this state after passengers leave
+	 * Not enought ime has passed to allow all passengers to exit - @OFFLD
+	 * All passengers have exited, passengers want to board - @BOARD
+	 * All passengers have exited, no passengers to board - @CLOSEDR
 	 * @return the int
 	 */
-	public int offLdState() {
+	public int currStateOffLd(int time, Elevator lift) {
 		return Elevator.STOP;
 	}
 	
 	/**
 	 * Mv 1 flr state.
-	 *
+	 * Move the elevator to the next floor in the current direction
+	 * In between floors or no passengers to exit or board at the new floor - @MV1FLR
+	 * Reached the new floor and there are either passengers to exit or passengers
+	 * to board in the same direction. Also possible that direction could change - @OPENDR
 	 * @return the int
 	 */
-	public int mv1FlrState() {
+	public int currStateMv1Flr(int time, Elevator lift) {
 		return Elevator.STOP;
 	}
 	
@@ -279,7 +324,7 @@ public class Building {
 	public void enableLogging() {
 		LOGGER.setLevel(Level.INFO);
 		for (Elevator el:elevators)
-			logElevatorConfig(el.getCapacity(),el.getTicksPerFloor(), el.getTicksDoorOpenClose(), el.getPassPerTick(), el.getCurrState());
+			logElevatorConfig(el.getCapacity(),el.getTicksPerFloor(), el.getTicksDoorOpenClose(), el.getPassPerTick(), el.getCurrState(), el.getCurrFloor());
 	}
 	
 	/**
