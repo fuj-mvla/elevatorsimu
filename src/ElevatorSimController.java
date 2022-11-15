@@ -258,6 +258,15 @@ public class ElevatorSimController {
 	public void setNumElevators(int numElevators) {
 		this.numElevators = numElevators;
 	}
+	public String getTestName() {
+		if(testfile.substring(testfile.length()-4, testfile.length()).equals(".csv")) {
+			return testfile.substring(0, testfile.length()-4);
+				
+		}
+		return testfile;
+			
+	}
+	
 	
 	
 
