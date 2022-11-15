@@ -63,7 +63,17 @@ public class ElevatorSimController {
 	
 	/** The end sim. */
 	private boolean endSim = false;
+	
+	private int CurrentFloor = 0;
 		
+	public int getCurrentFloor() {
+		return CurrentFloor;
+	}
+
+	public void setCurrentFloor(int currentFloor) {
+		CurrentFloor = currentFloor;
+	}
+
 	/**
 	 * Instantiates a new elevator sim controller. 
 	 * Reads the configuration file to configure the building and
@@ -223,6 +233,7 @@ public class ElevatorSimController {
 		//		4) send endSimulation to the GUI to stop ticks.
 	}
 	
+	
 	/**
 	 * Gets the building. ONLY USED FOR JUNIT TESTING - YOUR GUI SHOULD NOT ACCESS THIS!.
 	 *
@@ -231,5 +242,23 @@ public class ElevatorSimController {
 	Building getBuilding() {
 		return building;
 	}
+
+	public int getNumFloors() {
+		return numFloors;
+	}
+
+	public void setNumFloors(int numFloors) {
+		this.numFloors = numFloors;
+	}
+
+	public int getNumElevators() {
+		return numElevators;
+	}
+
+	public void setNumElevators(int numElevators) {
+		this.numElevators = numElevators;
+	}
+	
+	
 
 }
