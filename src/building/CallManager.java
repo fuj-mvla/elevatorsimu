@@ -5,6 +5,7 @@ package building;
  * The Class CallManager. This class models all of the calls on each floor,
  * and then provides methods that allow the building to determine what needs
  * to happen (ie, state transitions).
+ * @author tohar
  */
 public class CallManager {
 	

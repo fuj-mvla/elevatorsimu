@@ -12,6 +12,7 @@ import genericqueue.GenericQueue;
 /**
  * The Class Floor. This class provides the up/down queues to hold
  * Passengers as they wait for the Elevator.
+ * @author tohar
  */
 public class Floor {
 	/**  Constant for representing direction. */
