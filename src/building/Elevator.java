@@ -26,6 +26,9 @@ public class Elevator {
 	 *  updated in the constructor.
 	 */
 	private int capacity = 15;				// The number of PEOPLE the elevator can hold
+
+
+	
 	private int ticksPerFloor = 5;			// The time it takes the elevator to move between floors
 	private int ticksDoorOpenClose = 2;  	// The time it takes for doors to go from OPEN <=> CLOSED
 	private int passPerTick = 3;            // The number of PEOPLE that can enter/exit the elevator per tick
@@ -69,6 +72,110 @@ public class Elevator {
 
 		//TODO: Finish this constructor, adding configuration initialiation and
 		//      initialization of any other private fields, etc.
+	}
+	public void moveElevator() {
+		timeInState++;
+		prevFloor = currFloor;
+		if((timeInState % ticksPerFloor) == 0){
+			currFloor = currFloor + direction;
+		}
+	}
+	public void updateCurrState(int currState) {
+		this.prevState = this.currState;
+		this.currState = currState;
+		if(this.prevState != this.currState) {
+			timeInState = 0;
+		}
+	}
+	public int getCapacity() {
+		return capacity;
+	}
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+	public int getTicksPerFloor() {
+		return ticksPerFloor;
+	}
+	public void setTicksPerFloor(int ticksPerFloor) {
+		this.ticksPerFloor = ticksPerFloor;
+	}
+	public int getTicksDoorOpenClose() {
+		return ticksDoorOpenClose;
+	}
+	public void setTicksDoorOpenClose(int ticksDoorOpenClose) {
+		this.ticksDoorOpenClose = ticksDoorOpenClose;
+	}
+	public int getPassPerTick() {
+		return passPerTick;
+	}
+	public void setPassPerTick(int passPerTick) {
+		this.passPerTick = passPerTick;
+	}
+	public int getCurrState() {
+		return currState;
+	}
+	public void setCurrState(int currState) {
+		this.currState = currState;
+	}
+	public int getPrevState() {
+		return prevState;
+	}
+	public void setPrevState(int prevState) {
+		this.prevState = prevState;
+	}
+	public int getPrevFloor() {
+		return prevFloor;
+	}
+	public void setPrevFloor(int prevFloor) {
+		this.prevFloor = prevFloor;
+	}
+	public int getCurrFloor() {
+		return currFloor;
+	}
+	public void setCurrFloor(int currFloor) {
+		this.currFloor = currFloor;
+	}
+	public int getDirection() {
+		return direction;
+	}
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+	public int getTimeInState() {
+		return timeInState;
+	}
+	public void setTimeInState(int timeInState) {
+		this.timeInState = timeInState;
+	}
+	public int getDoorState() {
+		return doorState;
+	}
+	public void setDoorState(int doorState) {
+		this.doorState = doorState;
+	}
+	public int getPassengers() {
+		return passengers;
+	}
+	public void setPassengers(int passengers) {
+		this.passengers = passengers;
+	}
+	public ArrayList<Passengers>[] getPassByFloor() {
+		return passByFloor;
+	}
+	public void setPassByFloor(ArrayList<Passengers>[] passByFloor) {
+		this.passByFloor = passByFloor;
+	}
+	public int getMoveToFloor() {
+		return moveToFloor;
+	}
+	public void setMoveToFloor(int moveToFloor) {
+		this.moveToFloor = moveToFloor;
+	}
+	public int getPostMoveToFloorDir() {
+		return postMoveToFloorDir;
+	}
+	public void setPostMoveToFloorDir(int postMoveToFloorDir) {
+		this.postMoveToFloorDir = postMoveToFloorDir;
 	}
 	
 	//TODO: Add Getter/Setters and any methods that you deem are required. Examples 
