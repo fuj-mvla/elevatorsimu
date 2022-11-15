@@ -78,7 +78,7 @@ public class Building {
 	 * @param numElevators the num elevators
 	 * @param logfile the logfile
 	 */
-	public Building(int numFloors, int numElevators,String logfile) {
+	public Building(int numFloors, int numElevators, String logfile) {
 		NUM_FLOORS = numFloors;
 		NUM_ELEVATORS = numElevators;
 		passQ = new GenericQueue<Passengers>(PASSENGERS_QSIZE);
@@ -105,6 +105,99 @@ public class Building {
 	
 	// TODO: Place all of your code HERE - state methods and helpers...
 	
+	/**
+	 * Adds the passengers to queue.
+	 *
+	 * @param time the time
+	 * @param numPass the num pass
+	 * @param fromFloor the from floor
+	 * @param toFloor the to floor
+	 * @param polite the polite
+	 * @param wait the wait
+	 * @return true, if successful
+	 */
+	public boolean addPassengersToQueue(int time, int numPass, int fromFloor, int toFloor, boolean polite, int wait) {
+		return passQ.add(new Passengers(time, numPass, fromFloor, toFloor, polite, wait)) ? true : false;
+	}
+	
+	
+	/**
+	 * Config elevators.
+	 *
+	 * @param numFloors the num floors
+	 * @param capacity the capacity
+	 * @param floorTicks the floor ticks
+	 * @param doorTicks the door ticks
+	 * @param passPerTick the pass per tick
+	 */
+	public void configElevators(int numFloors, int capacity, int floorTicks, int doorTicks, int passPerTick) {
+		for (int i = 0; i < NUM_ELEVATORS; i++) {
+			elevators[i] = new Elevator(numFloors, capacity, floorTicks, doorTicks, passPerTick);
+		}
+	}
+	
+	/**
+	 * Stop state.
+	 *
+	 * @return the int
+	 */
+	public int stopState() {
+		return Elevator.STOP;
+	}
+	
+	/**
+	 * Close dr state.
+	 *
+	 * @return the int
+	 */
+	public int closeDrState() {
+		return Elevator.STOP;
+	}
+	
+	/**
+	 * Board state.
+	 *
+	 * @return the int
+	 */
+	public int boardState() {
+		return Elevator.STOP;
+	}
+	
+	/**
+	 * Open dr state.
+	 *
+	 * @return the int
+	 */
+	public int openDrState() {
+		return Elevator.STOP;
+	}
+	
+	/**
+	 * Mvto flr state.
+	 *
+	 * @return the int
+	 */
+	public int mvtoFlrState() {
+		return Elevator.STOP;
+	}
+	
+	/**
+	 * Off ld state.
+	 *
+	 * @return the int
+	 */
+	public int offLdState() {
+		return Elevator.STOP;
+	}
+	
+	/**
+	 * Mv 1 flr state.
+	 *
+	 * @return the int
+	 */
+	public int mv1FlrState() {
+		return Elevator.STOP;
+	}
 	
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
 	/**
