@@ -3,6 +3,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -70,8 +71,10 @@ public class Building {
 	/**  The Call Manager - it tracks calls for the elevator, analyzes them to answer questions and prioritize calls. */
 	private CallManager callMgr;
 	
+	/** The offload delay. */
 	// Add any fields that you think you might need here...
-
+	private int offloadDelay;
+	
 	/**
 	 * Instantiates a new building.
 	 *
@@ -101,7 +104,7 @@ public class Building {
 		callMgr = new CallManager(floors,NUM_FLOORS);
 		elevators = new Elevator[NUM_ELEVATORS];
 		//TODO: if you defined new fields, make sure to initialize them here
-		
+		offloadDelay = 0;
 	}
 	
 	// TODO: Place all of your code HERE - state methods and helpers...
@@ -245,13 +248,55 @@ public class Building {
 	 * @param time the time
 	 * @param lift the lift
 	 * @return the int
+	 * @todo Keep working on this. Might not be fully correct. getTimeArrived() time to offload?
 	 */
 	public int currStateOffLd(int time, Elevator lift) {
-		lift.setTimeInState(lift.getTimeInState()+1);
+		int timeInState = lift.getTimeInState();
+		lift.setTimeInState(timeInState+1);
 		if (lift.getPrevState() != Elevator.OFFLD) {
-			
+			List<Passengers>[] passengers = lift.getPassByFloor();
+			for (List<Passengers> p : passengers) {
+				for (Passengers i : p) {
+					offloadDelay += i.getTimeArrived();
+					i.setTimeArrived(time);
+				}
+				passSuccess.addAll(p);
+			}
 		}
-		return Elevator.STOP;
+		if (timeInState == offloadDelay) {
+			timeInStateEqualsOffldDelay(lift);
+		}
+		return Elevator.OFFLD;
+	}
+	
+	/**
+	 * Time in state equals offld delay.
+	 * Helper method
+	 * @param lift the lift
+	 * @return the int
+	 */
+	public int timeInStateEqualsOffldDelay(Elevator lift) {
+		if (lift.getDirection() == DOWN && callMgr.isDownCallPending()) {
+			return Elevator.BOARD;
+		}
+		if (lift.getDirection() == UP && callMgr.isUpCallPending()) {
+			return Elevator.BOARD;
+		}
+		if (lift.getPassengers() == 0) {
+			if (lift.getDirection() == UP && !callMgr.isUpCallPending()) {
+				if (callMgr.isDownCallPending()) {
+					lift.setDirection(DOWN);
+					return Elevator.BOARD;
+				}
+			}
+			if (lift.getDirection() == DOWN && !callMgr.isDownCallPending()) {
+				if (callMgr.isUpCallPending()) {
+					lift.setDirection(UP);
+					return Elevator.BOARD;
+				}
+			}
+		}
+		return Elevator.CLOSEDR;
 	}
 	
 	/**
@@ -267,8 +312,6 @@ public class Building {
 	 */
 	public int currStateMv1Flr(int time, Elevator lift) {
 		lift.moveElevator();
-		final int DOWN = Floor.getDown();
-		final int UP = Floor.getUp();
 		if (lift.getPrevFloor() != lift.getCurrFloor()) {
 			if (!(lift.getPassByFloor().length == 0)) {
 				return Elevator.OPENDR;
