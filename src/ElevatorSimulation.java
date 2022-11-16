@@ -104,7 +104,7 @@ public class ElevatorSimulation extends Application {
 			gp.getRowConstraints().add(new RowConstraints(50));
 	}
 	public int getTime() {
-		
+		return time;
 	}
 	public void initializeFloors() {
 		

@@ -155,6 +155,9 @@ public class Building {
 	 * If there are no calls in any direction - @STOP
 	 * If there is a call down or up - @OPENDR
 	 * If there are no calls on this floor, but there are calls on other floors - @MVTOFLOOR
+	 *
+	 * @param time the time
+	 * @param lift the lift
 	 * @return the int
 	 */
 	public int currStateStop(int time, Elevator lift) {
@@ -170,6 +173,9 @@ public class Building {
 	 * There are passengers in the elevator to get off on other floors in the current direction or there
 	 * are calls on floors moving in the current direction waiting to be serviced. Elevator direction could change
 	 * if no calls on floors moving in curr direction, but there are calls on floors moving in opp direction - @MV1FLR
+	 *
+	 * @param time the time
+	 * @param lift the lift
 	 * @return the int
 	 */
 	public int currStateCloseDr(int time, Elevator lift) {
@@ -185,6 +191,9 @@ public class Building {
 	 * There is capacity in the elevator and not enough time has passed
 	 * to board all waiting passengers - @BOARD
 	 * All passengers have boarded or no room for more - @CLOSEDR
+	 *
+	 * @param time the time
+	 * @param lift the lift
 	 * @return the int
 	 */
 	public int currStateBoard(int time, Elevator lift) {
@@ -199,6 +208,9 @@ public class Building {
 	 * If the doors are open and there are passengers waiting to get off - @OFFLD
 	 * If the doors are open, no passengers getting off, and passengers want to get on in the
 	 * current direction - @BOARD
+	 *
+	 * @param time the time
+	 * @param lift the lift
 	 * @return the int
 	 */
 	public int currStateOpenDr(int time, Elevator lift) {
@@ -211,6 +223,9 @@ public class Building {
 	 * Once it reaches the target floor, change the elevator direction
 	 * If the elevator has not reached the target floor - @MVTOFLR
 	 * If the elevator has reached the target floor - @OPENDR
+	 *
+	 * @param time the time
+	 * @param lift the lift
 	 * @return the int
 	 */
 	public int currStateMvToFlr(int time, Elevator lift) {
@@ -226,9 +241,16 @@ public class Building {
 	 * Not enought ime has passed to allow all passengers to exit - @OFFLD
 	 * All passengers have exited, passengers want to board - @BOARD
 	 * All passengers have exited, no passengers to board - @CLOSEDR
+	 *
+	 * @param time the time
+	 * @param lift the lift
 	 * @return the int
 	 */
 	public int currStateOffLd(int time, Elevator lift) {
+		lift.setTimeInState(lift.getTimeInState()+1);
+		if (lift.getPrevState() != Elevator.OFFLD) {
+			
+		}
 		return Elevator.STOP;
 	}
 	
@@ -238,10 +260,54 @@ public class Building {
 	 * In between floors or no passengers to exit or board at the new floor - @MV1FLR
 	 * Reached the new floor and there are either passengers to exit or passengers
 	 * to board in the same direction. Also possible that direction could change - @OPENDR
+	 *
+	 * @param time the time
+	 * @param lift the lift
 	 * @return the int
 	 */
 	public int currStateMv1Flr(int time, Elevator lift) {
-		return Elevator.STOP;
+		lift.moveElevator();
+		final int DOWN = Floor.getDown();
+		final int UP = Floor.getUp();
+		if (lift.getPrevFloor() != lift.getCurrFloor()) {
+			if (!(lift.getPassByFloor().length == 0)) {
+				return Elevator.OPENDR;
+			}
+			if (lift.getDirection() == DOWN && 
+					!floors[lift.getCurrFloor()-1].goingDownEmpty()) {
+				return Elevator.OPENDR;
+			}
+			if (lift.getDirection() == UP && 
+					!floors[lift.getCurrFloor()-1].goingUpEmpty()) {
+				return Elevator.OPENDR;
+			}
+			if (lift.getPassengers() == 0) {
+				return elevatorEmpty(lift);
+			}
+		}
+		return Elevator.MV1FLR;
+	}
+	
+	/**
+	 * Elevator empty.
+	 * Helper method
+	 * @param lift the lift
+	 * @return the int
+	 */
+	public int elevatorEmpty(Elevator lift) {
+		if (lift.getDirection() == UP && !callMgr.isUpCallPending()) {
+			if (!floors[lift.getCurrFloor()-1].goingDownEmpty()) {
+				lift.setDirection(DOWN);
+				return Elevator.OPENDR;
+			}
+		}
+		if (lift.getDirection() == DOWN && !callMgr.isDownCallPending()) {
+			if (!floors[lift.getCurrFloor()-1].goingUpEmpty()) {
+				lift.setDirection(UP);
+				return Elevator.OPENDR;
+			}
+		}
+		return Elevator.MV1FLR;
 	}
 	
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:

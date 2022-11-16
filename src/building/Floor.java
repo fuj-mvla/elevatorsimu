@@ -117,6 +117,42 @@ public class Floor {
 	}
 	
 	/**
+	 * Gets the up.
+	 *
+	 * @return the up
+	 */
+	public static int getUp() {
+		return UP;
+	}
+
+	/**
+	 * Gets the down.
+	 *
+	 * @return the down
+	 */
+	public static int getDown() {
+		return DOWN;
+	}
+
+	/**
+	 * Sets the down.
+	 *
+	 * @param down the new down
+	 */
+	public void setDown(GenericQueue<Passengers> down) {
+		this.down = down;
+	}
+
+	/**
+	 * Sets the up.
+	 *
+	 * @param up the new up
+	 */
+	public void setUp(GenericQueue<Passengers> up) {
+		this.up = up;
+	}
+
+	/**
 	 * Queue string. This method provides visibility into the queue
 	 * contents as a string. What exactly you would want to visualize 
 	 * is up to you
