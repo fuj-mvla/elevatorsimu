@@ -32,10 +32,14 @@ public class ElevatorSimulation extends Application {
 	private Rectangle elevator;
 	private BorderPane bp;
 	private GridPane gp;
-	private Button logging;
+	private Button logging = new Button("Log");
+	private Button Step = new Button ("Step");
+	private Button run = new Button("Run");
 	private int duration = 1000;
 	private int cycleCount = 1;
-	private Label timeLabel;
+	private Label timeLabel = new Label("Time = " + time);
+	private int cellX = 0;
+	private int cellY = 0;
 	
 	/** Local copies of the states for tracking purposes */
 	private final int STOP = Elevator.STOP;
@@ -72,18 +76,20 @@ public class ElevatorSimulation extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// You need to design the GUI. Note that the test name should
 		// appear in the Title of the window!!
+		initTimeline();
 		bp = new BorderPane();
-	
-		// Create the triangles
-			
-	
-	
+		HBox x = new HBox(25);
+		x.getChildren().addAll(logging,Step,run,timeLabel);
+		Step.setOnAction(e -> controller.stepSim());
+		logging.setOnAction(e -> enableLogging());
+		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
 		gp = new GridPane();
 		
 		setGridPaneConstraints();
 		Rectangle elevator = new Rectangle(100,100);
-		gp.add(elevator,1,1);
+		gp.add(elevator,1,14);
 		bp.setCenter(gp);
+		bp.setTop(x);
 		
 	
  	
@@ -96,23 +102,28 @@ public class ElevatorSimulation extends Application {
 		//      Meet the 30 line limit...
 		
 	}
-	public void setGridPaneConstraints() {
-		for (int i = 0; i < 12; i ++) 
+	private void setGridPaneConstraints() {
+		for (int i = 0; i < 16; i ++) 
 			gp.getColumnConstraints().add(new ColumnConstraints(50));
 
-		for (int i = 0; i < 12; i ++) 
+		for (int i = 0; i < 16; i ++) 
 			gp.getRowConstraints().add(new RowConstraints(50));
 	}
 	public int getTime() {
 		return time;
 	}
-	public void initializeFloors() {
+	private void initializeFloors() {
 		
 	}
-	public void enableLogging() {
+	private void enableLogging() {
+		controller.enableLogging();
+	}
+	public void updateState(int currstate) {
 		
 	}
-	
+	public void setTime(int time) {
+		this.time = time;
+	}
 	/**
 	 * The main method.
 	 *
