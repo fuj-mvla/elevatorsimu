@@ -38,8 +38,8 @@ public class ElevatorSimulation extends Application {
 	private int duration = 1000;
 	private int cycleCount = 1;
 	private Label timeLabel = new Label("Time = " + time);
-	private int cellX = 0;
-	private int cellY = 0;
+
+	private int cellY = 14;
 	
 	/** Local copies of the states for tracking purposes */
 	private final int STOP = Elevator.STOP;
@@ -61,7 +61,7 @@ public class ElevatorSimulation extends Application {
 		
 	}
 	public void initTimeline() {
-		t = new Timeline(new KeyFrame(Duration.millis(duration),ae -> controller.stepSim()));
+		t = new Timeline(new KeyFrame(Duration.millis(duration),ae -> move(true)));
 		t.setCycleCount(10);
 		
 	
@@ -87,7 +87,7 @@ public class ElevatorSimulation extends Application {
 		
 		setGridPaneConstraints();
 		Rectangle elevator = new Rectangle(100,100);
-		gp.add(elevator,1,14);
+		gp.add(elevator,1,cellY);
 		bp.setCenter(gp);
 		bp.setTop(x);
 		
@@ -120,6 +120,15 @@ public class ElevatorSimulation extends Application {
 	}
 	public void updateState(int currstate) {
 		
+	}
+	
+	public void move(boolean up) {
+		if (up) {
+			gp.getChildren().remove(elevator);
+			cellY--;
+			gp.add(elevator, 0, cellY);
+			
+		}
 	}
 	public void setTime(int time) {
 		this.time = time;
