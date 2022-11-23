@@ -164,7 +164,24 @@ public class Building {
 	 * @return the int
 	 */
 	public int currStateStop(int time, Elevator lift) {
-		return Elevator.STOP;
+		lift.setTimeInState(lift.getTimeInState()+1);
+		if (!callMgr.isUpCallPending() && !callMgr.isDownCallPending()) {
+			return Elevator.STOP;
+		}
+		else {
+			int floor = lift.getCurrFloor();
+			Passengers p = callMgr.prioritizePassengerCalls(floor);
+			if (!floors[floor].goingUpEmpty() || !floors[floor].goingDownEmpty()) {
+				lift.setDirection(p.getDirection());
+				return Elevator.OPENDR;
+			}
+			else {
+				lift.setDirection(p.getOnFloor() > lift.getCurrFloor() ? UP : DOWN);
+				lift.setMoveToFloor(p.getOnFloor());
+				lift.setPostMoveToFloorDir(p.getDestFloor());
+				return Elevator.MVTOFLR;
+			}
+		}
 	}
 	
 	/**
@@ -222,16 +239,9 @@ public class Building {
 			return Elevator.MV1FLR;
 		}
 		else {
-			if (direction == UP) {
-				lift.setDirection(DOWN);
-			}
-			if (direction == DOWN) {
-				lift.setDirection(UP);
-			}
+			lift.setDirection(direction == UP ? DOWN : UP);
 			if (direction == UP && !floors[lift.getCurrFloor()].goingUpEmpty()
-					|| direction == DOWN && !floors[lift.getCurrFloor()].goingDownEmpty()
-					|| direction == UP && callMgr.isUpCallPending() 
-					|| direction == DOWN && callMgr.isDownCallPending()) {
+					|| direction == DOWN && !floors[lift.getCurrFloor()].goingDownEmpty()) {
 				return Elevator.OPENDR;
 			}
 			else {
@@ -255,6 +265,12 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateBoard(int time, Elevator lift) {
+		while (lift.getPassengers() != lift.getCapacity()) {
+			Passengers p = passQ.peek();
+			if (p.getTimeWillGiveUp() == time + p.getWaitTime()) {
+				
+			}
+		}
 		return Elevator.STOP;
 	}
 	
