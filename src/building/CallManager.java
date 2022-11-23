@@ -89,7 +89,15 @@ public class CallManager {
 	 */
 	Passengers prioritizePassengerCalls(int floor) {
 		//TODO: Write this method based upon prioritization from STOP...
-		return null;
+		if (floors[floor].goingDownEmpty() && floors[floor].goingUpEmpty() && !downCallPending && !upCallPending) {
+			return null;
+		}
+		if (floors[floor].goingDownEmpty() && !floors[floor].goingUpEmpty()) {
+			return floors[floor].peekFromUp();
+		}
+		else {
+			return floors[floor].peekFromDown();
+		}
 	}
 
 	//TODO: Write any additional methods here. Things that you might consider:

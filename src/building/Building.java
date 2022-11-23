@@ -171,6 +171,9 @@ public class Building {
 		else {
 			int floor = lift.getCurrFloor();
 			Passengers p = callMgr.prioritizePassengerCalls(floor);
+			if (p == null) {
+				return Elevator.STOP;
+			}
 			if (!floors[floor].goingUpEmpty() || !floors[floor].goingDownEmpty()) {
 				lift.setDirection(p.getDirection());
 				return Elevator.OPENDR;
