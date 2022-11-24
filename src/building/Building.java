@@ -291,7 +291,26 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateOpenDr(int time, Elevator lift) {
-		return Elevator.STOP;
+		lift.setDoorState(Elevator.OPENDR);
+		if (lift.getTimeInState() != lift.getTicksDoorOpenClose()) {
+			lift.setTimeInState(lift.getTimeInState()+1);
+			return Elevator.OPENDR;
+		}
+		else {
+			List<Passengers>[] pToExit = lift.getPassByFloor();
+			if (pToExit.length == 0) {
+				return Elevator.OFFLD;
+			}
+			int floor = lift.getCurrFloor();
+			int dir = lift.getDirection();
+			if (pToExit.length == 0 && !floors[floor].goingDownEmpty() && dir == DOWN) {
+				return Elevator.BOARD;
+			}
+			if (pToExit.length == 0 && !floors[floor].goingUpEmpty() && dir == UP) {
+				return Elevator.BOARD;
+			}
+			return Elevator.CLOSEDR;
+		}	
 	}
 	
 	/**
@@ -306,7 +325,15 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateMvToFlr(int time, Elevator lift) {
-		return Elevator.STOP;
+		int currFloor = lift.getCurrFloor();
+		Passengers p = callMgr.prioritizePassengerCalls(currFloor);
+		if (currFloor == p.getDestFloor()) {
+			return Elevator.OPENDR;
+		}
+		else {
+			lift.moveElevator();
+			return Elevator.MVTOFLR;
+		}
 	}
 	
 	/**
