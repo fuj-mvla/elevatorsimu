@@ -88,6 +88,7 @@ public class ElevatorSimController {
 		fio = new MyFileIO();
 		// IMPORTANT: DO NOT CHANGE THE NEXT LINE!!! Update the config file itself
 		// (ElevatorSimConfig.csv) to change the configuration or test being run.
+		
 		configSimulation(SIM_CONFIG);
 		NUM_FLOORS = numFloors;
 		NUM_ELEVATORS = numElevators;
@@ -95,6 +96,7 @@ public class ElevatorSimController {
 		building = new Building(NUM_FLOORS,NUM_ELEVATORS,logfile);
 		
 		//TODO: YOU still need to configure the elevators in the building here....
+		System.out.println(testfile);
 		initializePassengerData(testfile);
 		building.configElevators(numFloors, capacity, floorTicks, doorTicks, passPerTick);
 	}

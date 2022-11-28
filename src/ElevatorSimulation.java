@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -29,7 +30,7 @@ public class ElevatorSimulation extends Application {
 	private int passengers;
 	private int time;
 	private Timeline t;
-	private Rectangle elevator;
+	private Rectangle elevator = new Rectangle(100,100);
 	private BorderPane bp;
 	private GridPane gp;
 	private Button logging = new Button("Log");
@@ -55,8 +56,8 @@ public class ElevatorSimulation extends Application {
 	 */
 	public ElevatorSimulation() {
 		controller = new ElevatorSimController(this);	
-		NUM_FLOORS = controller.getNumFloors();
-		NUM_ELEVATORS = controller.getNumElevators();
+	NUM_FLOORS = controller.getNumFloors();
+	NUM_ELEVATORS = controller.getNumElevators();
 		currFloor = controller.getCurrentFloor();
 		
 	}
@@ -86,9 +87,10 @@ public class ElevatorSimulation extends Application {
 		gp = new GridPane();
 		
 		setGridPaneConstraints();
-		Rectangle elevator = new Rectangle(100,100);
+		bp.getChildren().add(new Line(2,2,2,2));
 		gp.add(elevator,1,cellY);
-		bp.setCenter(gp);
+		initializeFloors();
+		bp.setLeft(gp);
 		bp.setTop(x);
 		
 	
