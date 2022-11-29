@@ -177,6 +177,7 @@ public class Elevator {
 	public void setPostMoveToFloorDir(int postMoveToFloorDir) {
 		this.postMoveToFloorDir = postMoveToFloorDir;
 	}
+
 	
 	//TODO: Add Getter/Setters and any methods that you deem are required. Examples 
 	//      include:
