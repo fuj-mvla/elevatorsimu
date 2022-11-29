@@ -17,7 +17,7 @@ public class ElevatorSimController {
 	private static final String SIM_CONFIG = "ElevatorSimConfig.csv";
 	
 	/**  Constant to make the Passenger queue contents visible after initialization. */
-	private boolean PASSQ_DEBUG=true;
+	private boolean PASSQ_DEBUG=false;
 	
 	/** The gui. */
 	private ElevatorSimulation gui;
@@ -219,9 +219,8 @@ public class ElevatorSimController {
 	public void stepSim() {
  		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
-		if()
 		
-		
+	
 		// TODO: Write the rest of this method
 		// If simulation is not completed (not all passengers have been processed
 		// or elevator(s) are not all in STOP state), then
@@ -231,9 +230,8 @@ public class ElevatorSimController {
 		//  else 
 		//    	1) update the GUI
 		//		2) close the logs
-		//		3) process the passenger results
-		//		4) send endSimulation to the GUI to stop ticks.
-	}
+		//		3) process the passenger resu
+		}
 	
 	
 	/**
