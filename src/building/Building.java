@@ -159,7 +159,7 @@ public class Building {
 	 * @return true, if successful
 	 */
 	public boolean passengersProcessed() {
-		return false;
+		return passQ.isEmpty();
 	}
 	
 	/**
