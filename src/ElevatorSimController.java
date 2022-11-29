@@ -112,7 +112,7 @@ public class ElevatorSimController {
 	private void configSimulation(String filename) {
 		File configFile = fio.getFileHandle(filename);
 		try ( BufferedReader br = fio.openBufferedReader(configFile)) {
-			String line;
+			String line = "";
 			while ((line = br.readLine())!= null) {
 				parseElevatorConfigData(line);
 			}
@@ -161,7 +161,7 @@ public class ElevatorSimController {
 		boolean firstLine = true;
 		File passInput = fio.getFileHandle(filename);
 		try (BufferedReader br = fio.openBufferedReader(passInput)) {
-			String line;
+			String line = "";
 			while ((line = br.readLine())!= null) {
 				if (firstLine) {
 					firstLine = false;
@@ -219,6 +219,7 @@ public class ElevatorSimController {
 	public void stepSim() {
  		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
+		if()
 		
 		
 		// TODO: Write the rest of this method
