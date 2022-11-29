@@ -17,7 +17,7 @@ public class ElevatorSimController {
 	private static final String SIM_CONFIG = "ElevatorSimConfig.csv";
 	
 	/**  Constant to make the Passenger queue contents visible after initialization. */
-	private boolean PASSQ_DEBUG=false;
+	private boolean PASSQ_DEBUG=true;
 	
 	/** The gui. */
 	private ElevatorSimulation gui;

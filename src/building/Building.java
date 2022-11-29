@@ -99,7 +99,7 @@ public class Building {
 		// note that YOU will need to create and config each specific elevator...
 		floors = new Floor[NUM_FLOORS];
 		for (int i = 0; i < NUM_FLOORS; i++) {
-			floors[i]= new Floor(FLOOR_QSIZE); 
+			floors[i] = new Floor(FLOOR_QSIZE); 
 		}
 		callMgr = new CallManager(floors,NUM_FLOORS);
 		elevators = new Elevator[NUM_ELEVATORS];
@@ -137,7 +137,6 @@ public class Building {
 		return passQ.add(new Passengers(time, numPass, fromFloor, toFloor, polite, wait)) ? true : false;
 	}
 	
-	
 	/**
 	 * Config elevators.
 	 *
@@ -151,6 +150,16 @@ public class Building {
 		for (int i = 0; i < NUM_ELEVATORS; i++) {
 			elevators[i] = new Elevator(numFloors, capacity, floorTicks, doorTicks, passPerTick);
 		}
+	}
+	
+	
+	/**
+	 * Checks if passengers were processed
+	 *
+	 * @return true, if successful
+	 */
+	public boolean passengersProcessed() {
+		return false;
 	}
 	
 	/**
@@ -506,7 +515,6 @@ public class Building {
 	 * assumed to be ArrayLists...
 	 */
 	public void processPassengerData() {
-		
 		try {
 			BufferedWriter out = fio.openBufferedWriter(passDataFile);
 			out.write("ID,Number,From,To,WaitToBoard,TotalTime\n");
