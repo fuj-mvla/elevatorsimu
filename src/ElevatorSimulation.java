@@ -39,8 +39,8 @@ public class ElevatorSimulation extends Application {
 	private int duration = 1000;
 	private int cycleCount = 1;
 	private Label timeLabel = new Label("Time = " + time);
-
-	private int cellY = 14;
+	private int floor = 1;
+	private int cellY = 13;
 	
 	/** Local copies of the states for tracking purposes */
 	private final int STOP = Elevator.STOP;
@@ -85,16 +85,14 @@ public class ElevatorSimulation extends Application {
 		logging.setOnAction(e -> enableLogging());
 		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
 		gp = new GridPane();
-		
 		setGridPaneConstraints();
-		bp.getChildren().add(new Line(2,2,2,2));
+		elevator.setFill(Color.TRANSPARENT);
+		elevator.setStroke(Color.BLACK);
 		gp.add(elevator,1,cellY);
-		initializeFloors();
-		bp.setLeft(gp);
+		initializeFloors(gp);
+		bp.setCenter(gp);
 		bp.setTop(x);
 		
-	
- 	
 		Scene scene = new Scene(bp,800,800);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Elevator Simulation - "+ controller.getTestName());
@@ -114,8 +112,12 @@ public class ElevatorSimulation extends Application {
 	public int getTime() {
 		return time;
 	}
-	private void initializeFloors() {
-		
+	private void initializeFloors(GridPane gp) {
+		int startingFloor = 14;
+		for (int i = 0;i < NUM_FLOORS;i++) {
+		gp.add(new Rectangle(700,2), 4, startingFloor);
+		startingFloor -=2;
+		}
 	}
 	private void enableLogging() {
 		controller.enableLogging();
@@ -127,13 +129,20 @@ public class ElevatorSimulation extends Application {
 	public void move(boolean up) {
 		if (up) {
 			gp.getChildren().remove(elevator);
-			cellY--;
-			gp.add(elevator, 0, cellY);
+			cellY -=2;
+			gp.add(elevator, 1, cellY);
 			
 		}
+		
 	}
 	public void setTime(int time) {
 		this.time = time;
+	}
+	public void updateGUI(int state) {
+		
+	}
+	public void arrivalPassengers(int[] passengers) {
+		
 	}
 	/**
 	 * The main method.
