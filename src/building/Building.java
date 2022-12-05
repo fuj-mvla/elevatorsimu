@@ -162,6 +162,10 @@ public class Building {
 		return passQ.isEmpty();
 	}
 	
+	public boolean checkPassengerArrival() {
+		return true;
+	}
+	
 	/**
 	 * Stop state.
 	 * If there are no calls in any direction - @STOP
