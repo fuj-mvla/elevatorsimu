@@ -1,5 +1,6 @@
 
 import building.Elevator;
+import building.Passengers;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -7,6 +8,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -41,7 +43,10 @@ public class ElevatorSimulation extends Application {
 	private Label timeLabel = new Label("Time = " + time);
 	private int floor = 1;
 	private int cellY = 13;
-	
+	private Label pLabel;
+	private StackPane sp;
+	private int numPass;
+	private TextField stepticks = new TextField();
 	/** Local copies of the states for tracking purposes */
 	private final int STOP = Elevator.STOP;
 	private final int MVTOFLR = Elevator.MVTOFLR;
@@ -79,8 +84,11 @@ public class ElevatorSimulation extends Application {
 		// appear in the Title of the window!!
 		initTimeline();
 		bp = new BorderPane();
+		sp = new StackPane();
 		HBox x = new HBox(25);
-		x.getChildren().addAll(logging,Step,run,timeLabel);
+		pLabel = new Label("" + numPass);
+		sp.getChildren().addAll(elevator,pLabel);
+		x.getChildren().addAll(logging,Step,run,timeLabel,stepticks);
 		Step.setOnAction(e -> controller.stepSim());
 		logging.setOnAction(e -> enableLogging());
 		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
@@ -88,11 +96,10 @@ public class ElevatorSimulation extends Application {
 		setGridPaneConstraints();
 		elevator.setFill(Color.TRANSPARENT);
 		elevator.setStroke(Color.BLACK);
-		gp.add(elevator,1,cellY);
+		gp.add(sp,1,cellY);
 		initializeFloors(gp);
 		bp.setCenter(gp);
 		bp.setTop(x);
-		
 		Scene scene = new Scene(bp,800,800);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Elevator Simulation - "+ controller.getTestName());
@@ -128,22 +135,28 @@ public class ElevatorSimulation extends Application {
 	
 	public void move(boolean up) {
 		if (up) {
-			gp.getChildren().remove(elevator);
+			gp.getChildren().remove(sp);
 			cellY -=2;
-			gp.add(elevator, 1, cellY);
-			
+			gp.add(sp, 1, cellY);
+			if (cellY < 4) {
+				t.stop();
+			}
 		}
-		
+			
 	}
 	public void setTime(int time) {
 		this.time = time;
 	}
-	public void updateGUI(int state) {
+	public void changeState(int state) {
 		
 	}
-	public void arrivalPassengers(int[] passengers) {
+	public void offLoad(Passengers[] passengers) {
 		
 	}
+	public void arrivalPassengers(Passengers[] passengers, int floor) {
+		
+	}
+	
 	/**
 	 * The main method.
 	 *
