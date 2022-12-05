@@ -211,8 +211,8 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateCloseDr(int time, Elevator lift) {
-		int timeInState = lift.getTimeInState();
-		lift.setTimeInState(timeInState-1);
+		lift.setTimeInState(lift.getTimeInState()+1);
+		lift.setDoorState(lift.getDoorState()-1);
 		int direction = lift.getDirection();
 		Passengers pInCurrDir = direction == UP ? floors[lift.getCurrFloor()].peekFromUp() 
 				: floors[lift.getCurrFloor()].peekFromDown();
@@ -277,6 +277,7 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateBoard(int time, Elevator lift) {
+		lift.setTimeInState(lift.getTimeInState()+1);
 		while (lift.getPassengers() != lift.getCapacity()) {
 			Passengers p = passQ.peek();
 			if (p.getTimeWillGiveUp() == time + p.getWaitTime()) {
@@ -301,8 +302,8 @@ public class Building {
 	 */
 	protected int currStateOpenDr(int time, Elevator lift) {
 		lift.setDoorState(Elevator.OPENDR);
+		lift.setTimeInState(lift.getTimeInState()+1);
 		if (lift.getTimeInState() != lift.getTicksDoorOpenClose()) {
-			lift.setTimeInState(lift.getTimeInState()+1);
 			return Elevator.OPENDR;
 		}
 		else {
@@ -334,6 +335,7 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateMvToFlr(int time, Elevator lift) {
+		lift.setTimeInState(lift.getTimeInState()+1);
 		int currFloor = lift.getCurrFloor();
 		Passengers p = callMgr.prioritizePassengerCalls(currFloor);
 		if (currFloor == p.getDestFloor()) {
@@ -421,6 +423,7 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateMv1Flr(int time, Elevator lift) {
+		lift.setTimeInState(lift.getTimeInState()+1);
 		lift.moveElevator();
 		if (lift.getPrevFloor() != lift.getCurrFloor()) {
 			if (!(lift.getPassByFloor().length == 0)) {

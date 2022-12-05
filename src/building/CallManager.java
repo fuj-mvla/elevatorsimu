@@ -41,6 +41,13 @@ public class CallManager {
 	 * @return true, if is up call pending
 	 */
 	public boolean isUpCallPending() {
+		int numCalls = 0;
+		for (int i = 0; i < upCalls.length; i++) {
+			if (upCalls[i] == true) {
+				numCalls++;
+			}
+		}
+		upCallPending = numCalls > 0 ? true : false;
 		return upCallPending;
 	}
 	
@@ -50,6 +57,13 @@ public class CallManager {
 	 * @return true, if is down call pending
 	 */
 	public boolean isDownCallPending() {
+		int numCalls = 0;
+		for (int i = 0; i < downCalls.length; i++) {
+			if (downCalls[i] == true) {
+				numCalls++;
+			}
+		}
+		downCallPending = numCalls > 0 ? true : false;
 		return downCallPending;
 	}
 	
@@ -89,10 +103,8 @@ public class CallManager {
 	 */
 	Passengers prioritizePassengerCalls(int floor) {
 		//TODO: Write this method based upon prioritization from STOP...
-		if (floors[floor].goingDownEmpty() && floors[floor].goingUpEmpty() && !downCallPending && !upCallPending) {
-			return null;
-		}
-		if (floors[floor].goingDownEmpty() && !floors[floor].goingUpEmpty()) {
+		// compare numCalls up and down
+		if (numUpCallsPending() > numDownCallsPending()) {
 			return floors[floor].peekFromUp();
 		}
 		else {
@@ -108,5 +120,35 @@ public class CallManager {
 	//      5. Should the elevator change direction?
 	//
 	//      These are an example - you may find you don't need some of these, or you may need more...
+	
+	/**
+	 * Num up calls pending.
+	 *
+	 * @return the int
+	 */
+	int numUpCallsPending() {
+		int numCalls = 0;
+		for (int i = 0; i < upCalls.length; i++) {
+			if (upCalls[i] == true) {
+				numCalls++;
+			}
+		}
+		return numCalls;
+	}
+	
+	/**
+	 * Num down calls pending.
+	 *
+	 * @return the int
+	 */
+	int numDownCallsPending() {
+		int numCalls = 0;
+		for (int i = 0; i < downCalls.length; i++) {
+			if (downCalls[i] == true) {
+				numCalls++;
+			}
+		}
+		return numCalls;
+	}
 
 }
