@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -32,16 +33,18 @@ public class ElevatorSimulation extends Application {
 	private int passengers;
 	private int time;
 	private Timeline t;
-	private Rectangle elevator = new Rectangle(100,100);
+	private Rectangle elevator;
 	private BorderPane bp;
 	private GridPane gp;
 	private Button logging = new Button("Log");
 	private Button Step = new Button ("Step");
 	private Button run = new Button("Run");
+	private Button enter = new Button("Enter");
 	private int duration = 1000;
 	private int cycleCount = 1;
 	private Label timeLabel = new Label("Time = " + time);
-	private int floor = 1;
+	private GridPane gp2;
+	private final static int MAXCELLY = 13;
 	private int cellY = 13;
 	private Label pLabel;
 	private StackPane sp;
@@ -68,7 +71,7 @@ public class ElevatorSimulation extends Application {
 	}
 	private void initTimeline() {
 		t = new Timeline(new KeyFrame(Duration.millis(duration),ae -> move(true)));
-		t.setCycleCount(10);
+	
 		
 	
 	}
@@ -80,34 +83,44 @@ public class ElevatorSimulation extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		// You need to design the GUI. Note that the test name should
-		// appear in the Title of the window!!
-		initTimeline();
+		gp = new GridPane();
 		bp = new BorderPane();
 		sp = new StackPane();
+		initTimeline();
+		initializeFloors();
+		initializeElevatorPosition();
+		stepticks.setText("Step n ticks");
 		HBox x = new HBox(25);
 		pLabel = new Label("" + numPass);
 		sp.getChildren().addAll(elevator,pLabel);
-		x.getChildren().addAll(logging,Step,run,timeLabel,stepticks);
+		x.getChildren().addAll(logging,Step,run,timeLabel,stepticks,enter);
 		Step.setOnAction(e -> controller.stepSim());
 		logging.setOnAction(e -> enableLogging());
 		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
-		gp = new GridPane();
+		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
-		elevator.setFill(Color.TRANSPARENT);
-		elevator.setStroke(Color.BLACK);
-		gp.add(sp,1,cellY);
-		initializeFloors(gp);
-		bp.setCenter(gp);
+
+		bp.setLeft(gp);
 		bp.setTop(x);
 		Scene scene = new Scene(bp,800,800);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Elevator Simulation - "+ controller.getTestName());
 		primaryStage.show();
-
-		//TODO: Complete your GUI, including adding any helper methods.
-		//      Meet the 30 line limit...
-		
+	}
+	private void initializeElevatorPosition() {
+		// TODO Auto-generated method stub
+		elevator = new Rectangle(100,100);
+		elevator.setFill(Color.TRANSPARENT);
+		elevator.setStroke(Color.BLACK);
+		for (int i = currFloor;i > 1;i-- ) {
+			cellY -=2;
+		}
+		gp.add(sp,1,cellY);
+	}
+	private void setTicks(String ticks) {
+		int tick = Integer.parseInt(ticks);
+		t.setCycleCount(tick);
+		t.play();
 	}
 	private void setGridPaneConstraints() {
 		for (int i = 0; i < 16; i ++) 
@@ -117,7 +130,10 @@ public class ElevatorSimulation extends Application {
 			gp.getRowConstraints().add(new RowConstraints(50));
 	}
 	
-	private void initializeFloors(GridPane gp) {
+
+	
+	private void initializeFloors() {
+
 		int startingFloor = 14;
 		for (int i = 0;i < NUM_FLOORS;i++) {
 		gp.add(new Rectangle(700,2), 4, startingFloor);
@@ -144,14 +160,15 @@ public class ElevatorSimulation extends Application {
 	}
 	public void setTime(int time) {
 		this.time = time;
+		timeLabel.setText("Time = " + time);
 	}
 	public void changeState(int state) {
 		
 	}
-	public void offLoad(Passengers[] passengers) {
+	public void offLoad(int[] passengers) {
 		
 	}
-	public void arrivalPassengers(Passengers[] passengers, int floor) {
+	public void arrivalPassengers(int[] passengers, int floor) {
 		
 	}
 	
