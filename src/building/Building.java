@@ -491,7 +491,7 @@ public class Building {
 	 * Necessary for controller to give to the GUI
 	 * @return the passengers
 	 */
-	public List<Passengers> getPassengersInQueue() {
+	public Passengers[] getPassengersInQueue() {
 		ListIterator<Passengers> passengers = passQ.getListIterator();
 		List<Passengers> p = new ArrayList<>();
 		if (passengers != null) {
@@ -499,7 +499,7 @@ public class Building {
 				p.add(passengers.next());
 			}
 		}
-		return p;
+		return p.toArray(new Passengers[p.size()]);
 	}
 	
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
