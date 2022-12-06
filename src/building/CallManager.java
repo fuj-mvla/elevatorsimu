@@ -150,5 +150,23 @@ public class CallManager {
 		}
 		return numCalls;
 	}
+	
+	/**
+	 * Gets the lowest up call.
+	 *
+	 * @return the lowest up call
+	 */
+	Passengers getLowestUpCall() {
+		return null;
+	}
+	
+	/**
+	 * Gets the highest down call.
+	 *
+	 * @return the highest down call
+	 */
+	Passengers getHighestDownCall() {
+		return null;
+	}
 
 }

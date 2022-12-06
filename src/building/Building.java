@@ -298,12 +298,16 @@ public class Building {
 			atCapacity = true;
 			if (!p.isPolite()) {
 				if (lift.getCapacity() >= (lift.getPassengers() + p.getNumPass())) {
+					logBoard(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
 					return Elevator.BOARD;
 				}
 				p.setPolite(true);
 			}
 		}
-		return Elevator.STOP;
+		if (atCapacity) {
+			return Elevator.CLOSEDR;
+		}
+		return Elevator.BOARD;
 	}
 	
 	/**
@@ -444,6 +448,8 @@ public class Building {
 	protected int currStateMv1Flr(int time, Elevator lift) {
 		lift.setTimeInState(lift.getTimeInState()+1);
 		lift.moveElevator();
+		// Need to check highestDownCall/lowestUpCall to determine when the doors should open
+		// If the curr floor is the highestDownCall and it's going down, we need to open the door
 		if (lift.getPrevFloor() != lift.getCurrFloor()) {
 			if (!(lift.getPassByFloor().length == 0)) {
 				return Elevator.OPENDR;
@@ -487,7 +493,7 @@ public class Building {
 	
 	
 	/**
-	 * Gets the passengers.
+	 * Gets the passengers in passQ.
 	 * Necessary for controller to give to the GUI
 	 * @return the passengers
 	 */
@@ -500,6 +506,16 @@ public class Building {
 			}
 		}
 		return p.toArray(new Passengers[p.size()]);
+	}
+	
+	/**
+	 * Gets the current state.
+	 * This is a hacky solution. If more elevators were added, this would
+	 * not work.
+	 * @return the current state
+	 */
+	public int getCurrentState() {
+		return elevators[0].getCurrState();
 	}
 	
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
