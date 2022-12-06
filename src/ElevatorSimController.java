@@ -217,9 +217,18 @@ public class ElevatorSimController {
 	 * must implement......
 	 */
 	public void stepSim() {
- 		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
-		stepCnt++;
+ 		
 		
+		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
+		stepCnt++;
+		if(building.passengersProcessed() == false) {
+			building.checkPassengerArrival();
+			update	
+		}
+		
+		else {
+			
+		}
 	
 		// TODO: Write the rest of this method
 		// If simulation is not completed (not all passengers have been processed
