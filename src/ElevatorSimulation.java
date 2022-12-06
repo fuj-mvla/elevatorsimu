@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -86,6 +87,7 @@ public class ElevatorSimulation extends Application {
 		gp = new GridPane();
 		bp = new BorderPane();
 		sp = new StackPane();
+		
 		initTimeline();
 		initializeFloors();
 		initializeElevatorPosition();
@@ -135,9 +137,14 @@ public class ElevatorSimulation extends Application {
 	private void initializeFloors() {
 
 		int startingFloor = 14;
+		int floor = 1;
 		for (int i = 0;i < NUM_FLOORS;i++) {
 		gp.add(new Rectangle(700,2), 4, startingFloor);
+		Label numFloor = new Label("" + floor);
+		numFloor.setFont(Font.font("Cambria",32));
+		gp.add(numFloor, 0, startingFloor-1);
 		startingFloor -=2;
+		floor++;
 		}
 	}
 	private void enableLogging() {
@@ -162,13 +169,11 @@ public class ElevatorSimulation extends Application {
 		this.time = time;
 		timeLabel.setText("Time = " + time);
 	}
-	public void changeState(int state) {
+
+	public void offLoad(Passengers[] passengers) {
 		
 	}
-	public void offLoad(int[] passengers) {
-		
-	}
-	public void arrivalPassengers(int[] passengers, int floor) {
+	public void arrivalPassengers(Passengers[] passengers) {
 		
 	}
 	
