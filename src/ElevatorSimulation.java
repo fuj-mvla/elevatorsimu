@@ -5,6 +5,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -95,6 +96,8 @@ public class ElevatorSimulation extends Application {
 		HBox x = new HBox(25);
 		pLabel = new Label("" + numPass);
 		sp.getChildren().addAll(elevator,pLabel);
+		sp.setAlignment(pLabel, Pos.TOP_CENTER);
+		makeElevatorDoors();
 		x.getChildren().addAll(logging,Step,run,timeLabel,stepticks,enter);
 		Step.setOnAction(e -> controller.stepSim());
 		logging.setOnAction(e -> enableLogging());
@@ -119,6 +122,10 @@ public class ElevatorSimulation extends Application {
 		}
 		gp.add(sp,1,cellY);
 	}
+	private void makeElevatorDoors() {
+		Rectangle x = new Rectangle(20,30);
+		sp.getChildren().add(x);
+		}
 	private void setTicks(String ticks) {
 		int tick = Integer.parseInt(ticks);
 		t.setCycleCount(tick);
