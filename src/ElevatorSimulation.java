@@ -66,7 +66,7 @@ public class ElevatorSimulation extends Application {
 		currFloor = controller.getCurrentFloor();
 		
 	}
-	public void initTimeline() {
+	private void initTimeline() {
 		t = new Timeline(new KeyFrame(Duration.millis(duration),ae -> move(true)));
 		t.setCycleCount(10);
 		
@@ -116,9 +116,7 @@ public class ElevatorSimulation extends Application {
 		for (int i = 0; i < 16; i ++) 
 			gp.getRowConstraints().add(new RowConstraints(50));
 	}
-	public int getTime() {
-		return time;
-	}
+	
 	private void initializeFloors(GridPane gp) {
 		int startingFloor = 14;
 		for (int i = 0;i < NUM_FLOORS;i++) {
@@ -133,7 +131,7 @@ public class ElevatorSimulation extends Application {
 		
 	}
 	
-	public void move(boolean up) {
+	private void move(boolean up) {
 		if (up) {
 			gp.getChildren().remove(sp);
 			cellY -=2;
