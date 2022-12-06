@@ -154,7 +154,7 @@ public class Building {
 	
 	
 	/**
-	 * Checks if passengers were processed
+	 * Checks if passengers were processed.
 	 *
 	 * @return true, if successful
 	 */
@@ -162,6 +162,11 @@ public class Building {
 		return passQ.isEmpty();
 	}
 	
+	/**
+	 * Check passenger arrival.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean checkPassengerArrival() {
 		return true;
 	}
@@ -172,7 +177,7 @@ public class Building {
 	 * If there is a call down or up - @OPENDR
 	 * If there are no calls on this floor, but there are calls on other floors - @MVTOFLOOR
 	 *
-	 * @param time the time
+	 * @param time thxe time
 	 * @param lift the lift
 	 * @return the int
 	 */
@@ -282,10 +287,20 @@ public class Building {
 	 */
 	protected int currStateBoard(int time, Elevator lift) {
 		lift.setTimeInState(lift.getTimeInState()+1);
-		while (lift.getPassengers() != lift.getCapacity()) {
-			Passengers p = passQ.peek();
-			if (p.getTimeWillGiveUp() == time + p.getWaitTime()) {
-				
+		Passengers p = passQ.peek();
+		boolean atCapacity = false;
+		if (time > p.getTimeWillGiveUp()) {
+			logGiveUp(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
+			passQ.remove();
+		}
+		if (lift.getCapacity() < (lift.getPassengers() + p.getNumPass())) {
+			logSkip(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
+			atCapacity = true;
+			if (!p.isPolite()) {
+				if (lift.getCapacity() >= (lift.getPassengers() + p.getNumPass())) {
+					return Elevator.BOARD;
+				}
+				p.setPolite(true);
 			}
 		}
 		return Elevator.STOP;
@@ -468,6 +483,23 @@ public class Building {
 			}
 		}
 		return Elevator.MV1FLR;
+	}
+	
+	
+	/**
+	 * Gets the passengers.
+	 * Necessary for controller to give to the GUI
+	 * @return the passengers
+	 */
+	public List<Passengers> getPassengers() {
+		ListIterator<Passengers> passengers = passQ.getListIterator();
+		List<Passengers> p = new ArrayList<>();
+		if (passengers != null) {
+			while (passengers.hasNext()) {
+				p.add(passengers.next());
+			}
+		}
+		return p;
 	}
 	
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
