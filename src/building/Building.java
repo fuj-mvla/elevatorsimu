@@ -491,7 +491,7 @@ public class Building {
 	 * Necessary for controller to give to the GUI
 	 * @return the passengers
 	 */
-	public List<Passengers> getPassengers() {
+	public List<Passengers> getPassengersInQueue() {
 		ListIterator<Passengers> passengers = passQ.getListIterator();
 		List<Passengers> p = new ArrayList<>();
 		if (passengers != null) {
