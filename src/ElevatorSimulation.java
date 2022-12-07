@@ -47,6 +47,7 @@ public class ElevatorSimulation extends Application {
 	private Label timeLabel = new Label("Time = " + time);
 	private GridPane gp2;
 	private final static int MAXCELLY = 13;
+	private final static int MAXFLOORY = 12;
 	private int cellY = 13;
 	private Label pLabel;
 	private StackPane sp;
@@ -123,8 +124,17 @@ public class ElevatorSimulation extends Application {
 		gp.add(sp,1,cellY);
 	}
 	private void makeElevatorDoors() {
-		Rectangle x = new Rectangle(20,30);
+		Rectangle x = new Rectangle(50,80);
+		Rectangle y = new Rectangle(50,80);
+		x.setFill(Color.GRAY);
+		y.setFill(Color.GRAY);
+		x.setStroke(Color.BLACK);
+		y.setStroke(Color.BLACK);
 		sp.getChildren().add(x);
+		sp.getChildren().add(y);
+		sp.setAlignment(x, Pos.BOTTOM_LEFT);
+		sp.setAlignment(y, Pos.BOTTOM_RIGHT);
+		
 		}
 	private void setTicks(String ticks) {
 		int tick = Integer.parseInt(ticks);
@@ -181,7 +191,9 @@ public class ElevatorSimulation extends Application {
 		
 	}
 	public void arrivalPassengers(Passengers[] passengers) {
-		
+		for (int i = 0;i < passengers.length;i++) {
+			int floor = MAXFLOORY - ((passengers[i].getOnFloor()+1)*2);
+		}
 	}
 	
 	/**
