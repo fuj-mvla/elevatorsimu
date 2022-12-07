@@ -157,7 +157,14 @@ public class CallManager {
 	 * @return the lowest up call
 	 */
 	Passengers getLowestUpCall() {
-		return null;
+		int floor = 0;
+		for (int i = 0; i < upCalls.length; i++) {
+			if (upCalls[i]) {
+				floor = i;
+				break;
+			}
+		}
+		return floors[floor].peekFromUp();
 	}
 	
 	/**
@@ -166,7 +173,13 @@ public class CallManager {
 	 * @return the highest down call
 	 */
 	Passengers getHighestDownCall() {
-		return null;
+		int saveHighest = 0;
+		for (int i = 0; i < downCalls.length; i++) {
+			if (downCalls[i]) {
+				saveHighest = i;
+			}
+		}
+		return floors[saveHighest].peekFromDown();
 	}
 
 }
