@@ -192,6 +192,7 @@ public class Building {
 			if (p == null) {
 				return Elevator.STOP;
 			}
+			logCalls(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
 			if (!floors[floor].goingUpEmpty() || !floors[floor].goingDownEmpty()) {
 				lift.setDirection(p.getDirection());
 				return Elevator.OPENDR;
@@ -448,18 +449,20 @@ public class Building {
 	protected int currStateMv1Flr(int time, Elevator lift) {
 		lift.setTimeInState(lift.getTimeInState()+1);
 		lift.moveElevator();
-		// Need to check highestDownCall/lowestUpCall to determine when the doors should open
-		// If the curr floor is the highestDownCall and it's going down, we need to open the door
+		Passengers p = lift.getDirection() == UP ? callMgr.getLowestUpCall() : callMgr.getHighestDownCall();
+		if (lift.getCurrFloor() == p.getDestFloor()) {
+			logArrival(time, p.getNumPass(), lift.getCurrFloor(), p.getId());
+		}
 		if (lift.getPrevFloor() != lift.getCurrFloor()) {
 			if (!(lift.getPassByFloor().length == 0)) {
 				return Elevator.OPENDR;
 			}
 			if (lift.getDirection() == DOWN && 
-					!floors[lift.getCurrFloor()-1].goingDownEmpty()) {
+					!floors[lift.getCurrFloor()].goingDownEmpty()) {
 				return Elevator.OPENDR;
 			}
 			if (lift.getDirection() == UP && 
-					!floors[lift.getCurrFloor()-1].goingUpEmpty()) {
+					!floors[lift.getCurrFloor()].goingUpEmpty()) {
 				return Elevator.OPENDR;
 			}
 			if (lift.getPassengers() == 0) {
@@ -477,13 +480,13 @@ public class Building {
 	 */
 	private int elevatorEmpty(Elevator lift) {
 		if (lift.getDirection() == UP && !callMgr.isUpCallPending()) {
-			if (!floors[lift.getCurrFloor()-1].goingDownEmpty()) {
+			if (!floors[lift.getCurrFloor()].goingDownEmpty()) {
 				lift.setDirection(DOWN);
 				return Elevator.OPENDR;
 			}
 		}
 		if (lift.getDirection() == DOWN && !callMgr.isDownCallPending()) {
-			if (!floors[lift.getCurrFloor()-1].goingUpEmpty()) {
+			if (!floors[lift.getCurrFloor()].goingUpEmpty()) {
 				lift.setDirection(UP);
 				return Elevator.OPENDR;
 			}

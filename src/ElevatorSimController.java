@@ -223,7 +223,7 @@ public class ElevatorSimController {
 		stepCnt++;
 		if(building.passengersProcessed() == false) {
 			building.checkPassengerArrival();
-			update	
+			//update	
 		}
 		
 		else {
