@@ -222,21 +222,19 @@ public class ElevatorSimController {
 		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
 		if(building.passengersProcessed() == false|| building.getCurrentState() != 0) {
-			building.checkPassengerArrival();
-
+			if(building.checkPassengerArrival(stepCnt) == true) {
+				gui.arrivalPassengers(building.getPassengersInQueue());
+			}
 			building.updateElevator(stepCnt);
-			
-			gui.arrivalPassengers(building.getPassengersInQueue());
 			gui.offLoad(building.getPassengersInQueue());
 			gui.setTime(stepCnt);
-			gui.updateState(building.getCurrentState());
-
+			gui.updateState(building.getCurrentState(), CurrentFloor);
+			
+		}		
 		else {
 			
-			gui.arrivalPassengers(building.getPassengersInQueue());
-			gui.offLoad(building.getPassengersInQueue());
 			gui.setTime(stepCnt);
-			gui.updateState(building.getCurrentState());
+			gui.updateState(building.getCurrentState(), CurrentFloor);
 			building.closeLogs(stepCnt);
 			building.processPassengerData();
 			
