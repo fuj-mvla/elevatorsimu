@@ -167,8 +167,9 @@ public class Building {
 	 *
 	 * @return true, if successful
 	 */
-	public boolean checkPassengerArrival() {
-		return true;
+	public boolean checkPassengerArrival(int time) {
+		Passengers p = passQ.peek();
+		return time == p.getTimeArrived();
 	}
 	
 	/**
