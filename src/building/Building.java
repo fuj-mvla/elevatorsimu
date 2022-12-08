@@ -165,12 +165,18 @@ public class Building {
 	/**
 	 * Check passenger arrival.
 	 *
+	 * @param time the time
 	 * @return true, if successful
 	 */
 	public boolean checkPassengerArrival(int time) {
 		Passengers[] p = getPassengersInQueue();
 		return time == p[p.length-1].getTimeArrived();
 	}
+	
+	/**
+	 * @todo Implement specific actions for states
+	 * Should be passing tests soon.
+	 */
 	
 	/**
 	 * Stop state.
@@ -288,6 +294,7 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateBoard(int time, Elevator lift) {
+		int numBoarded = 0;
 		while (lift.getPassengers() != lift.getCapacity()) {
 			Passengers p = passQ.peek();
 			if (p.getTimeWillGiveUp() == time) {
@@ -300,12 +307,13 @@ public class Building {
 				break;
 			}
 			else {
+				numBoarded += p.getNumPass();
 				p.setBoardTime(time);
 				logBoard(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
 				p = lift.getDirection() == UP ? floors[lift.getCurrFloor()].pollFromUp() 
 						: floors[lift.getCurrFloor()].pollFromDown();
 				lift.setPassengers(lift.getPassengers()+p.getNumPass());
-				int delayTime = 0; // Need to figure out how to calculate delay time
+				int delayTime = numBoarded / lift.getPassPerTick();
 				lift.setTimeInState(lift.getTimeInState()+1);
 				if (delayTime <= lift.getTimeInState()) {
 					return Elevator.CLOSEDR;
@@ -315,6 +323,17 @@ public class Building {
 				}
 			}
 		}
+		return tooManyPassengers(time, lift);
+	}
+	
+	/**
+	 * Too many passengers.
+	 * After Board breaks from loop
+	 * @param time the time
+	 * @param lift the lift
+	 * @return the int
+	 */
+	public int tooManyPassengers(int time, Elevator lift) {
 		Passengers p = passQ.peek();
 		boolean atCapacity = false;
 		if (time > p.getTimeWillGiveUp()) {
