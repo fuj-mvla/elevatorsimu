@@ -142,11 +142,12 @@ public class ElevatorSimulation extends Application {
 		Rectangle x = new Rectangle(50,80);
 		Rectangle y = new Rectangle(50,80);
 		x.setFill(Color.LIGHTGRAY);
-		y.setFill(Color.GRAY);
+		y.setFill(Color.LIGHTGRAY);
 		x.setStroke(Color.BLACK);
 		y.setStroke(Color.BLACK);
 		sp.getChildren().add(x);
 		sp.getChildren().add(y);
+		
 		sp.setAlignment(x, Pos.BOTTOM_LEFT);
 		sp.setAlignment(y, Pos.BOTTOM_RIGHT);
 		
@@ -221,30 +222,40 @@ public class ElevatorSimulation extends Application {
 			}
 		}
 	}
-	public void offLoad(Passengers passengers) {
+	public void offLoad(Passengers[] passengers) {
 		
 	}
-	public void arrivalPassengers(Passengers passengers) {
+	public void board(Passengers[] passengers) {
 		
-			int floor = MAXFLOORY - ((passengers.getOnFloor())*2);
-		if (passengers.getDirection() ==UP) {
-				Label numP = new Label("" + passengers.getNumPass());
+	}
+	public void arrivalPassengers(Passengers[] passengers) {
+		
+		
+		for(int i = 0; i < passengers.length;i++) {
+			int floor = MAXFLOORY - ((passengers[i].getOnFloor())*2);
+			if (passengers[i].getDirection() ==UP) {
+				Label numP = new Label("" + passengers[i].getNumPass());
 				Circle x = new Circle(25);
 				StackPane y = new StackPane(x,numP);
 				x.setFill(Color.GREEN);
 				
-				gp.add(y, floorArray[passengers.getOnFloor()], floor);
-				floorArray[passengers.getOnFloor()]++;
+				gp.add(y, floorArray[passengers[i].getOnFloor()], floor);
+				floorArray[passengers[i].getOnFloor()]++;
 			}
 			else {
-				Label numP = new Label("" + passengers.getNumPass());
+				Label numP = new Label("" + passengers[i].getNumPass());
 				Circle x = new Circle(25);
 				StackPane y = new StackPane(x,numP);
 				x.setFill(Color.RED);
 				
-				gp.add(y, floorArray[passengers.getOnFloor()], floor);
-				floorArray[passengers.getOnFloor()]++;
+				gp.add(y, floorArray[passengers[i].getOnFloor()], floor);
+				floorArray[passengers[i
+				                      ].getOnFloor()]++;
 			}
+		}
+		
+	}
+	public void endSim() {
 		
 	}
 	
