@@ -15,9 +15,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -47,12 +49,16 @@ public class ElevatorSimulation extends Application {
 	private Label timeLabel = new Label("Time = " + time);
 	private GridPane gp2;
 	private final static int MAXCELLY = 13;
-	private final static int MAXFLOORY = 12;
+	private final static int MAXFLOORY = 13;
 	private int cellY = 13;
 	private Label pLabel;
 	private StackPane sp;
 	private int numPass;
 	private TextField stepticks = new TextField();
+	private Pane legendPane;
+	private int[] floorArray = {4,4,4,4,4,4};
+	private final int UP = 1;
+	private final int DOWN = -1;
 	/** Local copies of the states for tracking purposes */
 	private final int STOP = Elevator.STOP;
 	private final int MVTOFLR = Elevator.MVTOFLR;
@@ -62,6 +68,8 @@ public class ElevatorSimulation extends Application {
 	private final int CLOSEDR = Elevator.CLOSEDR;
 	private final int MV1FLR = Elevator.MV1FLR;
 
+	private Passengers testP = new Passengers(1,2,1,3,false,2);
+	private Passengers testP2 = new Passengers(1,2,3,2,false,2);
 	/**
 	 * Instantiates a new elevator simulation.
 	 */
@@ -89,10 +97,10 @@ public class ElevatorSimulation extends Application {
 		gp = new GridPane();
 		bp = new BorderPane();
 		sp = new StackPane();
-		
 		initTimeline();
 		initializeFloors();
 		initializeElevatorPosition();
+		makeLegend();
 		stepticks.setText("Step n ticks");
 		HBox x = new HBox(25);
 		pLabel = new Label("" + numPass);
@@ -105,19 +113,26 @@ public class ElevatorSimulation extends Application {
 		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
 		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
-
 		bp.setLeft(gp);
 		bp.setTop(x);
+		
 		Scene scene = new Scene(bp,800,800);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Elevator Simulation - "+ controller.getTestName());
 		primaryStage.show();
 	}
+	private void makeLegend() {
+		gp.add(new Circle(15,Color.GREEN),  0,0);
+		gp.add(new Circle(15,Color.RED),  0,1);
+		gp.add(new Label(" Up"), 1, 0);
+		gp.add(new Label(" Down"), 1, 1);
+		
+	}
 	private void initializeElevatorPosition() {
 		// TODO Auto-generated method stub
 		elevator = new Rectangle(100,100);
 		elevator.setFill(Color.TRANSPARENT);
-		elevator.setStroke(Color.BLACK);
+		elevator.setStroke(Color.LIGHTSTEELBLUE);
 		for (int i = currFloor;i > 1;i-- ) {
 			cellY -=2;
 		}
@@ -126,7 +141,7 @@ public class ElevatorSimulation extends Application {
 	private void makeElevatorDoors() {
 		Rectangle x = new Rectangle(50,80);
 		Rectangle y = new Rectangle(50,80);
-		x.setFill(Color.GRAY);
+		x.setFill(Color.LIGHTGRAY);
 		y.setFill(Color.GRAY);
 		x.setStroke(Color.BLACK);
 		y.setStroke(Color.BLACK);
@@ -134,6 +149,7 @@ public class ElevatorSimulation extends Application {
 		sp.getChildren().add(y);
 		sp.setAlignment(x, Pos.BOTTOM_LEFT);
 		sp.setAlignment(y, Pos.BOTTOM_RIGHT);
+		
 		
 		}
 	private void setTicks(String ticks) {
@@ -156,20 +172,22 @@ public class ElevatorSimulation extends Application {
 		int startingFloor = 14;
 		int floor = 1;
 		for (int i = 0;i < NUM_FLOORS;i++) {
-		gp.add(new Rectangle(700,2), 4, startingFloor);
-		Label numFloor = new Label("" + floor);
-		numFloor.setFont(Font.font("Cambria",32));
-		gp.add(numFloor, 0, startingFloor-1);
-		startingFloor -=2;
-		floor++;
+
+			Rectangle floorR = new Rectangle(700,2);
+			floorR.setFill(Color.TAN);;
+			gp.add(floorR, 4, startingFloor);
+			Label numFloor = new Label("" + floor);
+			numFloor.setFont(Font.font("Cambria",32));
+			gp.add(numFloor, 0, startingFloor-1);
+			startingFloor -=2;
+			floor++;
+
 		}
 	}
 	private void enableLogging() {
 		controller.enableLogging();
 	}
-	public void updateState(int currstate) {
-		
-	}
+	
 	
 	private void move(boolean up) {
 		if (up) {
@@ -180,20 +198,54 @@ public class ElevatorSimulation extends Application {
 				t.stop();
 			}
 		}
+		else {
+			gp.getChildren().remove(sp);
+			cellY +=2;
+			gp.add(sp, 1, cellY);
+		}
 			
 	}
 	public void setTime(int time) {
 		this.time = time;
 		timeLabel.setText("Time = " + time);
 	}
-
-	public void offLoad(Passengers[] passengers) {
+	public void updateState(int currstate,int currFloor) {
+		if (currstate == MV1FLR) {
+			if (this.currFloor < currFloor) {
+				move(true);
+				this.currFloor = currFloor;
+			}
+			else if (this.currFloor > currFloor) {
+				move(false);
+				this.currFloor = currFloor;
+			}
+		}
+	}
+	public void offLoad(Passengers passengers) {
 		
 	}
-	public void arrivalPassengers(Passengers[] passengers) {
-		for (int i = 0;i < passengers.length;i++) {
-			int floor = MAXFLOORY - ((passengers[i].getOnFloor()+1)*2);
-		}
+	public void arrivalPassengers(Passengers passengers) {
+		
+			int floor = MAXFLOORY - ((passengers.getOnFloor())*2);
+		if (passengers.getDirection() ==UP) {
+				Label numP = new Label("" + passengers.getNumPass());
+				Circle x = new Circle(25);
+				StackPane y = new StackPane(x,numP);
+				x.setFill(Color.GREEN);
+				
+				gp.add(y, floorArray[passengers.getOnFloor()], floor);
+				floorArray[passengers.getOnFloor()]++;
+			}
+			else {
+				Label numP = new Label("" + passengers.getNumPass());
+				Circle x = new Circle(25);
+				StackPane y = new StackPane(x,numP);
+				x.setFill(Color.RED);
+				
+				gp.add(y, floorArray[passengers.getOnFloor()], floor);
+				floorArray[passengers.getOnFloor()]++;
+			}
+		
 	}
 	
 	/**
