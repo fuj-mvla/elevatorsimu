@@ -46,6 +46,8 @@ public class ElevatorSimulation extends Application {
 	private Button enter = new Button("Enter");
 	private int duration = 1000;
 	private int cycleCount = 1;
+	private Rectangle door1 = new Rectangle(50,80);
+	private Rectangle door2 = new Rectangle(50,80);
 	private Label timeLabel = new Label("Time = " + time);
 	private GridPane gp2;
 	private final static int MAXCELLY = 13;
@@ -81,7 +83,7 @@ public class ElevatorSimulation extends Application {
 		
 	}
 	private void initTimeline() {
-		t = new Timeline(new KeyFrame(Duration.millis(duration),ae -> move(true)));
+		t = new Timeline(new KeyFrame(Duration.millis(duration),ae -> test()));
 	
 		
 	
@@ -139,20 +141,27 @@ public class ElevatorSimulation extends Application {
 		gp.add(sp,1,cellY);
 	}
 	private void makeElevatorDoors() {
-		Rectangle x = new Rectangle(50,80);
-		Rectangle y = new Rectangle(50,80);
-		x.setFill(Color.LIGHTGRAY);
-		y.setFill(Color.LIGHTGRAY);
-		x.setStroke(Color.BLACK);
-		y.setStroke(Color.BLACK);
-		sp.getChildren().add(x);
-		sp.getChildren().add(y);
 		
-		sp.setAlignment(x, Pos.BOTTOM_LEFT);
-		sp.setAlignment(y, Pos.BOTTOM_RIGHT);
+		door1.setFill(Color.LIGHTGRAY);
+		door2.setFill(Color.LIGHTGRAY);
+		door1.setStroke(Color.BLACK);
+		door2.setStroke(Color.BLACK);
+		sp.getChildren().add(door1);
+		sp.getChildren().add(door2);
+		
+		sp.setAlignment(door1, Pos.BOTTOM_LEFT);
+		sp.setAlignment(door2, Pos.BOTTOM_RIGHT);
 		
 		
 		}
+	private void Opendr() {
+		door1.setWidth(25);
+		door2.setWidth(25);
+	}
+	private void Closedr() {
+		door1.setWidth(50);
+		door2.setWidth(50);
+	}
 	private void setTicks(String ticks) {
 		int tick = Integer.parseInt(ticks);
 		t.setCycleCount(tick);
@@ -207,19 +216,25 @@ public class ElevatorSimulation extends Application {
 			
 	}
 	public void setTime(int time) {
-		this.time = time;
+		
 		timeLabel.setText("Time = " + time);
 	}
 	public void updateState(int currstate,int currFloor) {
 		if (currstate == MV1FLR) {
 			if (this.currFloor < currFloor) {
 				move(true);
-				this.currFloor = currFloor;
+				
 			}
 			else if (this.currFloor > currFloor) {
 				move(false);
-				this.currFloor = currFloor;
 			}
+			this.currFloor = currFloor;
+		}
+		else if (currstate == OPENDR) {
+			Opendr();
+		}
+		else if (currstate == CLOSEDR) {
+			Closedr();
 		}
 	}
 	public void offLoad(Passengers[] passengers) {
@@ -257,6 +272,9 @@ public class ElevatorSimulation extends Application {
 	}
 	public void endSim() {
 		
+	}
+	private void test() {
+		Opendr();
 	}
 	
 	/**
