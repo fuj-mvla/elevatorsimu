@@ -21,7 +21,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -119,10 +123,17 @@ public class ElevatorSimulation extends Application {
 		run.setOnAction(e -> Opendr());
 		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
+		Pane t = new Pane(new Rectangle(700,20,20,20));
+		bp.setBottom(t);
 		bp.setLeft(gp);
 		bp.setTop(x);
 		
-		Scene scene = new Scene(bp,800,800);
+		
+		
+		
+		Scene scene = new Scene(bp,800,800,Color.BLUE);
+	//	scene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#81c483")),new Stop(1, Color.web("#fcc200"))));
+		
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Elevator Simulation - "+ controller.getTestName());
 		primaryStage.show();
@@ -256,7 +267,7 @@ public class ElevatorSimulation extends Application {
 		boolean boarded = false;
 		for ( int i =0;i < passengers.length;i++) {
 			for (int j = 0;j < passArray.size();j++) {
-				
+			//	if (passengers[i] == passArray)
 			}
 		}
 	}
