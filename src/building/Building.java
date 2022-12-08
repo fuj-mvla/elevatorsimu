@@ -288,7 +288,33 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateBoard(int time, Elevator lift) {
-		lift.setTimeInState(lift.getTimeInState()+1);
+		while (lift.getPassengers() != lift.getCapacity()) {
+			Passengers p = passQ.peek();
+			if (p.getTimeWillGiveUp() == time) {
+				p = lift.getDirection() == UP ? floors[lift.getCurrFloor()].pollFromUp() 
+						: floors[lift.getCurrFloor()].pollFromDown();
+				gaveUp.add(p);
+			}
+			else if (lift.getCapacity() < (lift.getPassengers() + p.getNumPass())) {
+				logSkip(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
+				break;
+			}
+			else {
+				p.setBoardTime(time);
+				logBoard(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
+				p = lift.getDirection() == UP ? floors[lift.getCurrFloor()].pollFromUp() 
+						: floors[lift.getCurrFloor()].pollFromDown();
+				lift.setPassengers(lift.getPassengers()+p.getNumPass());
+				int delayTime = 0; // Need to figure out how to calculate delay time
+				lift.setTimeInState(lift.getTimeInState()+1);
+				if (delayTime <= lift.getTimeInState()) {
+					return Elevator.CLOSEDR;
+				}
+				else {
+					return Elevator.BOARD;
+				}
+			}
+		}
 		Passengers p = passQ.peek();
 		boolean atCapacity = false;
 		if (time > p.getTimeWillGiveUp()) {
