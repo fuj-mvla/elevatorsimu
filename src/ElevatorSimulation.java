@@ -1,4 +1,6 @@
 
+import java.util.ArrayList;
+
 import building.Elevator;
 import building.Passengers;
 import javafx.animation.Animation;
@@ -61,6 +63,8 @@ public class ElevatorSimulation extends Application {
 	private int[] floorArray = {4,4,4,4,4,4};
 	private final int UP = 1;
 	private final int DOWN = -1;
+	private ArrayList<Circle> circArray = new ArrayList<>();
+	private ArrayList<Circle> passArray = new ArrayList<>();
 	/** Local copies of the states for tracking purposes */
 	private final int STOP = Elevator.STOP;
 	private final int MVTOFLR = Elevator.MVTOFLR;
@@ -110,9 +114,9 @@ public class ElevatorSimulation extends Application {
 		sp.setAlignment(pLabel, Pos.TOP_CENTER);
 		makeElevatorDoors();
 		x.getChildren().addAll(logging,Step,run,timeLabel,stepticks,enter);
-		Step.setOnAction(e -> controller.stepSim());
+		Step.setOnAction(e -> Closedr());
 		logging.setOnAction(e -> enableLogging());
-		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
+		run.setOnAction(e -> Opendr());
 		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
 		bp.setLeft(gp);
@@ -236,6 +240,7 @@ public class ElevatorSimulation extends Application {
 		else if (currstate == CLOSEDR) {
 			Closedr();
 		}
+		else if ()
 	}
 	public void offLoad(Passengers[] passengers) {
 		
