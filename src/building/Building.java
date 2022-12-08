@@ -168,8 +168,8 @@ public class Building {
 	 * @return true, if successful
 	 */
 	public boolean checkPassengerArrival(int time) {
-		Passengers p = passQ.peek();
-		return time == p.getTimeArrived();
+		Passengers[] p = getPassengersInQueue();
+		return time == p[p.length-1].getTimeArrived();
 	}
 	
 	/**

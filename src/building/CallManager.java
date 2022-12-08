@@ -36,38 +36,6 @@ public class CallManager {
 	//TODO: Add any additional fields here..
 	
 	/**
-	 * Checks if is up call pending.
-	 *
-	 * @return true, if is up call pending
-	 */
-	public boolean isUpCallPending() {
-		int numCalls = 0;
-		for (int i = 0; i < upCalls.length; i++) {
-			if (upCalls[i] == true) {
-				numCalls++;
-			}
-		}
-		upCallPending = numCalls > 0 ? true : false;
-		return upCallPending;
-	}
-	
-	/**
-	 * Checks if is down call pending.
-	 *
-	 * @return true, if is down call pending
-	 */
-	public boolean isDownCallPending() {
-		int numCalls = 0;
-		for (int i = 0; i < downCalls.length; i++) {
-			if (downCalls[i] == true) {
-				numCalls++;
-			}
-		}
-		downCallPending = numCalls > 0 ? true : false;
-		return downCallPending;
-	}
-	
-	/**
 	 * Instantiates a new call manager.
 	 *
 	 * @param floors the floors
@@ -180,6 +148,38 @@ public class CallManager {
 			}
 		}
 		return floors[saveHighest].peekFromDown();
+	}
+	
+	/**
+	 * Checks if is up call pending.
+	 *
+	 * @return true, if is up call pending
+	 */
+	public boolean isUpCallPending() {
+		int numCalls = 0;
+		for (int i = 0; i < upCalls.length; i++) {
+			if (upCalls[i] == true) {
+				numCalls++;
+			}
+		}
+		upCallPending = numCalls > 0 ? true : false;
+		return upCallPending;
+	}
+	
+	/**
+	 * Checks if is down call pending.
+	 *
+	 * @return true, if is down call pending
+	 */
+	public boolean isDownCallPending() {
+		int numCalls = 0;
+		for (int i = 0; i < downCalls.length; i++) {
+			if (downCalls[i] == true) {
+				numCalls++;
+			}
+		}
+		downCallPending = numCalls > 0 ? true : false;
+		return downCallPending;
 	}
 
 }
