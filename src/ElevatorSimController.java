@@ -230,7 +230,7 @@ public class ElevatorSimController {
 			gui.offLoad(building.getPassengersInQueue());
 			gui.setTime(stepCnt);
 			gui.updateState(building.getCurrentState());
-		}
+
 		else {
 			
 			gui.arrivalPassengers(building.getPassengersInQueue());

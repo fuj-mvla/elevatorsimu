@@ -521,6 +521,16 @@ public class Building {
 		return elevators[0].getCurrState();
 	}
 	
+	/**
+	 * Gets the current floor.
+	 * This is a hacky solution. If more elevators were added, this would
+	 * not work.
+	 * @return the current floor
+	 */
+	public int getCurrentFloor() {
+		return elevators[0].getCurrFloor();
+	}
+	
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
 	/**
 	 * Initialize building logger. Sets formating, file to log to, and
