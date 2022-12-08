@@ -240,7 +240,7 @@ public class ElevatorSimulation extends Application {
 		else if (currstate == CLOSEDR) {
 			Closedr();
 		}
-		else if ()
+		
 	}
 	public void offLoad(Passengers[] passengers) {
 		
@@ -269,8 +269,7 @@ public class ElevatorSimulation extends Application {
 				x.setFill(Color.RED);
 				
 				gp.add(y, floorArray[passengers[i].getOnFloor()], floor);
-				floorArray[passengers[i
-				                      ].getOnFloor()]++;
+				floorArray[passengers[i].getOnFloor()]++;
 			}
 		}
 		
