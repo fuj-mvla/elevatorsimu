@@ -226,7 +226,9 @@ public class ElevatorSimController {
 				gui.arrivalPassengers(building.getPassengersInQueue());
 			}
 			building.updateElevator(stepCnt);
-			gui.offLoad(building.getPassengersInQueue());
+			if(building.getCurrentState() == 3) {
+				gui.offLoad(building.getPassengersInQueue());
+			}
 			gui.setTime(stepCnt);
 			gui.updateState(building.getCurrentState(), CurrentFloor);
 			
