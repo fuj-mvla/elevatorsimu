@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -117,7 +118,7 @@ public class ElevatorSimulation extends Application {
 		// TODO Auto-generated method stub
 		elevator = new Rectangle(100,100);
 		elevator.setFill(Color.TRANSPARENT);
-		elevator.setStroke(Color.BLACK);
+		elevator.setStroke(Color.LIGHTSTEELBLUE);
 		for (int i = currFloor;i > 1;i-- ) {
 			cellY -=2;
 		}
@@ -126,7 +127,7 @@ public class ElevatorSimulation extends Application {
 	private void makeElevatorDoors() {
 		Rectangle x = new Rectangle(50,80);
 		Rectangle y = new Rectangle(50,80);
-		x.setFill(Color.GRAY);
+		x.setFill(Color.LIGHTGRAY);
 		y.setFill(Color.GRAY);
 		x.setStroke(Color.BLACK);
 		y.setStroke(Color.BLACK);
@@ -156,12 +157,14 @@ public class ElevatorSimulation extends Application {
 		int startingFloor = 14;
 		int floor = 1;
 		for (int i = 0;i < NUM_FLOORS;i++) {
-		gp.add(new Rectangle(700,2), 4, startingFloor);
-		Label numFloor = new Label("" + floor);
-		numFloor.setFont(Font.font("Cambria",32));
-		gp.add(numFloor, 0, startingFloor-1);
-		startingFloor -=2;
-		floor++;
+			Rectangle floorR = new Rectangle(700,2);
+			floorR.setFill(Color.TAN);;
+			gp.add(floorR, 4, startingFloor);
+			Label numFloor = new Label("" + floor);
+			numFloor.setFont(Font.font("Cambria",32));
+			gp.add(numFloor, 0, startingFloor-1);
+			startingFloor -=2;
+			floor++;
 		}
 	}
 	private void enableLogging() {
