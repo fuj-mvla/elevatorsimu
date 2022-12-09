@@ -63,7 +63,7 @@ public class ElevatorSimulation extends Application {
 	private StackPane sp;
 	private int numPass;
 	private TextField stepticks = new TextField();
-	private Pane legendPane;
+	private Pane background;
 	private int[] floorArray = {4,4,4,4,4,4};
 	private final int UP = 1;
 	private final int DOWN = -1;
@@ -123,11 +123,11 @@ public class ElevatorSimulation extends Application {
 		run.setOnAction(e -> Opendr());
 		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
-		Pane t = new Pane(new Rectangle(700,20,20,20));
-		bp.setBottom(t);
+		makeBuildings();
+		bp.setBottom(background);
 		bp.setLeft(gp);
 		bp.setTop(x);
-		
+		background.toFront();
 		
 		
 		
@@ -137,6 +137,16 @@ public class ElevatorSimulation extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Elevator Simulation - "+ controller.getTestName());
 		primaryStage.show();
+	}
+	public void makeBuildings() {
+		Rectangle Building  = new Rectangle(715,685,50,70);
+		Circle doorHandle = new Circle(755,725,5);
+		doorHandle.setStroke(Color.BLACK);
+		doorHandle.setFill(Color.LIGHTGRAY);
+		Building.setStroke(Color.BLACK);
+		Building.setFill(Color.SADDLEBROWN);
+		background = new Pane(Building,doorHandle);
+		
 	}
 	private void makeLegend() {
 		gp.add(new Circle(15,Color.GREEN),  0,0);
