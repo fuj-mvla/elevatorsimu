@@ -246,7 +246,7 @@ public class Building {
 			else {
 				lift.setDirection(p.getOnFloor() > lift.getCurrFloor() ? UP : DOWN);
 				lift.setMoveToFloor(p.getOnFloor());
-				lift.setPostMoveToFloorDir(p.getDestFloor());
+				lift.setPostMoveToFloorDir(p.getDirection());
 				return Elevator.MVTOFLR;
 			}
 		}
@@ -273,7 +273,6 @@ public class Building {
 		Passengers pInCurrDir = direction == UP ? floors[lift.getCurrFloor()].peekFromUp() 
 				: floors[lift.getCurrFloor()].peekFromDown();
 		if (pInCurrDir != null && !pInCurrDir.isPolite()) {
-			// take action
 			return Elevator.OPENDR;
 		}
 		if (lift.getCurrState() == Elevator.CLOSEDR) {
@@ -411,7 +410,7 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateOpenDr(int time, Elevator lift) {
-		lift.setDoorState(Elevator.OPENDR);
+		lift.openDoor();
 		lift.setTimeInState(lift.getTimeInState()+1);
 		if (lift.getTimeInState() != lift.getTicksDoorOpenClose()) {
 			return Elevator.OPENDR;
