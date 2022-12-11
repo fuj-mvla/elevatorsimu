@@ -50,7 +50,6 @@ public class Elevator {
 
 	
 	private int passengers;  	// the number of people in the elevator
-	
 	private ArrayList<Passengers>[] passByFloor;  // Passengers to exit on the corresponding floor
 
 	private int moveToFloor;	// When exiting the STOP state, this is the floor to move to without
@@ -86,6 +85,18 @@ public class Elevator {
 		if(this.prevState != this.currState) {
 			timeInState = 0;
 		}
+	}
+	public boolean isDoorClosed() {
+		if(currState == OPENDR) {
+			return false;
+			
+		}
+		return true;
+		
+	}
+	
+	public boolean hasArrivedInNewFloor() {
+		
 	}
 	public int getCapacity() {
 		return capacity;
