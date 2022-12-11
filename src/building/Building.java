@@ -180,8 +180,9 @@ public class Building {
 	 * @param floor the floor
 	 * @return the passengers boarding
 	 */
-	public List<Passengers> getPassengersBoarding(Elevator lift, int floor) {
+	public List<Passengers> getPassengersBoarding(Elevator lift) {
 		int numPassengers = 0;
+		int floor = lift.getCurrFloor();
 		List<Passengers> boarding = new ArrayList<Passengers>();
 		while (numPassengers <= lift.getCapacity()) {
 			boarding.add(callMgr.prioritizePassengerCalls(floor));
@@ -196,7 +197,7 @@ public class Building {
 	 * @param floor the floor
 	 * @return the passengers leaving
 	 */
-	public List<Passengers> getPassengersLeaving(Elevator lift, int floor) {
+	public List<Passengers> getPassengersLeaving(Elevator lift) {
 		List<Passengers> leaving = new ArrayList<Passengers>();
 		for (List<Passengers> p : lift.getPassByFloor()) {
 			for (Passengers j : p) {
