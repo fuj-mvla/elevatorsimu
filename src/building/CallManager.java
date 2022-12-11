@@ -66,17 +66,36 @@ public class CallManager {
 	/**
 	 * Prioritize passenger calls from STOP STATE.
 	 *
+	 * @param lift the lift
 	 * @param floor the floor
 	 * @return the passengers
 	 */
-	Passengers prioritizePassengerCalls(int floor) {
+	Passengers prioritizePassengerCalls(Elevator lift, int floor) {
 		//TODO: Write this method based upon prioritization from STOP...
 		// compare numCalls up and down
-		if (numUpCallsPending() > numDownCallsPending()) {
-			return floors[floor].peekFromUp();
+		if (!floors[floor].goingUpEmpty() && !floors[floor].goingDownEmpty()) {
+			if (numUpCallsPending(floor) >= numDownCallsPending(floor)) {
+				lift.setDirection(UP);
+				lift.setCurrState(Elevator.OPENDR);
+			}
+			else {
+				lift.setDirection(DOWN);
+				lift.setCurrState(Elevator.OPENDR);
+			}
+			return null;
+			// return prioritizePassengerCalls(lift, floor);
 		}
 		else {
-			return floors[floor].peekFromDown();
+			lift.setCurrState(Elevator.MVTOFLR);
+			if (numUpCallsPending() > numDownCallsPending()) {
+				return getLowestUpCall();
+			}
+			if (numDownCallsPending() > numUpCallsPending()) {
+				return getHighestDownCall();
+			}
+			int distanceToLowestUp = Math.abs(floor - getLowestUpCallFloor());
+			int distanceToHighestDown = Math.abs(floor - getHighestDownCallFloor());
+			return distanceToHighestDown < distanceToLowestUp ? getHighestDownCall() : getLowestUpCall();
 		}
 	}
 
@@ -105,6 +124,22 @@ public class CallManager {
 	}
 	
 	/**
+	 * Num up calls pending.
+	 *
+	 * @param floor the floor
+	 * @return the int
+	 */
+	int numUpCallsPending(int floor) {
+		int numCalls = 0;
+		for (int i = floor; i < upCalls.length; i++) {
+			if (upCalls[i] == true) {
+				numCalls++;
+			}
+		}
+		return numCalls;
+	}
+	
+	/**
 	 * Num down calls pending.
 	 *
 	 * @return the int
@@ -119,6 +154,21 @@ public class CallManager {
 		return numCalls;
 	}
 	
+	/**
+	 * Num down calls pending.
+	 *
+	 * @param floor the floor
+	 * @return the int
+	 */
+	int numDownCallsPending(int floor) {
+		int numCalls = 0;
+		for (int i = 0; i < floor; i++) {
+			if (downCalls[i] == true) {
+				numCalls++;
+			}
+		}
+		return numCalls;
+	}
 	/**
 	 * Gets the lowest up call.
 	 *
@@ -148,6 +198,37 @@ public class CallManager {
 			}
 		}
 		return floors[saveHighest].peekFromDown();
+	}
+	
+	/**
+	 * Gets the lowest up call floor.
+	 *
+	 * @return the lowest up call floor
+	 */
+	int getLowestUpCallFloor() {
+		int floor = 0;
+		for (int i = 0; i < upCalls.length; i++) {
+			if (upCalls[i]) {
+				floor = i;
+				break;
+			}
+		}
+		return floor;
+	}
+	
+	/**
+	 * Gets the highest down call floor.
+	 *
+	 * @return the highest down call floor
+	 */
+	int getHighestDownCallFloor() {
+		int saveHighest = 0;
+		for (int i = 0; i < downCalls.length; i++) {
+			if (downCalls[i]) {
+				saveHighest = i;
+			}
+		}
+		return saveHighest;
 	}
 	
 	/**

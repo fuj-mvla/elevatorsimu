@@ -197,4 +197,8 @@ public class Elevator {
 	//      3) opening the doors
 	//      and so on...
 	
+	public void openDoor() {
+		
+	}
+	
 }

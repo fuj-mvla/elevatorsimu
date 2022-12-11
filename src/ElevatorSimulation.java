@@ -21,7 +21,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -59,12 +63,12 @@ public class ElevatorSimulation extends Application {
 	private StackPane sp;
 	private int numPass;
 	private TextField stepticks = new TextField();
-	private Pane legendPane;
+	private Pane background;
 	private int[] floorArray = {4,4,4,4,4,4};
 	private final int UP = 1;
 	private final int DOWN = -1;
 	private ArrayList<Circle> circArray = new ArrayList<>();
-	private ArrayList<Circle> passArray = new ArrayList<>();
+	private ArrayList<Passengers> passArray = new ArrayList<>();
 	/** Local copies of the states for tracking purposes */
 	private final int STOP = Elevator.STOP;
 	private final int MVTOFLR = Elevator.MVTOFLR;
@@ -119,13 +123,30 @@ public class ElevatorSimulation extends Application {
 		run.setOnAction(e -> Opendr());
 		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
+		makeBuildings();
+		bp.setBottom(background);
 		bp.setLeft(gp);
 		bp.setTop(x);
+		background.toFront();
 		
-		Scene scene = new Scene(bp,800,800);
+		
+		
+		Scene scene = new Scene(bp,800,800,Color.BLUE);
+	//	scene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#81c483")),new Stop(1, Color.web("#fcc200"))));
+		
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Elevator Simulation - "+ controller.getTestName());
 		primaryStage.show();
+	}
+	public void makeBuildings() {
+		Rectangle Building  = new Rectangle(715,685,50,70);
+		Circle doorHandle = new Circle(755,725,5);
+		doorHandle.setStroke(Color.BLACK);
+		doorHandle.setFill(Color.LIGHTGRAY);
+		Building.setStroke(Color.BLACK);
+		Building.setFill(Color.SADDLEBROWN);
+		background = new Pane(Building,doorHandle);
+		
 	}
 	private void makeLegend() {
 		gp.add(new Circle(15,Color.GREEN),  0,0);
@@ -234,11 +255,17 @@ public class ElevatorSimulation extends Application {
 			}
 			this.currFloor = currFloor;
 		}
+		else if (currstate == MVTOFLR) {
+			
+		}
 		else if (currstate == OPENDR) {
 			Opendr();
 		}
 		else if (currstate == CLOSEDR) {
 			Closedr();
+		}
+		else if (currstate == STOP) {
+			
 		}
 		
 	}
@@ -246,7 +273,13 @@ public class ElevatorSimulation extends Application {
 		
 	}
 	public void board(Passengers[] passengers) {
-		
+		int index;
+		boolean boarded = false;
+		for ( int i =0;i < passengers.length;i++) {
+			for (int j = 0;j < passArray.size();j++) {
+			//	if (passengers[i] == passArray)
+			}
+		}
 	}
 	public void arrivalPassengers(Passengers[] passengers) {
 		
@@ -260,6 +293,8 @@ public class ElevatorSimulation extends Application {
 				x.setFill(Color.GREEN);
 				
 				gp.add(y, floorArray[passengers[i].getOnFloor()], floor);
+				circArray.add(x);
+				passArray.add(passengers[i]);
 				floorArray[passengers[i].getOnFloor()]++;
 			}
 			else {
@@ -269,6 +304,8 @@ public class ElevatorSimulation extends Application {
 				x.setFill(Color.RED);
 				
 				gp.add(y, floorArray[passengers[i].getOnFloor()], floor);
+				floorArray[passengers[i].getOnFloor()]++;
+				passArray.add(passengers[i]);
 				floorArray[passengers[i].getOnFloor()]++;
 			}
 		}

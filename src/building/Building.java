@@ -165,12 +165,57 @@ public class Building {
 	/**
 	 * Check passenger arrival.
 	 *
+	 * @param time the time
 	 * @return true, if successful
 	 */
 	public boolean checkPassengerArrival(int time) {
 		Passengers[] p = getPassengersInQueue();
 		return time == p[p.length-1].getTimeArrived();
 	}
+	
+	/**
+	 * Gets the passengers boarding.
+	 * Needed in Controller -> GUI
+	 * @param lift the lift
+	 * @param floor the floor
+	 * @return the passengers boarding
+	 */
+	public List<Passengers> getPassengersBoarding(Elevator lift) {
+		int numPassengers = 0;
+		int floor = lift.getCurrFloor();
+		List<Passengers> boarding = new ArrayList<Passengers>();
+		while (numPassengers <= lift.getCapacity()) {
+			boarding.add(callMgr.prioritizePassengerCalls(lift, floor));
+		}
+		return boarding;
+	}
+	
+	/**
+	 * Gets the passengers leaving.
+	 * Needed in Controller -> GUI
+	 * @param lift the lift
+	 * @param floor the floor
+	 * @return the passengers leaving
+	 */
+	public List<Passengers> getPassengersLeaving(Elevator lift) {
+		List<Passengers> leaving = new ArrayList<Passengers>();
+		for (List<Passengers> p : lift.getPassByFloor()) {
+			for (Passengers j : p) {
+				leaving.add(j);
+			}
+		}
+		return leaving;
+	}
+	
+	/**
+	 * Curr state stop.
+	 *
+	 * @param time the time
+	 * @param lift the lift
+	 * @return the int
+	 * @todo Implement specific actions for states
+	 * Should be passing tests soon.
+	 */
 	
 	/**
 	 * Stop state.
@@ -189,7 +234,7 @@ public class Building {
 		}
 		else {
 			int floor = lift.getCurrFloor();
-			Passengers p = callMgr.prioritizePassengerCalls(floor);
+			Passengers p = callMgr.prioritizePassengerCalls(lift, floor);
 			if (p == null) {
 				return Elevator.STOP;
 			}
@@ -201,7 +246,7 @@ public class Building {
 			else {
 				lift.setDirection(p.getOnFloor() > lift.getCurrFloor() ? UP : DOWN);
 				lift.setMoveToFloor(p.getOnFloor());
-				lift.setPostMoveToFloorDir(p.getDestFloor());
+				lift.setPostMoveToFloorDir(p.getDirection());
 				return Elevator.MVTOFLR;
 			}
 		}
@@ -240,7 +285,6 @@ public class Building {
 		}
 		return Elevator.CLOSEDR;
 	}
-	
 	
 	/**
 	 * Elevator empty.
@@ -288,7 +332,46 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateBoard(int time, Elevator lift) {
-		lift.setTimeInState(lift.getTimeInState()+1);
+		int numBoarded = 0;
+		while (lift.getPassengers() != lift.getCapacity()) {
+			Passengers p = passQ.peek();
+			if (p.getTimeWillGiveUp() == time) {
+				p = lift.getDirection() == UP ? floors[lift.getCurrFloor()].pollFromUp() 
+						: floors[lift.getCurrFloor()].pollFromDown();
+				gaveUp.add(p);
+			}
+			else if (lift.getCapacity() < (lift.getPassengers() + p.getNumPass())) {
+				logSkip(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
+				break;
+			}
+			else {
+				numBoarded += p.getNumPass();
+				p.setBoardTime(time);
+				logBoard(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
+				p = lift.getDirection() == UP ? floors[lift.getCurrFloor()].pollFromUp() 
+						: floors[lift.getCurrFloor()].pollFromDown();
+				lift.setPassengers(lift.getPassengers()+p.getNumPass());
+				int delayTime = numBoarded / lift.getPassPerTick();
+				lift.setTimeInState(lift.getTimeInState()+1);
+				if (delayTime <= lift.getTimeInState()) {
+					return Elevator.CLOSEDR;
+				}
+				else {
+					return Elevator.BOARD;
+				}
+			}
+		}
+		return tooManyPassengers(time, lift);
+	}
+	
+	/**
+	 * Too many passengers.
+	 * After Board breaks from loop
+	 * @param time the time
+	 * @param lift the lift
+	 * @return the int
+	 */
+	private int tooManyPassengers(int time, Elevator lift) {
 		Passengers p = passQ.peek();
 		boolean atCapacity = false;
 		if (time > p.getTimeWillGiveUp()) {
@@ -326,7 +409,7 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateOpenDr(int time, Elevator lift) {
-		lift.setDoorState(Elevator.OPENDR);
+		lift.openDoor();
 		lift.setTimeInState(lift.getTimeInState()+1);
 		if (lift.getTimeInState() != lift.getTicksDoorOpenClose()) {
 			return Elevator.OPENDR;
@@ -362,7 +445,7 @@ public class Building {
 	protected int currStateMvToFlr(int time, Elevator lift) {
 		lift.setTimeInState(lift.getTimeInState()+1);
 		int currFloor = lift.getCurrFloor();
-		Passengers p = callMgr.prioritizePassengerCalls(currFloor);
+		Passengers p = callMgr.prioritizePassengerCalls(lift, currFloor);
 		if (currFloor == p.getDestFloor()) {
 			return Elevator.OPENDR;
 		}
@@ -394,7 +477,7 @@ public class Building {
 			List<Passengers>[] passengers = lift.getPassByFloor();
 			for (List<Passengers> p : passengers) {
 				for (Passengers i : p) {
-					offloadDelay += i.getTimeArrived();
+					offloadDelay += i.getNumPass() / lift.getPassPerTick();
 					i.setTimeArrived(time);
 				}
 				passSuccess.addAll(p);
@@ -413,21 +496,21 @@ public class Building {
 	 * @return the int
 	 */
 	private int timeInStateEqualsOffldDelay(Elevator lift) {
-		if (lift.getDirection() == DOWN && callMgr.isDownCallPending()) {
+		if (lift.getDirection() == DOWN && !floors[lift.getCurrFloor()].goingDownEmpty()) {
 			return Elevator.BOARD;
 		}
-		if (lift.getDirection() == UP && callMgr.isUpCallPending()) {
+		if (lift.getDirection() == UP && !floors[lift.getCurrFloor()].goingUpEmpty()) {
 			return Elevator.BOARD;
 		}
 		if (lift.getPassengers() == 0) {
 			if (lift.getDirection() == UP && !callMgr.isUpCallPending()) {
-				if (callMgr.isDownCallPending()) {
+				if (!floors[lift.getCurrFloor()].goingDownEmpty()) {
 					lift.setDirection(DOWN);
 					return Elevator.BOARD;
 				}
 			}
 			if (lift.getDirection() == DOWN && !callMgr.isDownCallPending()) {
-				if (callMgr.isUpCallPending()) {
+				if (!floors[lift.getCurrFloor()].goingUpEmpty()) {
 					lift.setDirection(UP);
 					return Elevator.BOARD;
 				}
@@ -486,7 +569,7 @@ public class Building {
 				return Elevator.OPENDR;
 			}
 		}
-		if (lift.getDirection() == DOWN && !callMgr.isDownCallPending()) {
+		else if (lift.getDirection() == DOWN && !callMgr.isDownCallPending()) {
 			if (!floors[lift.getCurrFloor()].goingUpEmpty()) {
 				lift.setDirection(UP);
 				return Elevator.OPENDR;
