@@ -95,8 +95,18 @@ public class Elevator {
 		
 	}
 	
-	public boolean hasArrivedInNewFloor() {
+	public void closeDoor() {
+		if(currState == OPENDR) {
+			currState = CLOSEDR;
+		}
+			
 		
+	}
+	
+	public void openDoor() {
+		if(currState == CLOSEDR) {
+			currState = OPENDR;
+		}
 	}
 	public int getCapacity() {
 		return capacity;
@@ -197,8 +207,6 @@ public class Elevator {
 	//      3) opening the doors
 	//      and so on...
 	
-	public void openDoor() {
-		
-	}
+
 	
 }
