@@ -174,6 +174,44 @@ public class Building {
 	}
 	
 	/**
+	 * Gets the passengers boarding.
+	 * Needed in Controller -> GUI
+	 * @param lift the lift
+	 * @param floor the floor
+	 * @return the passengers boarding
+	 */
+	public List<Passengers> getPassengersBoarding(Elevator lift, int floor) {
+		int numPassengers = 0;
+		List<Passengers> boarding = new ArrayList<Passengers>();
+		while (numPassengers <= lift.getCapacity()) {
+			boarding.add(callMgr.prioritizePassengerCalls(floor));
+		}
+		return boarding;
+	}
+	
+	/**
+	 * Gets the passengers leaving.
+	 * Needed in Controller -> GUI
+	 * @param lift the lift
+	 * @param floor the floor
+	 * @return the passengers leaving
+	 */
+	public List<Passengers> getPassengersLeaving(Elevator lift, int floor) {
+		List<Passengers> leaving = new ArrayList<Passengers>();
+		for (List<Passengers> p : lift.getPassByFloor()) {
+			for (Passengers j : p) {
+				leaving.add(j);
+			}
+		}
+		return leaving;
+	}
+	
+	/**
+	 * Curr state stop.
+	 *
+	 * @param time the time
+	 * @param lift the lift
+	 * @return the int
 	 * @todo Implement specific actions for states
 	 * Should be passing tests soon.
 	 */
@@ -234,6 +272,7 @@ public class Building {
 		Passengers pInCurrDir = direction == UP ? floors[lift.getCurrFloor()].peekFromUp() 
 				: floors[lift.getCurrFloor()].peekFromDown();
 		if (pInCurrDir != null && !pInCurrDir.isPolite()) {
+			// take action
 			return Elevator.OPENDR;
 		}
 		if (lift.getCurrState() == Elevator.CLOSEDR) {
@@ -439,7 +478,7 @@ public class Building {
 			List<Passengers>[] passengers = lift.getPassByFloor();
 			for (List<Passengers> p : passengers) {
 				for (Passengers i : p) {
-					offloadDelay += i.getTimeArrived();
+					offloadDelay += i.getNumPass() / lift.getPassPerTick();
 					i.setTimeArrived(time);
 				}
 				passSuccess.addAll(p);
@@ -458,21 +497,21 @@ public class Building {
 	 * @return the int
 	 */
 	private int timeInStateEqualsOffldDelay(Elevator lift) {
-		if (lift.getDirection() == DOWN && callMgr.isDownCallPending()) {
+		if (lift.getDirection() == DOWN && !floors[lift.getCurrFloor()].goingDownEmpty()) {
 			return Elevator.BOARD;
 		}
-		if (lift.getDirection() == UP && callMgr.isUpCallPending()) {
+		if (lift.getDirection() == UP && !floors[lift.getCurrFloor()].goingUpEmpty()) {
 			return Elevator.BOARD;
 		}
 		if (lift.getPassengers() == 0) {
 			if (lift.getDirection() == UP && !callMgr.isUpCallPending()) {
-				if (callMgr.isDownCallPending()) {
+				if (!floors[lift.getCurrFloor()].goingDownEmpty()) {
 					lift.setDirection(DOWN);
 					return Elevator.BOARD;
 				}
 			}
 			if (lift.getDirection() == DOWN && !callMgr.isDownCallPending()) {
-				if (callMgr.isUpCallPending()) {
+				if (!floors[lift.getCurrFloor()].goingUpEmpty()) {
 					lift.setDirection(UP);
 					return Elevator.BOARD;
 				}
@@ -531,7 +570,7 @@ public class Building {
 				return Elevator.OPENDR;
 			}
 		}
-		if (lift.getDirection() == DOWN && !callMgr.isDownCallPending()) {
+		else if (lift.getDirection() == DOWN && !callMgr.isDownCallPending()) {
 			if (!floors[lift.getCurrFloor()].goingUpEmpty()) {
 				lift.setDirection(UP);
 				return Elevator.OPENDR;
