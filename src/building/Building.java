@@ -185,7 +185,7 @@ public class Building {
 		int floor = lift.getCurrFloor();
 		List<Passengers> boarding = new ArrayList<Passengers>();
 		while (numPassengers <= lift.getCapacity()) {
-			boarding.add(callMgr.prioritizePassengerCalls(floor));
+			boarding.add(callMgr.prioritizePassengerCalls(lift, floor));
 		}
 		return boarding;
 	}
@@ -234,7 +234,7 @@ public class Building {
 		}
 		else {
 			int floor = lift.getCurrFloor();
-			Passengers p = callMgr.prioritizePassengerCalls(floor);
+			Passengers p = callMgr.prioritizePassengerCalls(lift, floor);
 			if (p == null) {
 				return Elevator.STOP;
 			}
@@ -445,7 +445,7 @@ public class Building {
 	protected int currStateMvToFlr(int time, Elevator lift) {
 		lift.setTimeInState(lift.getTimeInState()+1);
 		int currFloor = lift.getCurrFloor();
-		Passengers p = callMgr.prioritizePassengerCalls(currFloor);
+		Passengers p = callMgr.prioritizePassengerCalls(lift, currFloor);
 		if (currFloor == p.getDestFloor()) {
 			return Elevator.OPENDR;
 		}
