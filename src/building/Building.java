@@ -286,7 +286,6 @@ public class Building {
 		return Elevator.CLOSEDR;
 	}
 	
-	
 	/**
 	 * Elevator empty.
 	 * Helper method
@@ -372,7 +371,7 @@ public class Building {
 	 * @param lift the lift
 	 * @return the int
 	 */
-	public int tooManyPassengers(int time, Elevator lift) {
+	private int tooManyPassengers(int time, Elevator lift) {
 		Passengers p = passQ.peek();
 		boolean atCapacity = false;
 		if (time > p.getTimeWillGiveUp()) {
