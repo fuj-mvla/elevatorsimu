@@ -125,9 +125,9 @@ public class ElevatorSimulation extends Application {
 		setGridPaneConstraints();
 		makeBuildings();
 		bp.setBottom(background);
-		bp.setLeft(gp);
+		bp.setCenter(gp);
 		bp.setTop(x);
-		background.toFront();
+	//	background.toFront();
 		
 		
 		
