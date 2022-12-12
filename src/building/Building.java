@@ -169,42 +169,63 @@ public class Building {
 	 * @return true, if successful
 	 */
 	public boolean checkPassengerArrival(int time) {
-		Passengers[] p = getPassengersInQueue();
-		return time == p[p.length-1].getTimeArrived();
+		Passengers p = passQ.peek();
+		boolean addSuccess = false;
+		if (time == p.getTimeArrived()) {
+			addSuccess = p.getDirection() == UP ? floors[p.getOnFloor()].addToUp(p) : floors[p.getOnFloor()].addToDown(p);
+			passQ.remove();
+		}
+		return addSuccess;
+	}
+	
+	/**
+	 * Check passenger giveup.
+	 *
+	 * @param time the time
+	 * @return true, if successful
+	 */
+	public boolean checkPassengerGiveup(int time) {
+		Passengers p = passQ.peek();
+		if (time == p.getTimeWillGiveUp()) {
+			passQ.remove();
+			gaveUp.add(p);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
 	 * Gets the passengers boarding.
 	 * Needed in Controller -> GUI
+	 *
 	 * @param lift the lift
-	 * @param floor the floor
 	 * @return the passengers boarding
 	 */
-	public List<Passengers> getPassengersBoarding(Elevator lift) {
+	public Passengers[] getPassengersBoarding(Elevator lift) {
 		int numPassengers = 0;
 		int floor = lift.getCurrFloor();
 		List<Passengers> boarding = new ArrayList<Passengers>();
 		while (numPassengers <= lift.getCapacity()) {
 			boarding.add(callMgr.prioritizePassengerCalls(lift, floor));
 		}
-		return boarding;
+		return boarding.toArray(new Passengers[boarding.size()]);
 	}
 	
 	/**
 	 * Gets the passengers leaving.
 	 * Needed in Controller -> GUI
+	 *
 	 * @param lift the lift
-	 * @param floor the floor
 	 * @return the passengers leaving
 	 */
-	public List<Passengers> getPassengersLeaving(Elevator lift) {
+	public Passengers[] getPassengersLeaving(Elevator lift) {
 		List<Passengers> leaving = new ArrayList<Passengers>();
 		for (List<Passengers> p : lift.getPassByFloor()) {
 			for (Passengers j : p) {
 				leaving.add(j);
 			}
 		}
-		return leaving;
+		return leaving.toArray(new Passengers[leaving.size()]);
 	}
 	
 	/**
@@ -584,6 +605,7 @@ public class Building {
 	 * Necessary for controller to give to the GUI
 	 * @return the passengers
 	 */
+	/*
 	public Passengers[] getPassengersInQueue() {
 		ListIterator<Passengers> passengers = passQ.getListIterator();
 		List<Passengers> p = new ArrayList<>();
@@ -594,6 +616,7 @@ public class Building {
 		}
 		return p.toArray(new Passengers[p.size()]);
 	}
+	*/
 	
 	/**
 	 * Gets the current state.
@@ -613,6 +636,15 @@ public class Building {
 	 */
 	public int getCurrentFloor() {
 		return elevators[0].getCurrFloor();
+	}
+
+	/**
+	 * Gets the elevator.
+	 *
+	 * @return the elevator
+	 */
+	public Elevator getElevator() {
+		return elevators[0];
 	}
 	
 	// DO NOT CHANGE ANYTHING BELOW THIS LINE:
