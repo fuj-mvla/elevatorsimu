@@ -221,25 +221,30 @@ public class ElevatorSimController {
 		
 		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
-		if(building.passengersProcessed() == false|| building.getCurrentState() != 0) {
-			if(building.checkPassengerArrival(stepCnt) == true) {
-				gui.arrivalPassengers(building.getPassengersInQueue());
-			}
-			building.updateElevator(stepCnt);
-			if(building.getCurrentState() == 3) {
-				gui.offLoad(building.getPassengersInQueue());
-			}
-			gui.setTime(stepCnt);
-			gui.updateState(building.getCurrentState(), CurrentFloor);
+		if(gui != null) {
+			if(building.passengersProcessed() == false|| building.getCurrentState() != 0) {
+				if(building.checkPassengerArrival(stepCnt) == true) {
+					gui.arrivalPassengers(building.getPassengersInQueue());
+				}
+				building.updateElevator(stepCnt);
+				if(building.getCurrentState() == 3) {
+					gui.offLoad(building.getPassengersInQueue());
+				}
+				gui.setTime(stepCnt);
+				gui.updateState(building.getCurrentState(), CurrentFloor);
 			
-		}		
-		else {
+			}		
+			else {
+				
 			
+			
+				
 			gui.setTime(stepCnt);
 			gui.updateState(building.getCurrentState(), CurrentFloor);
 			building.closeLogs(stepCnt);
 			building.processPassengerData();
 			
+		}
 		}
 	
 		// TODO: Write the rest of this method
