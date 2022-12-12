@@ -50,7 +50,7 @@ public class ElevatorSimulation extends Application {
 	private Button Step = new Button ("Step");
 	private Button run = new Button("Run");
 	private Button enter = new Button("Enter");
-	private int duration = 1000;
+	private int duration = 100;
 	private int cycleCount = 1;
 	private Rectangle door1 = new Rectangle(50,80);
 	private Rectangle door2 = new Rectangle(50,80);
@@ -67,7 +67,7 @@ public class ElevatorSimulation extends Application {
 	private int[] floorArray = {4,4,4,4,4,4};
 	private final int UP = 1;
 	private final int DOWN = -1;
-	private ArrayList<Circle> circArray = new ArrayList<>();
+	private ArrayList<StackPane> circArray = new ArrayList<>();
 	private ArrayList<Passengers> passArray = new ArrayList<>();
 	/** Local copies of the states for tracking purposes */
 	private final int STOP = Elevator.STOP;
@@ -78,8 +78,7 @@ public class ElevatorSimulation extends Application {
 	private final int CLOSEDR = Elevator.CLOSEDR;
 	private final int MV1FLR = Elevator.MV1FLR;
 
-	private Passengers testP = new Passengers(1,2,1,3,false,2);
-	private Passengers testP2 = new Passengers(1,2,3,2,false,2);
+	
 	/**
 	 * Instantiates a new elevator simulation.
 	 */
@@ -120,14 +119,21 @@ public class ElevatorSimulation extends Application {
 		x.getChildren().addAll(logging,Step,run,timeLabel,stepticks,enter);
 		Step.setOnAction(e -> Closedr());
 		logging.setOnAction(e -> enableLogging());
-		run.setOnAction(e -> Opendr());
+		run.setOnAction(e -> offLoad(3,2));
 		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
-		makeBuildings();
-		bp.setBottom(background);
-		bp.setLeft(gp);
+		
+		
+		bp.setCenter(gp);
 		bp.setTop(x);
-		background.toFront();
+		
+
+		
+	
+
+	
+	
+
 		
 		
 		
@@ -138,16 +144,10 @@ public class ElevatorSimulation extends Application {
 		primaryStage.setTitle("Elevator Simulation - "+ controller.getTestName());
 		primaryStage.show();
 	}
-	public void makeBuildings() {
-		Rectangle Building  = new Rectangle(715,685,50,70);
-		Circle doorHandle = new Circle(755,725,5);
-		doorHandle.setStroke(Color.BLACK);
-		doorHandle.setFill(Color.LIGHTGRAY);
-		Building.setStroke(Color.BLACK);
-		Building.setFill(Color.SADDLEBROWN);
-		background = new Pane(Building,doorHandle);
-		
-	}
+	
+	
+	
+	
 	private void makeLegend() {
 		gp.add(new Circle(15,Color.GREEN),  0,0);
 		gp.add(new Circle(15,Color.RED),  0,1);
@@ -155,6 +155,9 @@ public class ElevatorSimulation extends Application {
 		gp.add(new Label(" Down"), 1, 1);
 		
 	}
+	
+	
+	
 	private void initializeElevatorPosition() {
 		// TODO Auto-generated method stub
 		elevator = new Rectangle(100,100);
@@ -165,6 +168,9 @@ public class ElevatorSimulation extends Application {
 		}
 		gp.add(sp,1,cellY);
 	}
+	
+	
+	
 	private void makeElevatorDoors() {
 		
 		door1.setFill(Color.LIGHTGRAY);
@@ -179,19 +185,33 @@ public class ElevatorSimulation extends Application {
 		
 		
 		}
+	
+	
+	
+	
+	
 	private void Opendr() {
 		door1.setWidth(25);
 		door2.setWidth(25);
 	}
+	
+	
 	private void Closedr() {
 		door1.setWidth(50);
 		door2.setWidth(50);
 	}
+	
+	
+	
 	private void setTicks(String ticks) {
 		int tick = Integer.parseInt(ticks);
 		t.setCycleCount(tick);
 		t.play();
 	}
+	
+	
+	
+	
 	private void setGridPaneConstraints() {
 		for (int i = 0; i < 16; i ++) 
 			gp.getColumnConstraints().add(new ColumnConstraints(50));
@@ -219,9 +239,16 @@ public class ElevatorSimulation extends Application {
 
 		}
 	}
+	
+	
+	
+	
+	
 	private void enableLogging() {
 		controller.enableLogging();
 	}
+	
+	
 	
 	
 	private void move(boolean up) {
@@ -244,6 +271,10 @@ public class ElevatorSimulation extends Application {
 		
 		timeLabel.setText("Time = " + time);
 	}
+	
+	
+	
+	
 	public void updateState(int currstate,int currFloor) {
 		if (currstate == MV1FLR) {
 			if (this.currFloor < currFloor) {
@@ -269,18 +300,37 @@ public class ElevatorSimulation extends Application {
 		}
 		
 	}
-	public void offLoad(Passengers[] passengers) {
+	
+	
+	
+	
+	
+	
+	
+	public void offLoad(int passengers,int currFloor) {
+		this.passengers -=passengers;
+		int place =1;
+		
+		pLabel.setText("" + this.passengers);
 		
 	}
-	public void board(Passengers[] passengers) {
+	
+	
+	
+	
+	
+	public void board(Passengers passenger) {
 		int index;
 		boolean boarded = false;
-		for ( int i =0;i < passengers.length;i++) {
 			for (int j = 0;j < passArray.size();j++) {
 			//	if (passengers[i] == passArray)
 			}
 		}
-	}
+	
+	
+	
+	
+	
 	public void arrivalPassengers(Passengers[] passengers) {
 		
 		
@@ -293,7 +343,7 @@ public class ElevatorSimulation extends Application {
 				x.setFill(Color.GREEN);
 				
 				gp.add(y, floorArray[passengers[i].getOnFloor()], floor);
-				circArray.add(x);
+				circArray.add(y);
 				passArray.add(passengers[i]);
 				floorArray[passengers[i].getOnFloor()]++;
 			}
@@ -304,7 +354,7 @@ public class ElevatorSimulation extends Application {
 				x.setFill(Color.RED);
 				
 				gp.add(y, floorArray[passengers[i].getOnFloor()], floor);
-				floorArray[passengers[i].getOnFloor()]++;
+				circArray.add(y);
 				passArray.add(passengers[i]);
 				floorArray[passengers[i].getOnFloor()]++;
 			}
@@ -315,7 +365,7 @@ public class ElevatorSimulation extends Application {
 		
 	}
 	private void test() {
-		Opendr();
+		
 	}
 	
 	/**
