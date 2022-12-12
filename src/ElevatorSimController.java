@@ -74,6 +74,7 @@ public class ElevatorSimController {
 		CurrentFloor = currentFloor;
 	}
 
+
 	/**
 	 * Instantiates a new elevator sim controller. 
 	 * Reads the configuration file to configure the building and

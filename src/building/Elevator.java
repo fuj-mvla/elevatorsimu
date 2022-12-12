@@ -103,6 +103,7 @@ public class Elevator {
 		
 	}
 	
+	
 	public void openDoor() {
 		if(currState == CLOSEDR) {
 			currState = OPENDR;
