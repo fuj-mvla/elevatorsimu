@@ -84,9 +84,10 @@ public class CallManager {
 	 * @param floor the floor
 	 * @return the passengers
 	 */
-	Passengers prioritizePassengerCalls(Elevator lift, int floor) {
+	Passengers prioritizePassengerCalls(Elevator lift) {
 		//TODO: Write this method based upon prioritization from STOP...
 		// compare numCalls up and down
+		int floor = lift.getCurrFloor();
 		if (!floors[floor].goingUpEmpty() && !floors[floor].goingDownEmpty()) {
 			if (numUpCallsPending(floor) >= numDownCallsPending(floor)) {
 				lift.setDirection(UP);
