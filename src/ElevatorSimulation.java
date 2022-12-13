@@ -120,7 +120,7 @@ public class ElevatorSimulation extends Application {
 		x.getChildren().addAll(logging,Step,run,timeLabel,stepticks,enter);
 		Step.setOnAction(e -> Closedr());
 		logging.setOnAction(e -> enableLogging());
-		run.setOnAction(e -> offLoad(3,2));
+		run.setOnAction(e -> controller.stepSim());
 		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
 		
