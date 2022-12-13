@@ -96,8 +96,7 @@ public class Elevator {
 	}
 	
 	public void closeDoor() {
-			doorState--;
-		
+		doorState--;
 	}
 			
 		
