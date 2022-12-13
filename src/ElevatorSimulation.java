@@ -124,10 +124,17 @@ public class ElevatorSimulation extends Application {
 		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
 		
-	
-		bp.setLeft(gp);
+		
+		bp.setCenter(gp);
 		bp.setTop(x);
+		
+
+		
 	
+
+	
+	
+
 		
 		
 		
@@ -304,27 +311,13 @@ public class ElevatorSimulation extends Application {
 	public void offLoad(int passengers,int currFloor) {
 		this.passengers -=passengers;
 		int place =1;
-		StackPane p = new StackPane();
+		
 		pLabel.setText("" + this.passengers);
-		gp.add(p, 1, MAXFLOORY - (currFloor*2));
-			Timeline tt = new Timeline(new KeyFrame(Duration.millis(duration),ae ->animationOffLoad(passengers,currFloor,p)));
-			tt.setCycleCount(2);
-		
-			tt.play();
-			
-	//	if(gp.getChildren().remove(p)) {
-		//	System.out.println("meee");
-	//	}
 		
 	}
 	
 	
-	public void animationOffLoad(int passengers,int currFloor,StackPane mp) {
-		Circle p = new Circle(25,Color.GREEN);
-		Label y = new Label("" + passengers);
-		mp.getChildren().addAll(p,y);
 	
-	}
 	
 	
 	public void board(Passengers passenger) {
