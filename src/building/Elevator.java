@@ -96,18 +96,16 @@ public class Elevator {
 	}
 	
 	public void closeDoor() {
-		if(currState == OPENDR) {
-			currState = CLOSEDR;
-		}
-			
+			doorState--;
 		
 	}
+			
+		
+	
 	
 	
 	public void openDoor() {
-		if(currState == CLOSEDR) {
-			currState = OPENDR;
-		}
+		doorState++;
 	}
 	public int getCapacity() {
 		return capacity;

@@ -89,7 +89,7 @@ public class Building {
 		passSuccess = new ArrayList<Passengers>();
 		gaveUp = new ArrayList<Passengers>();
 		Passengers.resetStaticID();		
-		initializeBuildingLogger(logfile);
+		initializeBuildingLog0ger(logfile);
 		// passDataFile is where you will write all the results for those passengers who successfully
 		// arrived at their destination and those who gave up...
 		fio = new MyFileIO();
@@ -171,7 +171,7 @@ public class Building {
 	public boolean checkPassengerArrival(int time) {
 		Passengers p = passQ.peek();
 		boolean addSuccess = false;
-		if (time == p.getTimeArrived()) {
+		if (time == p .getTimeArrived()) {
 			addSuccess = p.getDirection() == UP ? floors[p.getOnFloor()].addToUp(p) : floors[p.getOnFloor()].addToDown(p);
 			passQ.remove();
 		}
@@ -654,8 +654,8 @@ public class Building {
 	 *
 	 * @param logfile the file to log information to
 	 */
-	void initializeBuildingLogger(String logfile) {
-		System.setProperty("java.util.logging.SimpleFormatter.format","%4$-7s %5$s%n");
+	void initializeBuildingLog0ger(String logfile) {
+		System.setProperty("jav0a.util.logging.SimpleFormatter.format","%4$-7s %5$s%n");
 		LOGGER.setLevel(Level.OFF);
 		try {
 			fh = new FileHandler(logfile);

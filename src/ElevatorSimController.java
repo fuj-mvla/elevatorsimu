@@ -222,22 +222,29 @@ public class ElevatorSimController {
 		
 		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
+		CurrentFloor = building.getCurrentFloor();
+		building.checkPassengerArrival(stepCnt);
+		building.checkPassengerGiveup(stepCnt);
 		if(gui != null) {
-			if(building.passengersProcessed() == false|| building.getCurrentState() != 0) {
-				if(building.checkPassengerArrival(stepCnt) == true) {
-					// Fix this
-				}
-				building.updateElevator(stepCnt);
-				if(building.getCurrentState() == 3) {
-					// Fix this
-				}
-				gui.setTime(stepCnt);
-				gui.updateState(building.getCurrentState(), CurrentFloor);
-			}
-		}
-		else {	
 			gui.setTime(stepCnt);
 			gui.updateState(building.getCurrentState(), CurrentFloor);
+			
+			if(building.passengersProcessed() == false|| building.getCurrentState() != 0) {
+
+				if(building.getCurrentState() == 3) {
+					gui.offLoad(building.getPassengersLeaving(building.getElevator()).length, CurrentFloor);
+				}
+				if(building.getCurrentState() == 4) {
+					if(building.getPassengersBoarding(building.getElevator()).length == 0) {
+						
+						//indicate to gu
+					}
+					else {
+						gui.board(building.getPassengersBoarding(building.getElevator())[0]);
+					}
+				}
+		}
+		else {	
 			building.closeLogs(stepCnt);
 			building.processPassengerData();
 		}
@@ -253,6 +260,7 @@ public class ElevatorSimController {
 		//		2) close the logs
 		//		3) process the passenger resu
 		}
+	}
 	
 	
 	/**
