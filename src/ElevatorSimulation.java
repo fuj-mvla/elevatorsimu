@@ -64,7 +64,7 @@ public class ElevatorSimulation extends Application {
 	private int numPass;
 	private TextField stepticks = new TextField();
 	private Pane background;
-	private int[] floorArray = {4,4,4,4,4,4};
+	private int[] floorArray = {5,5,5,5,5,5};
 	private final int UP = 1;
 	private final int DOWN = -1;
 	private ArrayList<StackPane> circArray = new ArrayList<>();
@@ -78,7 +78,9 @@ public class ElevatorSimulation extends Application {
 	private final int CLOSEDR = Elevator.CLOSEDR;
 	private final int MV1FLR = Elevator.MV1FLR;
 
-	
+	private Passengers mm = new Passengers(1,3,2,4,true,1000);
+	private Passengers test = new Passengers(1,3,2,4,true,1000);
+	private Passengers[] m = {mm,test};
 	/**
 	 * Instantiates a new elevator simulation.
 	 */
@@ -119,11 +121,11 @@ public class ElevatorSimulation extends Application {
 		x.getChildren().addAll(logging,Step,run,timeLabel,stepticks,enter);
 		Step.setOnAction(e -> Closedr());
 		logging.setOnAction(e -> enableLogging());
-		run.setOnAction(e -> offLoad(3,2));
+		run.setOnAction(e -> board(mm));
 		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
-		
-		
+		arrivalPassengers(m);
+		System.out.println(gp.getRowIndex(sp));
 		bp.setCenter(gp);
 		bp.setTop(x);
 		
@@ -166,7 +168,7 @@ public class ElevatorSimulation extends Application {
 		for (int i = currFloor;i > 1;i-- ) {
 			cellY -=2;
 		}
-		gp.add(sp,1,cellY);
+		gp.add(sp,2,cellY);
 	}
 	
 	
@@ -230,7 +232,7 @@ public class ElevatorSimulation extends Application {
 
 			Rectangle floorR = new Rectangle(700,2);
 			floorR.setFill(Color.TAN);;
-			gp.add(floorR, 4, startingFloor);
+			gp.add(floorR, 5, startingFloor);
 			Label numFloor = new Label("" + floor);
 			numFloor.setFont(Font.font("Cambria",32));
 			gp.add(numFloor, 0, startingFloor-1);
@@ -284,10 +286,17 @@ public class ElevatorSimulation extends Application {
 			else if (this.currFloor > currFloor) {
 				move(false);
 			}
-			this.currFloor = currFloor;
+			this.currFloor++;
 		}
 		else if (currstate == MVTOFLR) {
-			
+			if (this.currFloor < currFloor) {
+				move(true);
+				
+			}
+			else if (this.currFloor > currFloor) {
+				move(false);
+			}
+			this.currFloor++;
 		}
 		else if (currstate == OPENDR) {
 			Opendr();
@@ -320,10 +329,33 @@ public class ElevatorSimulation extends Application {
 	
 	
 	public void board(Passengers passenger) {
-		int index;
+		int yCord = 0;
+		int xCord = 0;
 		boolean boarded = false;
 			for (int j = 0;j < passArray.size();j++) {
-			//	if (passengers[i] == passArray)
+				if (passenger.equals(passArray.get(j))){
+					StackPane x= circArray.remove(j);
+					passArray.remove(j);
+					yCord = gp.getColumnIndex(x);
+					xCord = gp.getRowIndex(x);
+					gp.getChildren().remove(x);
+					boarded = true;
+					floorArray[passenger.getOnFloor()]--;
+					pLabel.setText("" + passenger.getNumPass());
+				}
+			}
+			if (boarded) {
+				for (int i = 0;i < circArray.size();i++) {
+					StackPane y = circArray.get(i);
+					int sCordy = gp.getRowIndex(y);
+					int sCordX = gp.getColumnIndex(y);
+					if (sCordy==xCord && sCordX > yCord) {
+						System.out.println("gothere");
+						gp.getChildren().remove(y);
+						gp.add(y, --sCordX, sCordy);
+						
+					}
+				}
 			}
 		}
 	
