@@ -225,7 +225,7 @@ public class ElevatorSimController {
 		
 		final int STOP = 0;
 		
-		if (!building.passengersProcessed()) {
+		if (!building.passengersProcessed() ||  building.getCurrentState() != STOP) {
 			building.checkPassengerArrival(stepCnt);
 			building.checkPassengerGiveup(stepCnt);
 			building.updateElevator(stepCnt);
@@ -241,7 +241,7 @@ public class ElevatorSimController {
 			gui.setTime(stepCnt);
 			gui.updateState(building.getCurrentState(), CurrentFloor);
 			
-			if(building.passengersProcessed() == false|| building.getCurrentState() != 0) {
+			if(building.passengersProcessed() == false) {
 
 				if(building.getCurrentState() == 3) {
 					gui.offLoad(building.getPassengersLeaving(building.getElevator()).length, CurrentFloor);
