@@ -87,6 +87,7 @@ public class ElevatorSimulation extends Application {
 	NUM_FLOORS = controller.getNumFloors();
 	NUM_ELEVATORS = controller.getNumElevators();
 		currFloor = controller.getCurrentFloor();
+		System.out.println(currFloor);
 		
 	}
 	private void initTimeline() {
@@ -277,7 +278,7 @@ public class ElevatorSimulation extends Application {
 			else if (this.currFloor > currFloor) {
 				move(false);
 			}
-			this.currFloor = currFloor;
+			this.currFloor++;
 		}
 		else if (currstate == MVTOFLR) {
 			
