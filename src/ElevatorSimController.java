@@ -17,7 +17,7 @@ public class ElevatorSimController {
 	private static final String SIM_CONFIG = "ElevatorSimConfig.csv";
 	
 	/**  Constant to make the Passenger queue contents visible after initialization. */
-	private boolean PASSQ_DEBUG=false;
+	private boolean PASSQ_DEBUG=true;
 	
 	/** The gui. */
 	private ElevatorSimulation gui;
@@ -222,9 +222,21 @@ public class ElevatorSimController {
 		
 		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
-		CurrentFloor = building.getCurrentFloor();
-		building.checkPassengerArrival(stepCnt);
-		building.checkPassengerGiveup(stepCnt);
+		
+		final int STOP = 0;
+		
+		if (!building.passengersProcessed()) {
+			building.checkPassengerArrival(stepCnt);
+			building.checkPassengerGiveup(stepCnt);
+			building.updateElevator(stepCnt);
+			// has to do something to update GUI
+		}
+		else {
+			// GUI action?
+			building.closeLogs(stepCnt);
+			building.processPassengerData();
+		}
+		/*
 		if(gui != null) {
 			gui.setTime(stepCnt);
 			gui.updateState(building.getCurrentState(), CurrentFloor);
@@ -259,7 +271,7 @@ public class ElevatorSimController {
 		//    	1) update the GUI
 		//		2) close the logs
 		//		3) process the passenger resu
-		}
+		}*/
 	}
 	
 	

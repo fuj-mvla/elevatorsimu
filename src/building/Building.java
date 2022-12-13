@@ -89,7 +89,7 @@ public class Building {
 		passSuccess = new ArrayList<Passengers>();
 		gaveUp = new ArrayList<Passengers>();
 		Passengers.resetStaticID();		
-		initializeBuildingLog0ger(logfile);
+		initializeBuildingLogger(logfile);
 		// passDataFile is where you will write all the results for those passengers who successfully
 		// arrived at their destination and those who gave up...
 		fio = new MyFileIO();
@@ -116,10 +116,7 @@ public class Building {
 	 * @return true, if successful
 	 */
 	public boolean elevatorStateChanged(Elevator lift) {
-		if (lift.getPrevState() != lift.getCurrState()) {
-			return true;
-		}
-		return false;
+		return lift.getPrevState() != lift.getCurrState();
 	}
 	
 	/**
@@ -163,6 +160,15 @@ public class Building {
 	}
 	
 	/**
+	 * Update up and down calls in CallManager.
+	 *
+	 * @param time the time
+	 */
+	public void updateUpAndDownCalls(int time) {
+		callMgr.updateCallStatus(time);
+	}
+	
+	/**
 	 * Check passenger arrival.
 	 *
 	 * @param time the time
@@ -171,8 +177,9 @@ public class Building {
 	public boolean checkPassengerArrival(int time) {
 		Passengers p = passQ.peek();
 		boolean addSuccess = false;
-		if (time == p .getTimeArrived()) {
+		if (time == p.getTimeArrived()) {
 			addSuccess = p.getDirection() == UP ? floors[p.getOnFloor()].addToUp(p) : floors[p.getOnFloor()].addToDown(p);
+			updateUpAndDownCalls(time);
 			passQ.remove();
 		}
 		return addSuccess;
@@ -229,22 +236,12 @@ public class Building {
 	}
 	
 	/**
-	 * Curr state stop.
-	 *
-	 * @param time the time
-	 * @param lift the lift
-	 * @return the int
-	 * @todo Implement specific actions for states
-	 * Should be passing tests soon.
-	 */
-	
-	/**
 	 * Stop state.
 	 * If there are no calls in any direction - @STOP
 	 * If there is a call down or up - @OPENDR
 	 * If there are no calls on this floor, but there are calls on other floors - @MVTOFLOOR
 	 *
-	 * @param time thxe time
+	 * @param time the time
 	 * @param lift the lift
 	 * @return the int
 	 */
@@ -256,9 +253,6 @@ public class Building {
 		else {
 			int floor = lift.getCurrFloor();
 			Passengers p = callMgr.prioritizePassengerCalls(lift, floor);
-			if (p == null) {
-				return Elevator.STOP;
-			}
 			logCalls(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
 			if (!floors[floor].goingUpEmpty() || !floors[floor].goingDownEmpty()) {
 				lift.setDirection(p.getDirection());
@@ -654,8 +648,8 @@ public class Building {
 	 *
 	 * @param logfile the file to log information to
 	 */
-	void initializeBuildingLog0ger(String logfile) {
-		System.setProperty("jav0a.util.logging.SimpleFormatter.format","%4$-7s %5$s%n");
+	void initializeBuildingLogger(String logfile) {
+		System.setProperty("java.util.logging.SimpleFormatter.format","%4$-7s %5$s%n");
 		LOGGER.setLevel(Level.OFF);
 		try {
 			fh = new FileHandler(logfile);
