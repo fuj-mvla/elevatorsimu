@@ -59,8 +59,22 @@ public class CallManager {
 	 * either passengers being added or being removed. The alternative is to dynamically
 	 * recalculate the values of specific fields when needed.
 	 */
-	void updateCallStatus() {
+	void updateCallStatus(int time) {
 		//TODO: Write this method if you choose to implement it...
+		for (int i = 0; i < floors.length; i++) {
+			if (!floors[i].goingUpEmpty()) {
+				upCalls[i] = true;
+			}
+			if (floors[i].goingUpEmpty()) {
+				upCalls[i] = false;
+			}
+			if (!floors[i].goingDownEmpty()) {
+				downCalls[i] = true;
+			}
+			if (floors[i].goingDownEmpty()) {
+				downCalls[i] = false;
+			}
+		}
 	}
 
 	/**
@@ -83,7 +97,6 @@ public class CallManager {
 				lift.setCurrState(Elevator.OPENDR);
 			}
 			return null;
-			// return prioritizePassengerCalls(lift, floor);
 		}
 		else {
 			lift.setCurrState(Elevator.MVTOFLR);
