@@ -1,6 +1,5 @@
 package building;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Passengers. Represents a GROUP of passengers that are 
  * traveling together from one floor to another. Tracks information that 
