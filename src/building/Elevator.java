@@ -58,6 +58,16 @@ public class Elevator {
 
 	private int postMoveToFloorDir; // This is the direction that the elevator will travel AFTER reaching
 									// the moveToFloor in MVTOFLR state.
+	
+	private int offloadDelay;
+
+	public int getOffloadDelay() {
+		return offloadDelay;
+	}
+
+	public void setOffloadDelay(int offloadDelay) {
+		this.offloadDelay = offloadDelay;
+	}
 
 	@SuppressWarnings("unchecked")
 	public Elevator(int numFloors, int capacity, int floorTicks, int doorTicks, int passPerTick) {
@@ -76,6 +86,7 @@ public class Elevator {
 		this.doorState = DOOR_CLOSED;
 		// TODO: Finish this constructor, adding configuration initialiation and
 		// initialization of any other private fields, etc.
+		offloadDelay = 0;
 	}
 
 	public void moveElevator() {

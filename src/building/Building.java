@@ -77,10 +77,6 @@ public class Building {
 	 */
 	private CallManager callMgr;
 
-	/** The offload delay. */
-	// Add any fields that you think you might need here...
-	private int offloadDelay;
-
 	/** The prioritized for mv to flr. */
 	private Passengers prioritizedForMvToFlr;
 
@@ -114,18 +110,18 @@ public class Building {
 		callMgr = new CallManager(floors, NUM_FLOORS);
 		elevators = new Elevator[NUM_ELEVATORS];
 		// TODO: if you defined new fields, make sure to initialize them here
-		offloadDelay = 0;
 	}
 
 	// TODO: Place all of your code HERE - state methods and helpers...
 	
 	/**
-	 * Do a time step and return done status
+	 * Do a time step and return done status.
+	 *
 	 * @param stepCnt the current time
 	 * @return true if done, false otherwise
 	 */
 	public boolean step(int stepCnt) {
-		if (!passengersProcessed() || !allElevetorsStopped()) {
+		if (!passengersProcessed() || !allElevatorsStopped()) {
 			checkPassengerArrival(stepCnt);
 			checkPassengerGiveup(stepCnt);
 			callMgr.updateCallStatus();
@@ -374,7 +370,7 @@ public class Building {
 		} else {
 			lift.setDoorState(Elevator.DOOR_CLOSED);
 			if (lift.getPassengers() == 0) {
-				return elevatorEmpty(lift.getDirection(), lift);
+				return elevatorEmptyClosed(lift.getDirection(), lift);
 			} else {
 				return Elevator.MV1FLR;
 			}
@@ -388,7 +384,7 @@ public class Building {
 	 * @param lift      the lift
 	 * @return the int
 	 */
-	private int elevatorEmpty(int direction, Elevator lift) {
+	private int elevatorEmptyClosed(int direction, Elevator lift) {
 		if (!callMgr.isDownCallPending() && !callMgr.isUpCallPending()) {
 			return Elevator.STOP;
 		}
@@ -423,29 +419,20 @@ public class Building {
 	 */
 	protected int currStateBoard(int time, Elevator lift) {
 		int numBoarded = 0;
-		while (lift.getPassengers() <= lift.getCapacity()) {
-			Passengers p = passQ.peek();
-			if (p.getTimeWillGiveUp() == time) {
-				p = lift.getDirection() == UP ? floors[lift.getCurrFloor()].pollFromUp()
-						: floors[lift.getCurrFloor()].pollFromDown();
-				gaveUp.add(p);
-			} else if (lift.getCapacity() < (lift.getPassengers() + p.getNumPass())) {
-				logSkip(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
-				break;
+		if (lift.getCapacity() < (lift.getPassengers() + prioritizedForMvToFlr.getNumPass())) {
+			logSkip(time, prioritizedForMvToFlr.getNumPass(), lift.getCurrFloor(), lift.getDirection(), prioritizedForMvToFlr.getId());
+		} else {
+			numBoarded += prioritizedForMvToFlr.getNumPass();
+			prioritizedForMvToFlr.setBoardTime(time);
+			logBoard(time, prioritizedForMvToFlr.getNumPass(), lift.getCurrFloor(), lift.getDirection(), prioritizedForMvToFlr.getId());
+			lift.setDirection(prioritizedForMvToFlr.getDirection());
+			lift.setPassengers(lift.getPassengers() + prioritizedForMvToFlr.getNumPass());
+			int delayTime = numBoarded / lift.getPassPerTick();
+			lift.setTimeInState(lift.getTimeInState() + 1);
+			if (delayTime <= lift.getTimeInState()) {
+				return Elevator.CLOSEDR;
 			} else {
-				numBoarded += p.getNumPass();
-				p.setBoardTime(time);
-				logBoard(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
-				p = lift.getDirection() == UP ? floors[lift.getCurrFloor()].pollFromUp()
-						: floors[lift.getCurrFloor()].pollFromDown();
-				lift.setPassengers(lift.getPassengers() + p.getNumPass());
-				int delayTime = numBoarded / lift.getPassPerTick();
-				lift.setTimeInState(lift.getTimeInState() + 1);
-				if (delayTime <= lift.getTimeInState()) {
-					return Elevator.CLOSEDR;
-				} else {
-					return Elevator.BOARD;
-				}
+				return Elevator.BOARD;
 			}
 		}
 		return tooManyPassengers(time, lift);
@@ -461,10 +448,6 @@ public class Building {
 	private int tooManyPassengers(int time, Elevator lift) {
 		Passengers p = passQ.peek();
 		boolean atCapacity = false;
-		if (time > p.getTimeWillGiveUp()) {
-			logGiveUp(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
-			passQ.remove();
-		}
 		if (lift.getCapacity() < (lift.getPassengers() + p.getNumPass())) {
 			logSkip(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
 			atCapacity = true;
@@ -558,17 +541,15 @@ public class Building {
 		int timeInState = lift.getTimeInState();
 		lift.setTimeInState(timeInState + 1);
 		if (lift.getPrevState() != Elevator.OFFLD) {
-			List<Passengers>[] passengers = lift.getPassByFloor();
-			for (List<Passengers> p : passengers) {
-				for (Passengers i : p) {
-					offloadDelay += i.getNumPass() / lift.getPassPerTick();
-					i.setTimeArrived(time);
-				}
-				passSuccess.addAll(p);
+			List<Passengers> passengers = lift.getPassByFloor()[lift.getCurrFloor()];
+			for (Passengers p : passengers) {
+				lift.setOffloadDelay(lift.getOffloadDelay() + p.getNumPass() / lift.getPassPerTick());
+				p.setTimeArrived(time);
+				passSuccess.add(p);
 			}
 		}
-		if (lift.getTimeInState() == offloadDelay) {
-			timeInStateEqualsOffldDelay(lift);
+		if (lift.getTimeInState() == lift.getOffloadDelay()) {
+			return timeInStateEqualsOffldDelay(lift);
 		}
 		return Elevator.OFFLD;
 	}
@@ -602,8 +583,9 @@ public class Building {
 					return Elevator.BOARD;
 				}
 			}
+			return Elevator.CLOSEDR;
 		}
-		return Elevator.CLOSEDR;
+		return Elevator.OFFLD;
 	}
 
 	/**
@@ -618,25 +600,21 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateMv1Flr(int time, Elevator lift) {
-		lift.setTimeInState(lift.getTimeInState() + 1);
-		lift.setCurrFloor(lift.getCurrFloor());
 		lift.moveElevator();
-		Passengers p = lift.getDirection() == UP ? callMgr.getLowestUpCall() : callMgr.getHighestDownCall();
-		if (lift.getCurrFloor() == p.getDestFloor()) {
-			logArrival(time, p.getNumPass(), lift.getCurrFloor(), p.getId());
-			return Elevator.OPENDR;
-		}
-		if (!(lift.getPassByFloor().length == 0)) {
-			return Elevator.OPENDR;
-		}
-		if (lift.getDirection() == DOWN && !floors[lift.getCurrFloor()].goingDownEmpty()) {
-			return Elevator.OPENDR;
-		}
-		if (lift.getDirection() == UP && !floors[lift.getCurrFloor()].goingUpEmpty()) {
-			return Elevator.OPENDR;
-		}
-		if (lift.getPassengers() == 0) {
-			return elevatorEmpty(lift);
+		
+		if (lift.getPrevFloor() != lift.getCurrFloor()) {
+			if (!(lift.getPassByFloor()[lift.getCurrFloor()].size() == 0)) {
+				return Elevator.OPENDR;
+			}
+			if (lift.getDirection() == DOWN && !floors[lift.getCurrFloor()].goingDownEmpty()) {
+				return Elevator.OPENDR;
+			}
+			if (lift.getDirection() == UP && !floors[lift.getCurrFloor()].goingUpEmpty()) {
+				return Elevator.OPENDR;
+			}
+			if (lift.getPassengers() == 0) {
+				return elevatorEmpty(lift);
+			}
 		}
 		return Elevator.MV1FLR;
 	}
@@ -662,7 +640,12 @@ public class Building {
 		return Elevator.MV1FLR;
 	}
 
-	public boolean allElevetorsStopped() {
+	/**
+	 * All elevators stopped.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean allElevatorsStopped() {
 		for (Elevator e : elevators) {
 			if (!e.isStopped()) {
 				return false;
