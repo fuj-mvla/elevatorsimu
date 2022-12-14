@@ -215,12 +215,13 @@ public class ElevatorSimulation extends Application {
 		run.setOnAction(e -> board(mm));
 
 		enter.setOnAction(e -> {
-			setTicks(stepticks.getText());
-			t.play();
-		});
+			setTicks(stepticks.getText());	t.play();});
+		Label y = new Label("MV1floor");
+		y.setMaxWidth(Double.MAX_VALUE);
+		gp.add(y, 2, 12);
 		setGridPaneConstraints();
 		arrivalPassengers(m);
-		System.out.println(gp.getRowIndex(sp));
+	
 		bp.setCenter(gp);
 		bp.setTop(x);
 
@@ -356,15 +357,14 @@ public class ElevatorSimulation extends Application {
 			gp.getChildren().remove(sp);
 			cellY -= 2;
 			gp.add(sp, 1, cellY);
-			if (cellY < 4) {
-				t.stop();
-			}
+			this.currFloor++;
 		} else {
 			gp.getChildren().remove(sp);
 			cellY += 2;
 			gp.add(sp, 1, cellY);
+			this.currFloor--;
 		}
-
+		
 	}
 
 	/**
@@ -385,13 +385,10 @@ public class ElevatorSimulation extends Application {
 	 */
 	public void updateState(int currstate, int currFloor) {
 		if (currstate == MV1FLR) {
-			if (this.currFloor < currFloor) {
-				move(true);
-
-			} else if (this.currFloor > currFloor) {
-				move(false);
+			if (this.currFloor < currFloor || this.currFloor > currFloor) {
+				move(this.currFloor < currFloor);
 			}
-			this.currFloor++;
+			
 		} else if (currstate == MVTOFLR) {
 			if (this.currFloor < currFloor) {
 				move(true);
@@ -441,7 +438,7 @@ public class ElevatorSimulation extends Application {
 				xCord = gp.getRowIndex(x);
 				gp.getChildren().remove(x);
 				boarded = true;
-				floorArray[passenger.getOnFloor()]--;
+				floorArray[currFloor]--;
 				pLabel.setText("" + passenger.getNumPass());
 			}
 		}
