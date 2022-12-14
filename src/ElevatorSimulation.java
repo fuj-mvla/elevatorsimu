@@ -91,7 +91,7 @@ public class ElevatorSimulation extends Application {
 		
 	}
 	private void initTimeline() {
-		t = new Timeline(new KeyFrame(Duration.millis(duration),ae -> test()));
+		t = new Timeline(new KeyFrame(Duration.millis(duration),ae ->controller.stepSim() ));
 	
 		
 	
@@ -120,7 +120,7 @@ public class ElevatorSimulation extends Application {
 		x.getChildren().addAll(logging,Step,run,timeLabel,stepticks,enter);
 		Step.setOnAction(e -> Closedr());
 		logging.setOnAction(e -> enableLogging());
-		run.setOnAction(e -> controller.stepSim());
+		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
 		enter.setOnAction(e -> {setTicks(stepticks.getText()); t.play();});
 		setGridPaneConstraints();
 		
@@ -146,7 +146,9 @@ public class ElevatorSimulation extends Application {
 		primaryStage.show();
 	}
 	
-	
+	public void stepSim() {
+		controller.stepSim();
+	}
 	
 	
 	private void makeLegend() {
