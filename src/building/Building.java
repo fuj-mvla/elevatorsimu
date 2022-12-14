@@ -78,7 +78,7 @@ public class Building {
 	private CallManager callMgr;
 
 	/** The prioritized for mv to flr. */
-	private Passengers prioritizedForMvToFlr;
+	private Passengers prioritizedForBoard;
 
 	/**
 	 * Instantiates a new building.
@@ -126,7 +126,6 @@ public class Building {
 			checkPassengerGiveup(stepCnt);
 			callMgr.updateCallStatus();
 			updateElevator(stepCnt);
-			setPassByFloor(getElevator());
 			return false;
 		}
 		closeLogs(stepCnt);
@@ -184,60 +183,10 @@ public class Building {
 	 *
 	 * @param lift the new pass by floor
 	 */
-	public void setPassByFloor(Elevator lift) {
-		ArrayList<Passengers>[] passByFloor = new ArrayList[NUM_FLOORS];
-		for (int i = 0; i < passByFloor.length; i++) {
-			passByFloor[i] = new ArrayList<>();
-		}
-		for (int i = 0; i < floors.length; i++) {
-			if (!floors[i].goingDownEmpty() && !floors[i].goingUpEmpty()) {
-				setUpPass(passByFloor, i);
-				setDownPass(passByFloor, i);
-			}
-			if (!floors[i].goingDownEmpty()) {
-				setDownPass(passByFloor, i);
-			}
-			if (!floors[i].goingUpEmpty()) {
-				setUpPass(passByFloor, i);
-			}
-		}
-		if (passByFloor != null) {
-			lift.setPassByFloor(passByFloor);
-		}
-	}
-
-	/**
-	 * Sets the up pass.
-	 *
-	 * @param passByFloor the pass by floor
-	 * @param i           the i
-	 */
-	public void setUpPass(ArrayList<Passengers>[] passByFloor, int i) {
-		List<Passengers> upQueue = new ArrayList<>();
-		ListIterator<Passengers> upIt = floors[i].getUpQueue().getListIterator();
-		while (upIt.hasNext()) {
-			upQueue.add(upIt.next());
-		}
-		for (Passengers p : upQueue) {
-			passByFloor[p.getDestFloor()].add(p);
-		}
-	}
-
-	/**
-	 * Sets the down pass.
-	 *
-	 * @param passByFloor the pass by floor
-	 * @param i           the i
-	 */
-	public void setDownPass(ArrayList<Passengers>[] passByFloor, int i) {
-		List<Passengers> downQueue = new ArrayList<>();
-		ListIterator<Passengers> downIt = floors[i].getDownQueue().getListIterator();
-		while (downIt.hasNext()) {
-			downQueue.add(downIt.next());
-		}
-		for (Passengers p : downQueue) {
-			passByFloor[p.getDestFloor()].add(p);
-		}
+	public void setPassByFloor() {
+		ArrayList<Passengers>[] passByFloor = getElevator().getPassByFloor();
+		passByFloor[prioritizedForBoard.getDestFloor()].add(prioritizedForBoard);
+		getElevator().setPassByFloor(passByFloor);
 	}
 
 	/**
@@ -327,7 +276,7 @@ public class Building {
 		} else {
 			int floor = lift.getCurrFloor();
 			Passengers p = callMgr.prioritizePassengerCalls(lift);
-			prioritizedForMvToFlr = p;
+			prioritizedForBoard = p;
 			logCalls(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
 			if (p.getOnFloor() == floor) {
 				lift.setDirection(p.getDirection());
@@ -419,14 +368,15 @@ public class Building {
 	 */
 	protected int currStateBoard(int time, Elevator lift) {
 		int numBoarded = 0;
-		if (lift.getCapacity() < (lift.getPassengers() + prioritizedForMvToFlr.getNumPass())) {
-			logSkip(time, prioritizedForMvToFlr.getNumPass(), lift.getCurrFloor(), lift.getDirection(), prioritizedForMvToFlr.getId());
+		if (lift.getCapacity() < (lift.getPassengers() + prioritizedForBoard.getNumPass())) {
+			logSkip(time, prioritizedForBoard.getNumPass(), lift.getCurrFloor(), lift.getDirection(), prioritizedForBoard.getId());
 		} else {
-			numBoarded += prioritizedForMvToFlr.getNumPass();
-			prioritizedForMvToFlr.setBoardTime(time);
-			logBoard(time, prioritizedForMvToFlr.getNumPass(), lift.getCurrFloor(), lift.getDirection(), prioritizedForMvToFlr.getId());
-			lift.setDirection(prioritizedForMvToFlr.getDirection());
-			lift.setPassengers(lift.getPassengers() + prioritizedForMvToFlr.getNumPass());
+			numBoarded += prioritizedForBoard.getNumPass();
+			prioritizedForBoard.setBoardTime(time);
+			logBoard(time, prioritizedForBoard.getNumPass(), lift.getCurrFloor(), lift.getDirection(), prioritizedForBoard.getId());
+			lift.setDirection(prioritizedForBoard.getDirection());
+			lift.setPassengers(lift.getPassengers() + prioritizedForBoard.getNumPass());
+			setPassByFloor();
 			int delayTime = numBoarded / lift.getPassPerTick();
 			lift.setTimeInState(lift.getTimeInState() + 1);
 			if (delayTime <= lift.getTimeInState()) {
@@ -512,9 +462,9 @@ public class Building {
 		lift.setTimeInState(lift.getTimeInState() + 1);
 		int currFloor = lift.getCurrFloor();
 		lift.setCurrFloor(currFloor);
-		if (currFloor == prioritizedForMvToFlr.getOnFloor()) {
-			if (lift.getDirection() != prioritizedForMvToFlr.getDirection()) {
-				lift.setDirection(prioritizedForMvToFlr.getDirection());
+		if (currFloor == prioritizedForBoard.getOnFloor()) {
+			if (lift.getDirection() != prioritizedForBoard.getDirection()) {
+				lift.setDirection(prioritizedForBoard.getDirection());
 			}
 			return Elevator.OPENDR;
 		} else {
