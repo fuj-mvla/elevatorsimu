@@ -224,12 +224,15 @@ public class ElevatorSimController {
 		stepCnt++;
 		
 		final int STOP = 0;
+		if(gui!= null) {
 		gui.setTime(stepCnt);
 		gui.updateState(building.getCurrentState(), CurrentFloor);
+		}
 		if (!building.passengersProcessed() ||  building.getCurrentState() != STOP) {
 			building.checkPassengerArrival(stepCnt);
 			building.checkPassengerGiveup(stepCnt);
 			building.updateElevator(stepCnt);
+			if(gui != null) {
 			if(building.getCurrentState() == 3) {
 				gui.offLoad(building.getPassengersLeaving(building.getElevator()).length, CurrentFloor);
 			}
@@ -239,12 +242,14 @@ public class ElevatorSimController {
 						break;
 					
 					}
+			
 				else {
 					gui.board(building.getPassengersBoarding(building.getElevator())[0]);
 				}
+				
 			}
 			}	
-			
+			}
 			// has to do something to update GUI
 		}
 		else {

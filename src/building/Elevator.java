@@ -64,11 +64,15 @@ public class Elevator {
 		this.currState = STOP;
 		this.timeInState = 0;
 		this.currFloor = 0;
+		this.passPerTick = passPerTick;
+		ticksPerFloor = floorTicks;
+		ticksDoorOpenClose = doorTicks;
 		passByFloor = new ArrayList[numFloors];
+		this.capacity = capacity;
 		
 		for (int i = 0; i < numFloors; i++) 
 			passByFloor[i] = new ArrayList<Passengers>(); 
-
+		
 		//TODO: Finish this constructor, adding configuration initialiation and
 		//      initialization of any other private fields, etc.
 	}
@@ -87,11 +91,7 @@ public class Elevator {
 		}
 	}
 	public boolean isDoorClosed() {
-		if(currState == OPENDR) {
-			return false;
-			
-		}
-		return true;
+		return(currState == OPENDR);
 		
 	}
 	
