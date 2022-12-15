@@ -236,7 +236,7 @@ public class ElevatorSimController {
 			endSim = building.step(stepCnt);
 			if (gui != null) {
 				gui.setTime(stepCnt);
-				gui.updateState(building.getCurrentState(), currentFloor);
+				gui.updateState(building.getCurrentState(), building.getCurrentFloor());
 //				if (getCurrentState() == 3) {
 //					if (gui != null)
 //						gui.offLoad(getPassengersLeaving(getElevator()).length, currentFloor);

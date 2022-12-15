@@ -85,7 +85,7 @@ public class ElevatorSimulation extends Application {
 	private Button enter = new Button("Enter");
 
 	/** The duration. */
-	private int duration = 1000;
+	private int duration = 100;
 
 	/** The cycle count. */
 	private int cycleCount = 1;
