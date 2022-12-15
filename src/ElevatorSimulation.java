@@ -82,7 +82,7 @@ public class ElevatorSimulation extends Application {
 	private Button enter = new Button("Enter");
 
 	/** The duration. */
-	private int duration = 100;
+	private int duration = 1000;
 
 	/** The cycle count. */
 	private int cycleCount = 1;
@@ -176,7 +176,7 @@ public class ElevatorSimulation extends Application {
 		NUM_FLOORS = controller.getNumFloors();
 		NUM_ELEVATORS = controller.getNumElevators();
 		currFloor = controller.getCurrentFloor();
-		System.out.println(currFloor);
+		
 
 	}
 
@@ -212,15 +212,13 @@ public class ElevatorSimulation extends Application {
 		x.getChildren().addAll(logging, Step, run, timeLabel, stepticks, enter);
 		Step.setOnAction(e -> Closedr());
 		logging.setOnAction(e -> enableLogging());
-		run.setOnAction(e -> board(mm));
+		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
 
 		enter.setOnAction(e -> {
 			setTicks(stepticks.getText());	t.play();});
-		Label y = new Label("MV1floor");
-		y.setMaxWidth(Double.MAX_VALUE);
-		gp.add(y, 2, 12);
+	
 		setGridPaneConstraints();
-		arrivalPassengers(m);
+		
 	
 		bp.setCenter(gp);
 		bp.setTop(x);
@@ -384,19 +382,18 @@ public class ElevatorSimulation extends Application {
 	 * @param currFloor the curr floor
 	 */
 	public void updateState(int currstate, int currFloor) {
+		System.out.println(currstate);
+		System.out.println(currFloor);
 		if (currstate == MV1FLR) {
 			if (this.currFloor < currFloor || this.currFloor > currFloor) {
 				move(this.currFloor < currFloor);
 			}
 			
 		} else if (currstate == MVTOFLR) {
-			if (this.currFloor < currFloor) {
-				move(true);
-
-			} else if (this.currFloor > currFloor) {
-				move(false);
+			if (this.currFloor < currFloor || this.currFloor > currFloor) {
+				move(this.currFloor < currFloor);
 			}
-			this.currFloor++;
+
 		} else if (currstate == OPENDR) {
 			Opendr();
 		} else if (currstate == CLOSEDR) {
