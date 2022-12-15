@@ -67,6 +67,7 @@ public class ElevatorSimulation extends Application {
 	/** The bp. */
 	private BorderPane bp;
 
+	private Label stateLabel;
 	/** The gp. */
 	private GridPane gp;
 
@@ -215,27 +216,17 @@ public class ElevatorSimulation extends Application {
 		sp.setAlignment(pLabel, Pos.TOP_CENTER);
 		bp.setRight(vb);
 		makeElevatorDoors();
-		
 		x.getChildren().addAll(logging, Step, run, timeLabel, stepticks, enter);
-		Step.setOnAction(e -> Closedr());
+		Step.setOnAction(e -> updateState(1,1));
 		logging.setOnAction(e -> enableLogging());
-
 		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
-
-
+		gp.setPrefWidth(50);
 		enter.setOnAction(e -> {
 			setTicks(stepticks.getText());	t.play();});
-	
 		setGridPaneConstraints();
-		
-	
 		bp.setCenter(gp);
 		bp.setTop(x);
-
 		Scene scene = new Scene(bp, 800, 800, Color.BLUE);
-		// scene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new
-		// Stop(0, Color.web("#81c483")),new Stop(1, Color.web("#fcc200"))));
-
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Elevator Simulation - " + controller.getTestName());
 		primaryStage.show();
@@ -264,9 +255,13 @@ public class ElevatorSimulation extends Application {
 		elevator = new Rectangle(100, 100);
 		elevator.setFill(Color.TRANSPARENT);
 		elevator.setStroke(Color.LIGHTSTEELBLUE);
+		stateLabel  = new Label("STOP");
+		stateLabel.setWrapText(true);
 		for (int i = currFloor; i > 1; i--) {
 			cellY -= 2;
+			
 		}
+		gp.add(stateLabel, 1, cellY);
 		gp.add(sp, 2, cellY);
 	}
 
@@ -281,18 +276,18 @@ public class ElevatorSimulation extends Application {
 		for (int i = 0;i < 6;i++) {
 	
 		Rectangle wall1 = new Rectangle(600, 120);
-		wall1.setFill(Color.BROWN);
+		wall1.setFill(Color.LIGHTGREY);
 		gp.add(wall1, 5, startingBackP);
 		startingBackP +=2;
 		}
 		for(int x = 0; x < 6; x++) {
-			gp.add(new Rectangle(50, 80), 8, 2 * x + 3);
+			gp.add(new Rectangle(50, 80,Color.SADDLEBROWN), 8, 2 * x + 3);
 		}
 		for(int x = 0; x < 6; x++) {
-			gp.add(new Rectangle(50, 80), 11, 2 * x + 3);
+			gp.add(new Rectangle(50, 80,Color.SADDLEBROWN), 11, 2 * x + 3);
 		}
 		for(int x = 0; x < 6; x++) {
-			gp.add(new Rectangle(50, 80), 14, 2 * x + 3);
+			gp.add(new Rectangle(50, 80,Color.SADDLEBROWN), 14, 2 * x + 3);
 		}
 	}
 	private void makeElevatorDoors() {
@@ -384,13 +379,17 @@ public class ElevatorSimulation extends Application {
 	private void move(boolean up) {
 		if (up) {
 			gp.getChildren().remove(sp);
+			gp.getChildren().remove(stateLabel);
 			cellY -= 2;
-			gp.add(sp, 1, cellY);
+			gp.add(sp, 2, cellY);
+			gp.add(stateLabel, 1, cellY);
 			this.currFloor++;
 		} else {
 			gp.getChildren().remove(sp);
+			gp.getChildren().remove(stateLabel);
 			cellY += 2;
-			gp.add(sp, 1, cellY);
+			gp.add(sp, 2, cellY);
+			gp.add(stateLabel, 1, cellY);
 			this.currFloor--;
 		}
 		
@@ -413,25 +412,30 @@ public class ElevatorSimulation extends Application {
 	 * @param currFloor the curr floor
 	 */
 	public void updateState(int currstate, int currFloor) {
-		System.out.println(currstate);
-		System.out.println(currFloor);
 		if (currstate == MV1FLR) {
-
 			if (this.currFloor < currFloor || this.currFloor > currFloor) {
 				move(this.currFloor < currFloor);
 			}
-			
+			stateLabel.setText("MV1FLR");
 		} else if (currstate == MVTOFLR) {
 			if (this.currFloor < currFloor || this.currFloor > currFloor) {
 				move(this.currFloor < currFloor);
 			}
-
+			stateLabel.setText("MVTOFR");
 		} else if (currstate == OPENDR) {
 			Opendr();
+			stateLabel.setText("OPENDR");
 		} else if (currstate == CLOSEDR) {
 			Closedr();
+			stateLabel.setText("CLOSDR");
 		} else if (currstate == STOP) {
-
+			stateLabel.setText("STOP");
+		}
+		else if (currstate == BOARD) {
+			stateLabel.setText("BOARD");
+		}
+		else if (currstate== OFFLD) {
+			stateLabel.setText("OFFLD");
 		}
 
 	}
@@ -486,8 +490,33 @@ public class ElevatorSimulation extends Application {
 		}
 	}
 
-	public void giveUp(Passengers passengers) {
+	public void giveUp(Passengers passenger) {
+		int yCord = 0;
+		int xCord = 0;
+		boolean boarded = false;
+		for (int j = 0; j < passArray.size(); j++) {
+			if (passenger.equals(passArray.get(j))) {
+				StackPane x = circArray.remove(j);
+				passArray.remove(j);
+				yCord = gp.getColumnIndex(x);
+				xCord = gp.getRowIndex(x);
+				gp.getChildren().remove(x);
+				boarded = true;
+				floorArray[currFloor]--;
+			}
+		}
+		if (boarded) {
+			for (int i = 0; i < circArray.size(); i++) {
+				StackPane y = circArray.get(i);
+				int sCordy = gp.getRowIndex(y);
+				int sCordX = gp.getColumnIndex(y);
+				if (sCordy == xCord && sCordX > yCord) {
+					gp.getChildren().remove(y);
+					gp.add(y, --sCordX, sCordy);
 
+				}
+			}
+		}
 	}
 
 	/**
