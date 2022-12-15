@@ -219,7 +219,7 @@ public class ElevatorSimulation extends Application {
 		bp.setRight(vb);
 		makeElevatorDoors();
 		x.getChildren().addAll(logging, Step, run, timeLabel, stepticks, enter);
-		Step.setOnAction(e -> updateState(1,1));
+		Step.setOnAction(e -> controller.stepSim());
 		logging.setOnAction(e -> enableLogging());
 		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
 		gp.setPrefWidth(50);
