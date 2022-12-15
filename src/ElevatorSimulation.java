@@ -85,7 +85,7 @@ public class ElevatorSimulation extends Application {
 	private Button enter = new Button("Enter");
 
 	/** The duration. */
-	private int duration = 100;
+	private int duration = 1000;
 
 	/** The cycle count. */
 	private int cycleCount = 1;
@@ -480,7 +480,8 @@ public class ElevatorSimulation extends Application {
 				gp.getChildren().remove(x);
 				boarded = true;
 				floorArray[currFloor]--;
-				pLabel.setText("" + passenger.getNumPass());
+				passengers += passenger.getNumPass();
+				pLabel.setText("" + passengers);
 			}
 		}
 		if (boarded) { // shifts the other circles over in the floor
