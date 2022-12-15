@@ -1,6 +1,5 @@
 numFloors,6
 numElevators,1
-<<<<<<< HEAD
 passCSV,ElevatorTest.csv
 capacity,15
 floorTicks,5
