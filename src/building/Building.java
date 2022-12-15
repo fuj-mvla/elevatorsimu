@@ -83,13 +83,16 @@ public class Building {
 	/* Passengers for the GUI */
 	
 	/** The arrival passengers. */
-	List<Passengers> arrivalPassengers;
+	private List<Passengers> arrivalPassengers;
 	
 	/** The boarding passengers. */
-	Passengers boardingPassengers;
+	private Passengers boardingPassengers;
 	
 	/** The give up passengers. */
-	Passengers giveUpPassengers;
+	private Passengers giveUpPassengers;
+	
+	/** The offload passengers. */
+	private int offloadPassengers;
 
 	/**
 	 * Instantiates a new building.
@@ -122,6 +125,7 @@ public class Building {
 		callMgr = new CallManager(floors, NUM_FLOORS);
 		elevators = new Elevator[NUM_ELEVATORS];
 		// TODO: if you defined new fields, make sure to initialize them here
+		offloadPassengers = 0;
 	}
 
 	// TODO: Place all of your code HERE - state methods and helpers...
@@ -271,6 +275,17 @@ public class Building {
 	 */
 	public Passengers giveUpPassengers() {
 		return giveUpPassengers;
+	}
+	
+	/**
+	 * Offload passengers.
+	 *
+	 * @return the int
+	 */
+	public int offloadPassengers() {
+		int temp = offloadPassengers;
+		offloadPassengers = 0;
+		return temp;
 	}
 	
 	/**
@@ -506,6 +521,7 @@ public class Building {
 			for (Passengers p : passengers) {
 				totalPassengers += p.getNumPass();
 				p.setTimeArrived(time);
+				offloadPassengers += p.getNumPass();
 				logArrival(time, p.getNumPass(), lift.getCurrFloor(), p.getId());
 			}
 			lift.setOffloadDelay((totalPassengers + lift.getPassPerTick() - 1) / lift.getPassPerTick());
@@ -561,6 +577,7 @@ public class Building {
 	 */
 	protected int currStateMv1Flr(int time, Elevator lift) {
 		int floor = lift.getCurrFloor();
+		lift.moveElevator();
 		if (lift.getPrevFloor() != lift.getCurrFloor()) {
 			if (lift.getPassByFloor()[floor].size() > 0) {
 				return Elevator.OPENDR;
@@ -575,7 +592,6 @@ public class Building {
 				return elevatorEmpty(lift);
 			}
 		}
-		lift.moveElevator();
 		return Elevator.MV1FLR;
 	}
 
@@ -600,7 +616,6 @@ public class Building {
 				return Elevator.OPENDR;
 			}
 		}
-		lift.moveElevator();
 		return Elevator.MV1FLR;
 	}
 
