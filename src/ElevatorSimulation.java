@@ -67,6 +67,7 @@ public class ElevatorSimulation extends Application {
 	/** The bp. */
 	private BorderPane bp;
 
+	/** The state label. */
 	private Label stateLabel;
 	/** The gp. */
 	private GridPane gp;
@@ -170,6 +171,7 @@ public class ElevatorSimulation extends Application {
 	/** The m. */
 	private Passengers[] m = { mm, test };
 	
+	/** The vb. */
 	private VBox vb;
 
 	/**
@@ -185,7 +187,7 @@ public class ElevatorSimulation extends Application {
 	}
 
 	/**
-	 * Inits the timeline.
+	 * Initialize the timeline.
 	 */
 	private void initTimeline() {
 		t = new Timeline(new KeyFrame(Duration.millis(duration), ae -> controller.stepSim()));
@@ -232,12 +234,10 @@ public class ElevatorSimulation extends Application {
 		primaryStage.show();
 	}
 
-	public void stepSim() {
-		controller.stepSim();
-	}
+	
 
 	/**
-	 * Make legend.
+	 * Makes a legend so you can know what passengers are going up or down.
 	 */
 	private void makeLegend() {
 		gp.add(new Circle(15, Color.GREEN), 0, 0);
@@ -248,7 +248,7 @@ public class ElevatorSimulation extends Application {
 	}
 
 	/**
-	 * Initialize elevator position.
+	 * Initializes the elevator at the correct floor with the state
 	 */
 	private void initializeElevatorPosition() {
 		// TODO Auto-generated method stub
@@ -265,18 +265,19 @@ public class ElevatorSimulation extends Application {
 		gp.add(sp, 2, cellY);
 	}
 
+	
 	/**
-	 * Make elevator doors.
+	 * Makes the background of the building and elevator, makes the doors aswell
 	 */
 	private void makeHotelDoors() {
-		Rectangle ElevatorBackground = new Rectangle(100, 625);
+		Rectangle ElevatorBackground = new Rectangle(102, 625);
 		ElevatorBackground.setFill(Color.GRAY);
 		gp.add(ElevatorBackground, 2, 8);
 		int startingBackP = 3;
 		for (int i = 0;i < 6;i++) {
 	
 		Rectangle wall1 = new Rectangle(600, 120);
-		wall1.setFill(Color.LIGHTGREY);
+		wall1.setFill(Color.DARKGREY);
 		gp.add(wall1, 5, startingBackP);
 		startingBackP +=2;
 		}
@@ -290,6 +291,10 @@ public class ElevatorSimulation extends Application {
 			gp.add(new Rectangle(50, 80,Color.SADDLEBROWN), 14, 2 * x + 3);
 		}
 	}
+	
+	/**
+	 * Make elevator doors.
+	 */
 	private void makeElevatorDoors() {
 
 		door1.setFill(Color.LIGHTGRAY);
@@ -305,7 +310,7 @@ public class ElevatorSimulation extends Application {
 	}
 
 	/**
-	 * Opendr.
+	 * Open door function
 	 */
 	private void Opendr() {
 		door1.setWidth(25);
@@ -313,7 +318,7 @@ public class ElevatorSimulation extends Application {
 	}
 
 	/**
-	 * Closedr.
+	 * Close door function
 	 */
 	private void Closedr() {
 		door1.setWidth(50);
@@ -343,7 +348,7 @@ public class ElevatorSimulation extends Application {
 	}
 
 	/**
-	 * Initialize floors.
+	 * Initialize floors of the building accordingly.
 	 */
 	private void initializeFloors() {
 
@@ -374,7 +379,7 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * Move.
 	 *
-	 * @param up the up
+	 * @param Moves the elevator according to the boolean, if true moves up by one, if false moves down.
 	 */
 	private void move(boolean up) {
 		if (up) {
@@ -406,10 +411,10 @@ public class ElevatorSimulation extends Application {
 	}
 
 	/**
-	 * Update state.
+	 * Updates the state, and displays the correct state on the label
 	 *
-	 * @param currstate the currstate
-	 * @param currFloor the curr floor
+	 * @param current state
+	 * @param currentfloor from elevator
 	 */
 	public void updateState(int currstate, int currFloor) {
 		if (currstate == MV1FLR) {
@@ -437,16 +442,15 @@ public class ElevatorSimulation extends Application {
 		else if (currstate== OFFLD) {
 			stateLabel.setText("OFFLD");
 		}
-
 	}
 
 	/**
-	 * Off load.
+	 * offloads the number of passengers that are being offloaded
 	 *
 	 * @param passengers the passengers
 	 * @param currFloor  the curr floor
 	 */
-	public void offLoad(int passengers, int currFloor) {
+	public void offLoad(int passengers) {
 		this.passengers -= passengers;
 		int place = 1;
 
@@ -455,7 +459,7 @@ public class ElevatorSimulation extends Application {
 	}
 
 	/**
-	 * Board.
+	 * Boards the correct passenger specified by controller, reflects change onto gui.
 	 *
 	 * @param passenger the passenger
 	 */
@@ -464,7 +468,7 @@ public class ElevatorSimulation extends Application {
 		int xCord = 0;
 		boolean boarded = false;
 		for (int j = 0; j < passArray.size(); j++) {
-			if (passenger.equals(passArray.get(j))) {
+			if (passenger.equals(passArray.get(j))) { //removes circle from the correct floor
 				StackPane x = circArray.remove(j);
 				passArray.remove(j);
 				yCord = gp.getColumnIndex(x);
@@ -475,13 +479,12 @@ public class ElevatorSimulation extends Application {
 				pLabel.setText("" + passenger.getNumPass());
 			}
 		}
-		if (boarded) {
+		if (boarded) { // shifts the other circles over in the floor
 			for (int i = 0; i < circArray.size(); i++) {
 				StackPane y = circArray.get(i);
 				int sCordy = gp.getRowIndex(y);
 				int sCordX = gp.getColumnIndex(y);
 				if (sCordy == xCord && sCordX > yCord) {
-					System.out.println("gothere");
 					gp.getChildren().remove(y);
 					gp.add(y, --sCordX, sCordy);
 
@@ -490,6 +493,11 @@ public class ElevatorSimulation extends Application {
 		}
 	}
 
+	/**
+	 * if any passengers give up, the controller passes it in and it is reflected by the gui.Similar logic to the board
+	 *
+	 * @param passenger the passenger
+	 */
 	public void giveUp(Passengers passenger) {
 		int yCord = 0;
 		int xCord = 0;
@@ -526,7 +534,6 @@ public class ElevatorSimulation extends Application {
 	 * @param passengers the passengers
 	 */
 	public void arrivalPassengers(Passengers[] passengers) {
-
 		for (int i = 0; i < passengers.length; i++) {
 			int floor = MAXFLOORY - ((passengers[i].getOnFloor()) * 2);
 			if (passengers[i].getDirection() == UP) {
@@ -544,7 +551,6 @@ public class ElevatorSimulation extends Application {
 				Circle x = new Circle(25);
 				StackPane y = new StackPane(x, numP);
 				x.setFill(Color.RED);
-
 				gp.add(y, floorArray[passengers[i].getOnFloor()], floor);
 				circArray.add(y);
 				passArray.add(passengers[i]);
@@ -558,15 +564,9 @@ public class ElevatorSimulation extends Application {
 	 * End sim.
 	 */
 	public void endSim() {
-
+		t.stop();
 	}
 
-	/**
-	 * Test.
-	 */
-	private void test() {
-
-	}
 
 	/**
 	 * The main method.
