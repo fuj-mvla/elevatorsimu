@@ -79,6 +79,8 @@ public class Building {
 
 	/** The prioritized for mv to flr. */
 	private Passengers prioritizedForBoard;
+	
+	List<Passengers> arrivalPassengers;
 
 	/**
 	 * Instantiates a new building.
@@ -93,6 +95,7 @@ public class Building {
 		passQ = new GenericQueue<Passengers>(PASSENGERS_QSIZE);
 		passSuccess = new ArrayList<Passengers>();
 		gaveUp = new ArrayList<Passengers>();
+		arrivalPassengers = new ArrayList<Passengers>();
 		Passengers.resetStaticID();
 		initializeBuildingLogger(logfile);
 		// passDataFile is where you will write all the results for those passengers who
@@ -205,6 +208,7 @@ public class Building {
 				floors[p.getOnFloor()].addToDown(p);
 			}
 			logCalls(time, p.getNumPass(), p.getOnFloor(), p.getDirection(), p.getId());
+			arrivalPassengers.add(p);
 			passQ.remove();
 			p = passQ.peek();
 		}
@@ -231,37 +235,10 @@ public class Building {
 		}
 	}
 
-	/**
-	 * Gets the passengers boarding. Needed in Controller -> GUI
-	 *
-	 * @param lift the lift
-	 * @return the passengers boarding
-	 */
-	public Passengers[] getPassengersBoarding(Elevator lift) {
-		int numPassengers = 0;
-		List<Passengers> boarding = new ArrayList<Passengers>();
-		while (numPassengers <= lift.getCapacity()) {
-			boarding.add(callMgr.prioritizePassengerCalls(lift));
-		}
-		return boarding.toArray(new Passengers[boarding.size()]);
+	public Passengers[] arrivalPassengers() {
+		return arrivalPassengers.toArray(new Passengers[arrivalPassengers.size()]);
 	}
-
-	/**
-	 * Gets the passengers leaving. Needed in Controller -> GUI
-	 *
-	 * @param lift the lift
-	 * @return the passengers leaving
-	 */
-	public Passengers[] getPassengersLeaving(Elevator lift) {
-		List<Passengers> leaving = new ArrayList<Passengers>();
-		for (List<Passengers> p : lift.getPassByFloor()) {
-			for (Passengers j : p) {
-				leaving.add(j);
-			}
-		}
-		return leaving.toArray(new Passengers[leaving.size()]);
-	}
-
+	
 	/**
 	 * State Machine.
 	 *
@@ -390,6 +367,7 @@ public class Building {
 			if (p.getTimeWillGiveUp() + 1 == time) {
 				q.poll();
 				gaveUp.add(p);
+				logGiveUp(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
 			} else if (p.getNumPass() + lift.getPassengers() > lift.getCapacity()) {
 				if (!p.isLoggedSkip()) {
 					logSkip(time, p.getNumPass(), lift.getCurrFloor(), p.getDirection(), p.getId());
@@ -459,12 +437,12 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateMvToFlr(int time, Elevator lift) {
-		lift.moveElevator();
 		int currFloor = lift.getCurrFloor();
 		if (currFloor == prioritizedForBoard.getOnFloor()) {
 			lift.setDirection(prioritizedForBoard.getDirection());
 			return Elevator.OPENDR;
 		} else {
+			lift.moveElevator();
 			return Elevator.MVTOFLR;
 		}
 	}
@@ -492,6 +470,7 @@ public class Building {
 			for (Passengers p : passengers) {
 				totalPassengers += p.getNumPass();
 				p.setTimeArrived(time);
+				logArrival(time, p.getNumPass(), lift.getCurrFloor(), p.getId());
 			}
 			lift.setOffloadDelay((totalPassengers + lift.getPassPerTick() - 1) / lift.getPassPerTick());
 			passSuccess.addAll(passengers);
@@ -545,7 +524,6 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateMv1Flr(int time, Elevator lift) {
-		lift.moveElevator();
 		int floor = lift.getCurrFloor();
 		if (lift.getPrevFloor() != lift.getCurrFloor()) {
 			if (lift.getPassByFloor()[floor].size() > 0) {
@@ -561,6 +539,7 @@ public class Building {
 				return elevatorEmpty(lift);
 			}
 		}
+		lift.moveElevator();
 		return Elevator.MV1FLR;
 	}
 
@@ -585,6 +564,7 @@ public class Building {
 				return Elevator.OPENDR;
 			}
 		}
+		lift.moveElevator();
 		return Elevator.MV1FLR;
 	}
 
