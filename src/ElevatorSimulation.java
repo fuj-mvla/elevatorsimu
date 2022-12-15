@@ -420,13 +420,7 @@ public class ElevatorSimulation extends Application {
 	 */
 	public void updateState(int currstate,int currFloor) {
 		if (currstate == MV1FLR) {
-			if (this.currFloor < currFloor) {
-				move(true);
-				
-			}
-			else if (this.currFloor > currFloor) {
-				move(false);
-			}
+				move(this.currFloor < currFloor);
 			this.currFloor++;
 		}
 		else if (currstate == MVTOFLR) {
