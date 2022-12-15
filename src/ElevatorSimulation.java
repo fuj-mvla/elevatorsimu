@@ -274,27 +274,17 @@ public class ElevatorSimulation extends Application {
 	 * Make elevator doors.
 	 */
 	private void makeHotelDoors() {
-		Rectangle ElevatorBackground = new Rectangle(180, 625);
+		Rectangle ElevatorBackground = new Rectangle(100, 625);
 		ElevatorBackground.setFill(Color.GRAY);
-		gp.add(ElevatorBackground, 1, 8);
+		gp.add(ElevatorBackground, 2, 8);
+		int startingBackP = 3;
+		for (int i = 0;i < 6;i++) {
+	
 		Rectangle wall1 = new Rectangle(600, 120);
 		wall1.setFill(Color.BROWN);
-		gp.add(wall1, 5, 3);
-		Rectangle wall2 = new Rectangle(600, 120);
-		wall2.setFill(Color.BROWN);
-		gp.add(wall2, 5, 5);
-		Rectangle wall3 = new Rectangle(600, 120);
-		wall3.setFill(Color.BROWN);
-		gp.add(wall3, 5, 7);
-		Rectangle wall4 = new Rectangle(600, 120);
-		wall4.setFill(Color.BROWN);
-		gp.add(wall4, 5, 9);
-		Rectangle wall5 = new Rectangle(600, 120);
-		wall5.setFill(Color.BROWN);
-		gp.add(wall5, 5, 11);
-		Rectangle wall6 = new Rectangle(600, 120);
-		wall6.setFill(Color.BROWN);
-		gp.add(wall6, 5, 13);
+		gp.add(wall1, 5, startingBackP);
+		startingBackP +=2;
+		}
 		for(int x = 0; x < 6; x++) {
 			gp.add(new Rectangle(50, 80), 8, 2 * x + 3);
 		}
