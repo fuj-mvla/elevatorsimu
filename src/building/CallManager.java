@@ -127,7 +127,7 @@ public class CallManager {
 	int numUpCallsPending() {
 		int numCalls = 0;
 		for (int i = 0; i < upCalls.length; i++) {
-			if (upCalls[i] == true) {
+			if (upCalls[i]) {
 				numCalls++;
 			}
 		}
@@ -143,7 +143,7 @@ public class CallManager {
 	int numUpCallsPending(int floor) {
 		int numCalls = 0;
 		for (int i = floor; i < upCalls.length; i++) {
-			if (upCalls[i] == true) {
+			if (upCalls[i]) {
 				numCalls++;
 			}
 		}
@@ -158,7 +158,7 @@ public class CallManager {
 	int numDownCallsPending() {
 		int numCalls = 0;
 		for (int i = 0; i < downCalls.length; i++) {
-			if (downCalls[i] == true) {
+			if (downCalls[i]) {
 				numCalls++;
 			}
 		}
@@ -174,7 +174,39 @@ public class CallManager {
 	int numDownCallsPending(int floor) {
 		int numCalls = 0;
 		for (int i = 0; i < floor; i++) {
-			if (downCalls[i] == true) {
+			if (downCalls[i]) {
+				numCalls++;
+			}
+		}
+		return numCalls;
+	}
+
+	/**
+	 * Num calls pending below floor
+	 *
+	 * @param floor the floor
+	 * @return the int
+	 */
+	int numCallsPendingBelow(int floor) {
+		int numCalls = 0;
+		for (int i = 0; i < floor-1; i++) {
+			if (downCalls[i] || upCalls[i]) {
+				numCalls++;
+			}
+		}
+		return numCalls;
+	}
+
+	/**
+	 * Num calls pending above floor
+	 *
+	 * @param floor the floor
+	 * @return the int
+	 */
+	int numCallsPendingAbove(int floor) {
+		int numCalls = 0;
+		for (int i = floor+1; i < floors.length; i++) {
+			if (downCalls[i] || upCalls[i]) {
 				numCalls++;
 			}
 		}
@@ -251,7 +283,7 @@ public class CallManager {
 	public boolean isUpCallPending() {
 		int numCalls = 0;
 		for (int i = 0; i < upCalls.length; i++) {
-			if (upCalls[i] == true) {
+			if (upCalls[i]) {
 				numCalls++;
 			}
 		}
@@ -267,7 +299,7 @@ public class CallManager {
 	public boolean isDownCallPending() {
 		int numCalls = 0;
 		for (int i = 0; i < downCalls.length; i++) {
-			if (downCalls[i] == true) {
+			if (downCalls[i]) {
 				numCalls++;
 			}
 		}

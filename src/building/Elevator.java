@@ -60,14 +60,8 @@ public class Elevator {
 									// the moveToFloor in MVTOFLR state.
 	
 	private int offloadDelay;
-
-	public int getOffloadDelay() {
-		return offloadDelay;
-	}
-
-	public void setOffloadDelay(int offloadDelay) {
-		this.offloadDelay = offloadDelay;
-	}
+	
+	private int currentOnboardingGroups;
 
 	@SuppressWarnings("unchecked")
 	public Elevator(int numFloors, int capacity, int floorTicks, int doorTicks, int passPerTick) {
@@ -75,19 +69,9 @@ public class Elevator {
 		this.currState = STOP;
 		this.timeInState = 0;
 		this.currFloor = 0;
-		this.passPerTick = passPerTick;
-		ticksPerFloor = floorTicks;
-		ticksDoorOpenClose = doorTicks;
 		passByFloor = new ArrayList[numFloors];
-
-		this.capacity = capacity;
-		
-		for (int i = 0; i < numFloors; i++) 
-			passByFloor[i] = new ArrayList<Passengers>(); 
-		
-		//TODO: Finish this constructor, adding configuration initialiation and
-		//      initialization of any other private fields, etc.
-
+		for (int i = 0; i < numFloors; i++)
+			passByFloor[i] = new ArrayList<Passengers>();
 
 		this.capacity = capacity;
 		this.ticksPerFloor = floorTicks;
@@ -97,7 +81,6 @@ public class Elevator {
 		// TODO: Finish this constructor, adding configuration initialiation and
 		// initialization of any other private fields, etc.
 		offloadDelay = 0;
-
 	}
 
 	public void moveElevator() {
@@ -115,15 +98,9 @@ public class Elevator {
 			timeInState = 0;
 		}
 	}
-
-	public boolean isDoorClosed() {
-		return(currState == OPENDR);
-		
-
-	}
+	
 	public boolean isStopped() {
 		return currState == STOP;
-
 	}
 	
 	public boolean didStateChange() {
@@ -234,6 +211,11 @@ public class Elevator {
 		this.passByFloor = passByFloor;
 	}
 
+	public void addPassengers(Passengers p) {
+		passByFloor[p.getDestFloor()].add(p);
+		passengers += p.getNumPass();
+	}
+	
 	public int getMoveToFloor() {
 		return moveToFloor;
 	}
@@ -249,6 +231,23 @@ public class Elevator {
 	public void setPostMoveToFloorDir(int postMoveToFloorDir) {
 		this.postMoveToFloorDir = postMoveToFloorDir;
 	}
+
+	public int getCurrentOnboardingGroups() {
+		return currentOnboardingGroups;
+	}
+
+	public void setCurrentOnboardingGroups(int currentOnboardingGroups) {
+		this.currentOnboardingGroups = currentOnboardingGroups;
+	}
+
+	public int getOffloadDelay() {
+		return offloadDelay;
+	}
+
+	public void setOffloadDelay(int offloadDelay) {
+		this.offloadDelay = offloadDelay;
+	}
+
 
 	// TODO: Add Getter/Setters and any methods that you deem are required. Examples
 	// include:

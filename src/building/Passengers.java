@@ -38,6 +38,7 @@ public class Passengers {
 	/** These values will actually be set during execution. Initialized to -1 */
 	private int boardTime=-1;
 	private int timeArrived=-1;
+	private boolean loggedSkip; // Did we already log a skip for this passengers group
 
 	/**
 	 * Instantiates a new passengers.
@@ -203,6 +204,16 @@ public class Passengers {
 	@Override
 	public String toString() {
 		return("ID="+id+"   Time="+time+"   NumPass="+numPass+"   From="+(onFloor+1)+"   To="+(destFloor+1)+"   Polite="+polite+"   Wait="+waitTime);
+	}
+
+
+	public boolean isLoggedSkip() {
+		return loggedSkip;
+	}
+
+
+	public void setLoggedSkip(boolean loggedSkip) {
+		this.loggedSkip = loggedSkip;
 	}
 
 }
