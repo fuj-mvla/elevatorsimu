@@ -80,7 +80,7 @@ public class ElevatorSimController {
 	 * configure the building and the elevator characteristics and also select the
 	 * test to run. Reads the passenger data for the test to run to initialize the
 	 * passenger queue in building...
-	 *
+	 *Peer Review by Jack Fu
 	 * @param gui the gui
 	 */
 	public ElevatorSimController(ElevatorSimulation gui) {
@@ -222,7 +222,7 @@ public class ElevatorSimController {
 
 	// TODO: Write any other helper methods that you may need to access data from
 	// the building...
-
+	// Peer Review by Jack Fu
 	/**
 	 * Step sim. See the comments below for the functionality you must
 	 * implement......
