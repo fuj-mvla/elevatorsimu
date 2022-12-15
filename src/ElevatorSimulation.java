@@ -275,20 +275,24 @@ public class ElevatorSimulation extends Application {
 		gp.add(ElevatorBackground, 2, 8);
 		int startingBackP = 3;
 		for (int i = 0;i < 6;i++) {
-	
 		Rectangle wall1 = new Rectangle(600, 120);
 		wall1.setFill(Color.DARKGREY);
 		gp.add(wall1, 5, startingBackP);
 		startingBackP +=2;
 		}
-		for(int x = 0; x < 6; x++) {
-			gp.add(new Rectangle(50, 80,Color.SADDLEBROWN), 8, 2 * x + 3);
-		}
-		for(int x = 0; x < 6; x++) {
-			gp.add(new Rectangle(50, 80,Color.SADDLEBROWN), 11, 2 * x + 3);
-		}
-		for(int x = 0; x < 6; x++) {
-			gp.add(new Rectangle(50, 80,Color.SADDLEBROWN), 14, 2 * x + 3);
+		int startingX = 5;
+		int startingY = 0;
+		for(int x = 0; x < 18; x++) {
+			Rectangle door = new Rectangle(50, 80,Color.SADDLEBROWN);
+			Circle doorKnob = new Circle(5,Color.BLACK);
+			StackPane doorK = new StackPane(door,doorKnob);
+			doorK.setAlignment(doorKnob, Pos.CENTER_LEFT);
+			if (x %6==0) {
+				startingX +=3;
+				 startingY = 0;
+			}
+			gp.add(doorK, startingX, 2 * startingY + 3);
+			startingY++;
 		}
 	}
 	
