@@ -79,7 +79,7 @@ public class Elevator {
 		ticksPerFloor = floorTicks;
 		ticksDoorOpenClose = doorTicks;
 		passByFloor = new ArrayList[numFloors];
-<<<<<<< HEAD
+
 		this.capacity = capacity;
 		
 		for (int i = 0; i < numFloors; i++) 
@@ -87,9 +87,7 @@ public class Elevator {
 		
 		//TODO: Finish this constructor, adding configuration initialiation and
 		//      initialization of any other private fields, etc.
-=======
-		for (int i = 0; i < numFloors; i++)
-			passByFloor[i] = new ArrayList<Passengers>();
+
 
 		this.capacity = capacity;
 		this.ticksPerFloor = floorTicks;
@@ -99,7 +97,7 @@ public class Elevator {
 		// TODO: Finish this constructor, adding configuration initialiation and
 		// initialization of any other private fields, etc.
 		offloadDelay = 0;
->>>>>>> 20f86e90ce78af5cf60bfbdb996af4385f447c7b
+
 	}
 
 	public void moveElevator() {
@@ -117,15 +115,15 @@ public class Elevator {
 			timeInState = 0;
 		}
 	}
-<<<<<<< HEAD
+
 	public boolean isDoorClosed() {
 		return(currState == OPENDR);
 		
-=======
-	
+
+	}
 	public boolean isStopped() {
 		return currState == STOP;
->>>>>>> 20f86e90ce78af5cf60bfbdb996af4385f447c7b
+
 	}
 	
 	public boolean didStateChange() {

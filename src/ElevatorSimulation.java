@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -167,6 +168,8 @@ public class ElevatorSimulation extends Application {
 
 	/** The m. */
 	private Passengers[] m = { mm, test };
+	
+	private VBox vb;
 
 	/**
 	 * Instantiates a new elevator simulation.
@@ -199,7 +202,9 @@ public class ElevatorSimulation extends Application {
 		gp = new GridPane();
 		bp = new BorderPane();
 		sp = new StackPane();
+		vb = new VBox();
 		initTimeline();
+		makeHotelDoors();
 		initializeFloors();
 		initializeElevatorPosition();
 		makeLegend();
@@ -208,12 +213,14 @@ public class ElevatorSimulation extends Application {
 		pLabel = new Label("" + numPass);
 		sp.getChildren().addAll(elevator, pLabel);
 		sp.setAlignment(pLabel, Pos.TOP_CENTER);
+		bp.setRight(vb);
 		makeElevatorDoors();
+		
 		x.getChildren().addAll(logging, Step, run, timeLabel, stepticks, enter);
 		Step.setOnAction(e -> Closedr());
 		logging.setOnAction(e -> enableLogging());
 		run.setOnAction(e -> board(mm));
-
+		
 		enter.setOnAction(e -> {
 			setTicks(stepticks.getText());	t.play();});
 		Label y = new Label("MV1floor");
@@ -266,6 +273,44 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * Make elevator doors.
 	 */
+	private void makeHotelDoors() {
+		
+		Rectangle ElevatorBackground = new Rectangle(180, 625);
+		ElevatorBackground.setFill(Color.GRAY);
+		gp.add(ElevatorBackground, 1, 8);
+		Rectangle wall1 = new Rectangle(600, 120);
+		wall1.setFill(Color.BROWN);
+		gp.add(wall1, 5, 3);
+		Rectangle wall2 = new Rectangle(600, 120);
+		wall2.setFill(Color.BROWN);
+		gp.add(wall2, 5, 5);
+		Rectangle wall3 = new Rectangle(600, 120);
+		wall3.setFill(Color.BROWN);
+		gp.add(wall3, 5, 7);
+		Rectangle wall4 = new Rectangle(600, 120);
+		wall4.setFill(Color.BROWN);
+		gp.add(wall4, 5, 9);
+		Rectangle wall5 = new Rectangle(600, 120);
+		wall5.setFill(Color.BROWN);
+		gp.add(wall5, 5, 11);
+		Rectangle wall6 = new Rectangle(600, 120);
+		wall6.setFill(Color.BROWN);
+		gp.add(wall6, 5, 13);
+		
+		for(int x = 0; x < 6; x++) {
+			gp.add(new Rectangle(50, 80), 8, 2 * x + 3);
+		}
+		for(int x = 0; x < 6; x++) {
+			gp.add(new Rectangle(50, 80), 11, 2 * x + 3);
+		}
+		for(int x = 0; x < 6; x++) {
+			gp.add(new Rectangle(50, 80), 14, 2 * x + 3);
+		}
+		
+		
+		
+		
+	}
 	private void makeElevatorDoors() {
 
 		door1.setFill(Color.LIGHTGRAY);
