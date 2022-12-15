@@ -80,7 +80,16 @@ public class Building {
 	/** The prioritized for mv to flr. */
 	private Passengers prioritizedForBoard;
 	
+	/* Passengers for the GUI */
+	
+	/** The arrival passengers. */
 	List<Passengers> arrivalPassengers;
+	
+	/** The boarding passengers. */
+	Passengers boardingPassengers;
+	
+	/** The give up passengers. */
+	Passengers giveUpPassengers;
 
 	/**
 	 * Instantiates a new building.
@@ -235,8 +244,33 @@ public class Building {
 		}
 	}
 
+	/**
+	 * Arrival passengers.
+	 *
+	 * @return the passengers[]
+	 */
 	public Passengers[] arrivalPassengers() {
-		return arrivalPassengers.toArray(new Passengers[arrivalPassengers.size()]);
+		Passengers[] p = arrivalPassengers.toArray(new Passengers[arrivalPassengers.size()]);
+		arrivalPassengers.clear();
+		return p;
+	}
+	
+	/**
+	 * Boarding passengers.
+	 *
+	 * @return the passengers[]
+	 */
+	public Passengers boardingPassengers() {
+		return boardingPassengers;
+	}
+	
+	/**
+	 * Leaving passengers.
+	 *
+	 * @return the passengers[]
+	 */
+	public Passengers giveUpPassengers() {
+		return giveUpPassengers;
 	}
 	
 	/**
@@ -367,6 +401,7 @@ public class Building {
 			if (p.getTimeWillGiveUp() + 1 == time) {
 				q.poll();
 				gaveUp.add(p);
+				giveUpPassengers = p;
 				logGiveUp(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
 			} else if (p.getNumPass() + lift.getPassengers() > lift.getCapacity()) {
 				if (!p.isLoggedSkip()) {
@@ -381,6 +416,7 @@ public class Building {
 				logBoard(time, p.getNumPass(), lift.getCurrFloor(), p.getDirection(), p.getId());
 				q.poll();
 				lift.addPassengers(p);
+				boardingPassengers = p;
 			}
 			p = q.peek();
 		}

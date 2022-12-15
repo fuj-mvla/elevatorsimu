@@ -238,6 +238,12 @@ public class ElevatorSimController {
 				gui.setTime(stepCnt);
 				gui.updateState(building.getCurrentState(), building.getCurrentFloor());
 				gui.arrivalPassengers(building.arrivalPassengers());
+				if (building.boardingPassengers() != null) {
+					gui.board(building.boardingPassengers());
+				}
+				if (building.giveUpPassengers() != null) {
+					gui.giveUp(building.giveUpPassengers());
+				}
 //				if (getCurrentState() == 3) {
 //					if (gui != null)
 //						gui.offLoad(getPassengersLeaving(getElevator()).length, currentFloor);
