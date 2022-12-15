@@ -32,6 +32,7 @@ class BuildingFSMGiveUpTest {
 	private static boolean DEBUG = false;
 	private static String os = null;
 	private static String javaHome = null;
+	private ElevatorLogCompare cmpLog = new ElevatorLogCompare();
 
 	private void updateSimConfigCSV(String fname) {
 		File fh = fio.getFileHandle("ElevatorSimConfig.csv");
@@ -78,78 +79,78 @@ class BuildingFSMGiveUpTest {
 	}
 
 	
-	private boolean processCmpElevatorOutput(Process proc, ArrayList<String> results) {
-		String line = "";
-		boolean pass = true;
-		BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-		try {
-			while ((line = br.readLine())!=null) {
-				results.add(line);
-				System.out.println(line);
-				if (line.contains("FAILED")) pass = false;
-			}
-			br.close();		
-		} catch (IOException e) {
-			e.printStackTrace();			
-		}
-		return pass;
-	}
-	
-	private void printManualCmpElevatorInstructions(File fh) {
-		System.out.println("ERROR: cmpElevator failed to run - you will need to run manually.");
-		System.out.println("       1) cd to your project directory in the terminal.");
-		System.out.println("       2) java -jar cmpElevator.jar "+fh.getName().replaceAll(".cmp", ".log"));	
-	}
-	
-	private boolean processCmpElevatorError(Process proc, ArrayList<String> results, File fh) {
-		String line = "";
-		boolean pass = true;
-		BufferedReader br = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-		try {
-			while ((line = br.readLine())!=null) {
-				results.add(line);
-				System.out.println(line);
-				pass = false;
-			}
-			br.close();		
-			printManualCmpElevatorInstructions(fh);
-		} catch (IOException e) {
-			e.printStackTrace();			
-		}
-		return pass;
-	}
-	
-	private boolean executeCmpElevator(File fh,String cmd) {
-		boolean pass = true;
-		ArrayList<String> cmpResults = new ArrayList<String>();
-		if (javaHome == null) {
-			printManualCmpElevatorInstructions(fh);
-			fail();
-		}
-		cmd = javaHome+"/"+cmd;
-		String[] execCmpElevator = cmd.split("\\s+");
-		try {
-			Process proc = new ProcessBuilder(execCmpElevator).start();
-			proc.waitFor();
-			pass = pass && processCmpElevatorOutput(proc,cmpResults);
-			if (cmpResults.isEmpty()) 
-				pass = pass && processCmpElevatorError(proc,cmpResults,fh);
-			
-			if (!cmpResults.isEmpty()) {
-				BufferedWriter bw = fio.openBufferedWriter(fh);
-				for (int i = 0; i < cmpResults.size() ; i++) {
-					bw.write(cmpResults.get(i)+"\n");
-				}
-				bw.close();
-				moveLogCmpFiles(fh.getName().replaceAll(".cmp", ""));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	    return(pass);	
-	}
+//	private boolean processCmpElevatorOutput(Process proc, ArrayList<String> results) {
+//		String line = "";
+//		boolean pass = true;
+//		BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+//		try {
+//			while ((line = br.readLine())!=null) {
+//				results.add(line);
+//				System.out.println(line);
+//				if (line.contains("FAILED")) pass = false;
+//			}
+//			br.close();		
+//		} catch (IOException e) {
+//			e.printStackTrace();			
+//		}
+//		return pass;
+//	}
+//	
+//	private void printManualCmpElevatorInstructions(File fh) {
+//		System.out.println("ERROR: cmpElevator failed to run - you will need to run manually.");
+//		System.out.println("       1) cd to your project directory in the terminal.");
+//		System.out.println("       2) java -jar cmpElevator.jar "+fh.getName().replaceAll(".cmp", ".log"));	
+//	}
+//	
+//	private boolean processCmpElevatorError(Process proc, ArrayList<String> results, File fh) {
+//		String line = "";
+//		boolean pass = true;
+//		BufferedReader br = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+//		try {
+//			while ((line = br.readLine())!=null) {
+//				results.add(line);
+//				System.out.println(line);
+//				pass = false;
+//			}
+//			br.close();		
+//			printManualCmpElevatorInstructions(fh);
+//		} catch (IOException e) {
+//			e.printStackTrace();			
+//		}
+//		return pass;
+//	}
+//	
+//	private boolean executeCmpElevator(File fh,String cmd) {
+//		boolean pass = true;
+//		ArrayList<String> cmpResults = new ArrayList<String>();
+//		if (javaHome == null) {
+//			printManualCmpElevatorInstructions(fh);
+//			fail();
+//		}
+//		cmd = javaHome+"/"+cmd;
+//		String[] execCmpElevator = cmd.split("\\s+");
+//		try {
+//			Process proc = new ProcessBuilder(execCmpElevator).start();
+//			proc.waitFor();
+//			pass = pass && processCmpElevatorOutput(proc,cmpResults);
+//			if (cmpResults.isEmpty()) 
+//				pass = pass && processCmpElevatorError(proc,cmpResults,fh);
+//			
+//			if (!cmpResults.isEmpty()) {
+//				BufferedWriter bw = fio.openBufferedWriter(fh);
+//				for (int i = 0; i < cmpResults.size() ; i++) {
+//					bw.write(cmpResults.get(i)+"\n");
+//				}
+//				bw.close();
+//				moveLogCmpFiles(fh.getName().replaceAll(".cmp", ""));
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//	    return(pass);	
+//	}
 
 	
     private static String getOperatingSystem() {
@@ -222,6 +223,14 @@ class BuildingFSMGiveUpTest {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
+
+	
+	private void runFSMTest (String test,String cmd) {
+		deleteTestCSV(test+".csv");
+		assertTrue(cmpLog.executeCompare(cmd.split("\\s+")));
+		moveLogCmpFiles(test);
+	}
+	
 	@Test
 	@Order(1)
 	//@Disabled
@@ -235,10 +244,8 @@ class BuildingFSMGiveUpTest {
 	    int i;
 		for (i = 0; i < 41;i++) c.stepSim();
 		b.closeLogs(i);
-		deleteTestCSV(test+".csv");
-		File fh = fio.getFileHandle(test+".cmp");
-		String cmd = "java -jar ./cmpElevator.jar "+test+".log";
-		assertTrue(executeCmpElevator(fh,cmd));
+		String cmd = "java -jar cmpElevator.jar --ckCalls "+test+".log";
+	    runFSMTest(test,cmd);
 	}
 
 	@Test
@@ -254,10 +261,8 @@ class BuildingFSMGiveUpTest {
 	    int i;
 		for (i = 0; i < 107;i++) c.stepSim();
 		b.closeLogs(i);
-		deleteTestCSV(test+".csv");
-		File fh = fio.getFileHandle(test+".cmp");
-		String cmd = "java -jar ./cmpElevator.jar "+test+".log";
-		assertTrue(executeCmpElevator(fh,cmd));
+		String cmd = "java -jar cmpElevator.jar --ckCalls "+test+".log";
+	    runFSMTest(test,cmd);
 	}
 
 	@Test
@@ -273,10 +278,8 @@ class BuildingFSMGiveUpTest {
 	    int i;
 		for (i = 0; i < 109;i++) c.stepSim();
 		b.closeLogs(i);
-		deleteTestCSV(test+".csv");
-		File fh = fio.getFileHandle(test+".cmp");
-		String cmd = "java -jar ./cmpElevator.jar "+test+".log";
-		assertTrue(executeCmpElevator(fh,cmd));
+		String cmd = "java -jar cmpElevator.jar --ckCalls "+test+".log";
+	    runFSMTest(test,cmd);
 	}
 
 	@Test
@@ -292,10 +295,8 @@ class BuildingFSMGiveUpTest {
 	    int i;
 		for (i = 0; i < 129;i++) c.stepSim();
 		b.closeLogs(i);
-		deleteTestCSV(test+".csv");
-		File fh = fio.getFileHandle(test+".cmp");
-		String cmd = "java -jar ./cmpElevator.jar "+test+".log";
-		assertTrue(executeCmpElevator(fh,cmd));
+		String cmd = "java -jar cmpElevator.jar --ckCalls "+test+".log";
+	    runFSMTest(test,cmd);
 	}
 
 }
