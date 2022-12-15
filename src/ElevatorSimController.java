@@ -232,35 +232,77 @@ public class ElevatorSimController {
 		// DO NOT MOVE THIS - YOU MUST INCREMENT TIME FIRST!
 		stepCnt++;
 
+
+		final int STOP = 0;
+		if(gui!= null) {
+			gui.setTime(stepCnt);
+			gui.updateState(building.getCurrentState(), currentFloor);
+		}
+		if (!building.passengersProcessed() ||  building.getCurrentState() != STOP) {
+			building.checkPassengerArrival(stepCnt);
+			building.checkPassengerGiveup(stepCnt);
+			building.updateElevator(stepCnt);
+			if(gui != null) {
+
+
+				if(building.getCurrentState() == 3) {
+					gui.offLoad(building.getPassengersLeaving(building.getElevator()).length, currentFloor);
+				}
+				if(building.getCurrentState() == 4) {//board
+					for(int x = 0; x < 3; x++) {
+						if(building.getPassengersBoarding(building.getElevator()).length == 0) {
+							break;
+
+						}
+
+						else {
+							gui.board(building.getPassengersBoarding(building.getElevator())[0]);
+
+						}
+					}
+				}
+			}
+		}
 		if (!endSim) {
 			endSim = building.step(stepCnt);
 			if (gui != null) {
 				gui.setTime(stepCnt);
 				gui.updateState(building.getCurrentState(), currentFloor);
-//				if (getCurrentState() == 3) {
-//					if (gui != null)
-//						gui.offLoad(getPassengersLeaving(getElevator()).length, currentFloor);
-//					// gui.offLoad(building.getPassengersLeaving(building.getElevator()).length,
-//					// CurrentFloor);
-//				}
-//				if (getCurrentState() == 4) {// board
-//					for (int x = 0; x < 3; x++) {
-//						if (getPassengersBoarding(getElevator()).length == 0) {
-//							break;
-//
-//						} else {
-//							if (gui != null)
-//								gui.board(building.getPassengersBoarding(building.getElevator())[0]);
-//							// gui.board(building.getPassengersBoarding(building.getElevator())[0]);
-//						}
-//					}
-//				}
-				if (endSim) {
-					gui.endSim();
-				}
+				//				if (getCurrentState() == 3) {
+				//					if (gui != null)
+				//						gui.offLoad(getPassengersLeaving(getElevator()).length, currentFloor);
+				//					// gui.offLoad(building.getPassengersLeaving(building.getElevator()).length,
+				//					// CurrentFloor);
+				//				}
+				//				if (getCurrentState() == 4) {// board
+				//					for (int x = 0; x < 3; x++) {
+				//						if (getPassengersBoarding(getElevator()).length == 0) {
+				//							break;
+				//
+				//						} else {
+				//							if (gui != null)
+				//								gui.board(building.getPassengersBoarding(building.getElevator())[0]);
+				//							// gui.board(building.getPassengersBoarding(building.getElevator())[0]);
+				//						}
+				//					}
+				//				}
 			}
 		}
+		if (endSim) {
+			gui.endSim();
+
+		}
+
+
+
+
 	}
+	
+			// has to do something to update GUI
+
+
+		
+	
 	/*
 	 * if(gui != null) {
 	 * 
