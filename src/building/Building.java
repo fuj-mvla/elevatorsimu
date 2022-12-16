@@ -133,6 +133,7 @@ public class Building {
 	 * @param stepCnt the current time
 	 * @return true if done, false otherwise
 	 */
+	// Reviewed by Jack Fu
 	public boolean step(int stepCnt) {
 		checkPassengerArrival(stepCnt);
 		checkPassengerGiveup(stepCnt);
@@ -158,6 +159,7 @@ public class Building {
 	 * @param wait      the wait
 	 * @return true, if successful
 	 */
+	// Reviewed by Jack Fu
 	public boolean addPassengersToQueue(int time, int numPass, int fromFloor, int toFloor, boolean polite, int wait) {
 		return passQ.add(new Passengers(time, numPass, fromFloor, toFloor, polite, wait));
 	}
@@ -171,6 +173,7 @@ public class Building {
 	 * @param doorTicks   the door ticks
 	 * @param passPerTick the pass per tick
 	 */
+	// Reviewed by Jack Fu
 	public void configElevators(int numFloors, int capacity, int floorTicks, int doorTicks, int passPerTick) {
 		for (int i = 0; i < NUM_ELEVATORS; i++) {
 			elevators[i] = new Elevator(numFloors, capacity, floorTicks, doorTicks, passPerTick);
@@ -188,6 +191,7 @@ public class Building {
 	 *
 	 * @return true, if successful
 	 */
+	// Reviewed by Jack Fu
 	public boolean passengersProcessed() {
 		if (!passQ.isEmpty()) {
 			return false;
@@ -210,6 +214,7 @@ public class Building {
 	 * @param time the time
 	 * @return true, if successful
 	 */
+	// Reviewed by Jack Fu
 	public void checkPassengerArrival(int time) {
 		Passengers p = passQ.peek();
 		while (p != null && time == p.getTime()) {
@@ -231,6 +236,7 @@ public class Building {
 	 * @param time the time
 	 * @return true, if successful
 	 */
+	// Reviewed by Jack Fu
 	public void checkPassengerGiveup(int time) {
 		for (Floor f : floors) {
 			Passengers p = f.peekFromUp();
@@ -251,6 +257,7 @@ public class Building {
 	 *
 	 * @return the passengers[]
 	 */
+	// Reviewed by Jack Fu
 	public Passengers[] arrivalPassengers() {
 		Passengers[] p = arrivalPassengers.toArray(new Passengers[arrivalPassengers.size()]);
 		arrivalPassengers.clear();
@@ -262,6 +269,7 @@ public class Building {
 	 *
 	 * @return the passengers[]
 	 */
+	// Reviewed by Jack Fu
 	public Passengers[] boardingPassengers() {
 		Passengers[] p = boardingPassengers.toArray(new Passengers[boardingPassengers.size()]);
 		boardingPassengers.clear();
@@ -273,6 +281,7 @@ public class Building {
 	 *
 	 * @return the passengers[]
 	 */
+	// Reviewed by Jack Fu
 	public Passengers[] giveUpPassengers() {
 		Passengers[] p = gaveUp.toArray(new Passengers[gaveUp.size()]);
 		return p;
@@ -283,6 +292,7 @@ public class Building {
 	 *
 	 * @return the curr num pass
 	 */
+	// Reviewed by Jack Fu
 	public int getCurrNumPass() {
 		return elevators[0].getPassengers();
 	}
@@ -292,6 +302,7 @@ public class Building {
 	 *
 	 * @return the curr direction
 	 */
+	// Reviewed by Jack Fu
 	public int getCurrDirection() {
 		return elevators[0].getDirection();
 	}
@@ -313,6 +324,7 @@ public class Building {
 	 * @param lift the lift
 	 * @return the int
 	 */
+	// Reviewed by Jack Fu
 	public int currStateStop(int time, Elevator lift) {
 		lift.setTimeInState(lift.getTimeInState() + 1);
 		if (!callMgr.isUpCallPending() && !callMgr.isDownCallPending()) {
@@ -347,6 +359,7 @@ public class Building {
 	 * @param lift the lift
 	 * @return the int
 	 */
+	// Reviewed by Jack Fu
 	protected int currStateCloseDr(int time, Elevator lift) {
 		int direction = lift.getDirection();
 		Passengers pInCurrDir = direction == UP ? floors[lift.getCurrFloor()].peekFromUp()
@@ -376,6 +389,7 @@ public class Building {
 	 * @param lift      the lift
 	 * @return the int
 	 */
+	// Reviewed by Jack Fu
 	private int elevatorEmptyClosed(int direction, Elevator lift) {
 		if (!callMgr.isDownCallPending() && !callMgr.isUpCallPending()) {
 			return Elevator.STOP;
@@ -411,6 +425,7 @@ public class Building {
 	 * @param lift the lift
 	 * @return the int
 	 */
+	// Reviewed by Jack Fu
 	protected int currStateBoard(int time, Elevator lift) {
 		lift.setTimeInState(lift.getTimeInState() + 1);
 		if (prioritizedForBoard != null) {
@@ -442,6 +457,7 @@ public class Building {
 	 * @param p the p
 	 * @param q the q
 	 */
+	// Reviewed by Jack Fu
 	public void loopOverBoarding(int time, Elevator lift, Passengers p, GenericQueue<Passengers> q) {
 		while (p != null) {
 			if (p.getTimeWillGiveUp() + 1 == time) {
@@ -478,6 +494,7 @@ public class Building {
 	 * @param lift the lift
 	 * @return the int
 	 */
+	// Reviewed by Jack Fu
 	protected int currStateOpenDr(int time, Elevator lift) {
 		lift.resetPrevFloor();			
 		lift.setTimeInState(lift.getTimeInState() + 1);
@@ -511,6 +528,7 @@ public class Building {
 	 * @param lift the lift
 	 * @return the int
 	 */
+	// Reviewed by Jack Fu
 	protected int currStateMvToFlr(int time, Elevator lift) {
 		lift.moveElevator();
 		if (lift.getCurrFloor() == prioritizedForBoard.getOnFloor()) {
@@ -535,6 +553,7 @@ public class Building {
 	 * @todo Keep working on this. Might not be fully correct. getTimeArrived() time
 	 *       to offload?
 	 */
+	// Reviewed by Jack Fu
 	protected int currStateOffLd(int time, Elevator lift) {
 		int timeInState = lift.getTimeInState();
 		lift.setTimeInState(timeInState + 1);
@@ -563,6 +582,7 @@ public class Building {
 	 * @param lift the lift
 	 * @return the int
 	 */
+	// Reviewed by Jack Fu
 	private int timeInStateEqualsOffldDelay(Elevator lift) {
 		if (lift.getDirection() == DOWN && !floors[lift.getCurrFloor()].goingDownEmpty()) {
 			return Elevator.BOARD;
@@ -598,6 +618,7 @@ public class Building {
 	 * @param lift the lift
 	 * @return the int
 	 */
+	// Reviewed by Jack Fu
 	protected int currStateMv1Flr(int time, Elevator lift) {
 		lift.moveElevator();
 		int floor = lift.getCurrFloor();
@@ -624,6 +645,7 @@ public class Building {
 	 * @param lift the lift
 	 * @return the int
 	 */
+	// Reviewed by Jack Fu
 	private int elevatorEmpty(Elevator lift) {
 		int floor = lift.getCurrFloor();
 		int dir = lift.getDirection();
@@ -647,6 +669,7 @@ public class Building {
 	 *
 	 * @return true, if successful
 	 */
+	// Reviewed by Jack Fu
 	public boolean allElevatorsStopped() {
 		for (Elevator e : elevators) {
 			if (!e.isStopped()) {
@@ -662,6 +685,7 @@ public class Building {
 	 * 
 	 * @return the current state
 	 */
+	// Reviewed by Jack Fu
 	public int getCurrentState() {
 		return elevators[0].getCurrState();
 	}
@@ -672,6 +696,7 @@ public class Building {
 	 * 
 	 * @return the current floor
 	 */
+	// Reviewed by Jack Fu
 	public int getCurrentFloor() {
 		return elevators[0].getCurrFloor();
 	}
@@ -681,6 +706,7 @@ public class Building {
 	 *
 	 * @return the elevator
 	 */
+	// Reviewed by Jack Fu
 	public Elevator getElevator() {
 		return elevators[0];
 	}

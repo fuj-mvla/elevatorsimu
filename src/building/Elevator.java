@@ -82,7 +82,8 @@ public class Elevator {
 		// initialization of any other private fields, etc.
 		offloadDelay = 0;
 	}
-
+	
+	// Reviewed by Tohar Markovich
 	public void moveElevator() {
 		timeInState++;
 		prevFloor = currFloor;
@@ -91,6 +92,7 @@ public class Elevator {
 		}
 	}
 
+	// Reviewed by Tohar Markovich
 	public void updateCurrState(int currState) {
 		this.prevState = this.currState;
 		this.currState = currState;
@@ -207,19 +209,23 @@ public class Elevator {
 		this.passengers = passengers;
 	}
 
+	// Reviewed by Tohar Markovich
 	public ArrayList<Passengers>[] getPassByFloor() {
 		return passByFloor;
 	}
 
+	// Reviewed by Tohar Markovich
 	public void setPassByFloor(ArrayList<Passengers>[] passByFloor) {
 		this.passByFloor = passByFloor;
 	}
 
+	// Reviewed by Tohar Markovich
 	public void addPassengers(Passengers p) {
 		passByFloor[p.getDestFloor()].add(p);
 		passengers += p.getNumPass();
 	}
 	
+	// Reviewed by Tohar Markovich
 	public void clearFloor(int floor) {
 		for (Passengers p : passByFloor[floor]) {
 			passengers -= p.getNumPass();

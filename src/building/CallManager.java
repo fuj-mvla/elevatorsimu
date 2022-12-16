@@ -65,6 +65,7 @@ public class CallManager {
 	 * queues - either passengers being added or being removed. The alternative is
 	 * to dynamically recalculate the values of specific fields when needed.
 	 */
+	// Reviewed by Itai Schwarz
 	void updateCallStatus() {
 		// TODO: Write this method if you choose to implement it...
 		upCallPending = false;
@@ -88,6 +89,7 @@ public class CallManager {
 	 * @param floor the floor
 	 * @return the passengers
 	 */
+	// Reviewed by Itai Schwarz
 	Passengers prioritizePassengerCalls(Elevator lift) {
 		// TODO: Write this method based upon prioritization from STOP...
 		// compare numCalls up and down
@@ -132,6 +134,7 @@ public class CallManager {
 	 *
 	 * @return the int
 	 */
+	// Reviewed by Itai Schwarz
 	int numUpCallsPending() {
 		int numCalls = 0;
 		for (int i = 0; i < upCalls.length; i++) {
@@ -148,6 +151,7 @@ public class CallManager {
 	 * @param floor the floor
 	 * @return the int
 	 */
+	// Reviewed by Itai Schwarz
 	int numUpCallsPending(int floor) {
 		int numCalls = 0;
 		for (int i = floor; i < upCalls.length; i++) {
@@ -163,6 +167,7 @@ public class CallManager {
 	 *
 	 * @return the int
 	 */
+	// Reviewed by Itai Schwarz
 	int numDownCallsPending() {
 		int numCalls = 0;
 		for (int i = 0; i < downCalls.length; i++) {
@@ -179,6 +184,7 @@ public class CallManager {
 	 * @param floor the floor
 	 * @return the int
 	 */
+	// Reviewed by Itai Schwarz
 	int numDownCallsPending(int floor) {
 		int numCalls = 0;
 		for (int i = 0; i < floor; i++) {
@@ -195,6 +201,7 @@ public class CallManager {
 	 * @param floor the floor
 	 * @return the int
 	 */
+	// Reviewed by Itai Schwarz
 	int numCallsPendingBelow(int floor) {
 		int numCalls = 0;
 		for (int i = 0; i < floor; i++) {
@@ -211,6 +218,7 @@ public class CallManager {
 	 * @param floor the floor
 	 * @return the int
 	 */
+	// Reviewed by Itai Schwarz
 	int numCallsPendingAbove(int floor) {
 		int numCalls = 0;
 		for (int i = floor+1; i < floors.length; i++) {
@@ -226,6 +234,7 @@ public class CallManager {
 	 *
 	 * @return the lowest up call
 	 */
+	// Reviewed by Itai Schwarz
 	Passengers getLowestUpCall() {
 		int floor = 0;
 		for (int i = 0; i < upCalls.length; i++) {
@@ -242,6 +251,7 @@ public class CallManager {
 	 *
 	 * @return the highest down call
 	 */
+	// Reviewed by Itai Schwarz
 	Passengers getHighestDownCall() {
 		int saveHighest = 0;
 		for (int i = 0; i < downCalls.length; i++) {
@@ -257,6 +267,7 @@ public class CallManager {
 	 *
 	 * @return the lowest up call floor
 	 */
+	// Reviewed by Itai Schwarz
 	int getLowestUpCallFloor() {
 		int floor = 0;
 		for (int i = 0; i < upCalls.length; i++) {
@@ -273,6 +284,7 @@ public class CallManager {
 	 *
 	 * @return the highest down call floor
 	 */
+	// Reviewed by Itai Schwarz
 	int getHighestDownCallFloor() {
 		int saveHighest = 0;
 		for (int i = 0; i < downCalls.length; i++) {
@@ -288,6 +300,7 @@ public class CallManager {
 	 *
 	 * @return true, if is up call pending
 	 */
+	// Reviewed by Itai Schwarz
 	public boolean isUpCallPending() {
 		return upCallPending;
 	}
@@ -297,6 +310,7 @@ public class CallManager {
 	 *
 	 * @return true, if is down call pending
 	 */
+	// Reviewed by Itai Schwarz
 	public boolean isDownCallPending() {
 		return downCallPending;
 	}

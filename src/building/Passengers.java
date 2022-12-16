@@ -211,7 +211,7 @@ public class Passengers {
 		return loggedSkip;
 	}
 
-
+	// Reviewed by Tohar Markovich
 	public void setLoggedSkip(boolean loggedSkip) {
 		this.loggedSkip = loggedSkip;
 	}

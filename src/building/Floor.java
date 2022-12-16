@@ -41,6 +41,7 @@ public class Floor {
 	 *
 	 * @return the generic queue
 	 */
+	// Reviewed by Itai Schwarz
 	public GenericQueue<Passengers> getDownQueue() {
 		return down;
 	}
@@ -50,6 +51,7 @@ public class Floor {
 	 *
 	 * @return the generic queue
 	 */
+	// Reviewed by Itai Schwarz
 	public GenericQueue<Passengers> getUpQueue() {
 		return up;
 	}
@@ -60,6 +62,7 @@ public class Floor {
 	 * @return true, if successful
 	 */
 	// account for this in your methods.
+	// Reviewed by Itai Schwarz
 	public boolean goingUpEmpty() {
 		return up.isEmpty();
 	}
@@ -70,6 +73,7 @@ public class Floor {
 	 * @param p the p
 	 * @return true, if successful
 	 */
+	// Reviewed by Itai Schwarz
 	public boolean addToUp(Passengers p) {
 		return up.add(p);
 	}
@@ -79,6 +83,7 @@ public class Floor {
 	 *
 	 * @return the passengers
 	 */
+	// Reviewed by Itai Schwarz
 	public Passengers peekFromUp() {
 		return up.peek();
 	}
@@ -88,6 +93,7 @@ public class Floor {
 	 *
 	 * @return the passengers
 	 */
+	// Reviewed by Itai Schwarz
 	public Passengers pollFromUp() {
 		return up.poll();
 	}
@@ -97,6 +103,7 @@ public class Floor {
 	 *
 	 * @return true, if successful
 	 */
+	// Reviewed by Itai Schwarz
 	public boolean goingDownEmpty() {
 		return down.isEmpty();
 	}
@@ -107,6 +114,7 @@ public class Floor {
 	 * @param p the p
 	 * @return true, if successful
 	 */
+	// Reviewed by Itai Schwarz
 	public boolean addToDown(Passengers p) {
 		return down.add(p);
 	}
@@ -116,6 +124,7 @@ public class Floor {
 	 *
 	 * @return the passengers
 	 */
+	// Reviewed by Itai Schwarz
 	public Passengers peekFromDown() {
 		return down.peek();
 	}
@@ -125,6 +134,7 @@ public class Floor {
 	 *
 	 * @return the passengers
 	 */
+	// Reviewed by Itai Schwarz
 	public Passengers pollFromDown() {
 		return down.poll();
 	}
