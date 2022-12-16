@@ -166,8 +166,7 @@ public class ElevatorSimulation extends Application {
 
 	
 	
-	/** The vb. */
-	private VBox vb;
+	
 
 	/**
 	 * Instantiates a new elevator simulation.
@@ -200,7 +199,6 @@ public class ElevatorSimulation extends Application {
 		gp = new GridPane();
 		bp = new BorderPane();
 		sp = new StackPane();
-		vb = new VBox();
 		initTimeline();
 		makeHotelDoors();
 		initializeFloors();
@@ -211,7 +209,6 @@ public class ElevatorSimulation extends Application {
 		pLabel = new Label("" + numPass);
 		sp.getChildren().addAll(elevator, pLabel);
 		sp.setAlignment(pLabel, Pos.TOP_CENTER);
-		bp.setRight(vb);
 		makeElevatorDoors();
 		x.getChildren().addAll(logging, Step, run, timeLabel, stepticks, enter);
 		Step.setOnAction(e -> controller.stepSim());
