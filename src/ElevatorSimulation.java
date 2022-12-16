@@ -85,7 +85,7 @@ public class ElevatorSimulation extends Application {
 	private Button enter = new Button("Enter");
 
 	/** The duration. */
-	private int duration = 100;
+	private int duration = 50;
 
 	/** The cycle count. */
 	private int cycleCount = 1;
@@ -415,7 +415,6 @@ public class ElevatorSimulation extends Application {
 	 * @param currentfloor from elevator
 	 */
 	public void updateState(int currstate, int currFloor,int direction) {
-		System.out.println(currFloor);
 		if (currstate == MV1FLR) {
 			if (this.currFloor ==currFloor) {
 			move(direction==UP);
