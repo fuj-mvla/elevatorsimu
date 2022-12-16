@@ -162,14 +162,9 @@ public class ElevatorSimulation extends Application {
 	/** The mv1flr. */
 	private final int MV1FLR = Elevator.MV1FLR;
 
-	/** The mm. */
-	private Passengers mm = new Passengers(1, 3, 2, 4, true, 1000);
 
-	/** The test. */
-	private Passengers test = new Passengers(1, 3, 2, 4, true, 1000);
 
-	/** The m. */
-	private Passengers[] m = { mm, test };
+	
 	
 	/** The vb. */
 	private VBox vb;
