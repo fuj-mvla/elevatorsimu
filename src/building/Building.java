@@ -362,13 +362,13 @@ public class Building {
 			return Elevator.STOP;
 		}
 		int floor = lift.getCurrFloor();
-		if (direction == UP && !floors[floor].goingUpEmpty()
-				|| direction == DOWN && !floors[floor].goingDownEmpty()) {
-			return Elevator.OPENDR;
-		}
 		if (direction == UP && callMgr.numCallsPendingAbove(floor) > 0 || direction == DOWN && callMgr.numCallsPendingBelow(floor) > 0) {
 			return Elevator.MV1FLR;
 		} else {
+			if (direction == UP && !floors[floor].goingUpEmpty()
+					|| direction == DOWN && !floors[floor].goingDownEmpty()) {
+				return Elevator.OPENDR;
+			}
 			direction = direction * -1;
 			lift.setDirection(direction);
 			if (direction == UP && !floors[floor].goingUpEmpty()
