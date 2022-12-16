@@ -233,18 +233,16 @@ public class ElevatorSimController {
 		stepCnt++;
 
 		if (!endSim) {
+			gui.currentNumPassengers(building.getCurrNumPass());
 			endSim = building.step(stepCnt);
 			if (gui != null) {
 				gui.setTime(stepCnt);
-				gui.updateState(building.getCurrentState(), building.getCurrentFloor());
+				gui.updateState(building.getCurrentState(), building.getCurrentFloor(), building.getCurrDirection());
 				gui.arrivalPassengers(building.arrivalPassengers());
-				if (building.boardingPassengers() != null) {
-					gui.board(building.boardingPassengers());
-				}
+				gui.board(building.boardingPassengers());
 				if (building.giveUpPassengers() != null) {
 					gui.giveUp(building.giveUpPassengers());
 				}
-				gui.currentNumPassengers(building.getCurrNumPass());
 				if (endSim) {
 					gui.endSim();
 				}

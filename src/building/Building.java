@@ -86,7 +86,7 @@ public class Building {
 	private List<Passengers> arrivalPassengers;
 	
 	/** The boarding passengers. */
-	private Passengers boardingPassengers;
+	private List<Passengers> boardingPassengers;
 	
 	/** The give up passengers. */
 	private Passengers giveUpPassengers;
@@ -108,6 +108,7 @@ public class Building {
 		passSuccess = new ArrayList<Passengers>();
 		gaveUp = new ArrayList<Passengers>();
 		arrivalPassengers = new ArrayList<Passengers>();
+		boardingPassengers = new ArrayList<Passengers>();
 		Passengers.resetStaticID();
 		initializeBuildingLogger(logfile);
 		// passDataFile is where you will write all the results for those passengers who
@@ -264,8 +265,10 @@ public class Building {
 	 *
 	 * @return the passengers[]
 	 */
-	public Passengers boardingPassengers() {
-		return boardingPassengers;
+	public Passengers[] boardingPassengers() {
+		Passengers[] p = boardingPassengers.toArray(new Passengers[boardingPassengers.size()]);
+		boardingPassengers.clear();
+		return p;
 	}
 	
 	/**
@@ -277,8 +280,22 @@ public class Building {
 		return giveUpPassengers;
 	}
 	
+	/**
+	 * Gets the curr num pass.
+	 *
+	 * @return the curr num pass
+	 */
 	public int getCurrNumPass() {
 		return elevators[0].getPassengers();
+	}
+	
+	/**
+	 * Gets the curr direction.
+	 *
+	 * @return the curr direction
+	 */
+	public int getCurrDirection() {
+		return elevators[0].getDirection();
 	}
 		
 	/**
@@ -425,7 +442,7 @@ public class Building {
 				logBoard(time, p.getNumPass(), lift.getCurrFloor(), p.getDirection(), p.getId());
 				q.poll();
 				lift.addPassengers(p);
-				boardingPassengers = p;
+				boardingPassengers.add(p);
 			}
 			p = q.peek();
 		}
