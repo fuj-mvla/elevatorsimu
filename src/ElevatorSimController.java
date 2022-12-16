@@ -244,7 +244,7 @@ public class ElevatorSimController {
 				if (building.giveUpPassengers() != null) {
 					gui.giveUp(building.giveUpPassengers());
 				}
-				gui.offLoad(building.offloadPassengers());
+				// gui.offLoad(building.offloadPassengers());
 				if (endSim) {
 					gui.endSim();
 				}

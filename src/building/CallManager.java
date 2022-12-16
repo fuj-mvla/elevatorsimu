@@ -67,9 +67,17 @@ public class CallManager {
 	 */
 	void updateCallStatus() {
 		// TODO: Write this method if you choose to implement it...
+		upCallPending = false;
+		downCallPending = false;
 		for (int i = 0; i < floors.length; i++) {
 			upCalls[i] = !floors[i].goingUpEmpty();
+			if (upCalls[i]) {
+				upCallPending = true;
+			}
 			downCalls[i] = !floors[i].goingDownEmpty();
+			if (downCalls[i]) {
+				downCallPending = true;
+			}
 		}
 	}
 
@@ -189,7 +197,7 @@ public class CallManager {
 	 */
 	int numCallsPendingBelow(int floor) {
 		int numCalls = 0;
-		for (int i = 0; i < floor-1; i++) {
+		for (int i = 0; i < floor; i++) {
 			if (downCalls[i] || upCalls[i]) {
 				numCalls++;
 			}
@@ -281,13 +289,6 @@ public class CallManager {
 	 * @return true, if is up call pending
 	 */
 	public boolean isUpCallPending() {
-		int numCalls = 0;
-		for (int i = 0; i < upCalls.length; i++) {
-			if (upCalls[i]) {
-				numCalls++;
-			}
-		}
-		upCallPending = numCalls > 0 ? true : false;
 		return upCallPending;
 	}
 
@@ -297,13 +298,6 @@ public class CallManager {
 	 * @return true, if is down call pending
 	 */
 	public boolean isDownCallPending() {
-		int numCalls = 0;
-		for (int i = 0; i < downCalls.length; i++) {
-			if (downCalls[i]) {
-				numCalls++;
-			}
-		}
-		downCallPending = numCalls > 0 ? true : false;
 		return downCallPending;
 	}
 

@@ -91,9 +91,9 @@ public class Building {
 	/** The give up passengers. */
 	private Passengers giveUpPassengers;
 	
-	/** The offload passengers. */
-	private int offloadPassengers;
-
+	/** Should we end simulation */
+	private boolean endSim;
+	
 	/**
 	 * Instantiates a new building.
 	 *
@@ -125,7 +125,6 @@ public class Building {
 		callMgr = new CallManager(floors, NUM_FLOORS);
 		elevators = new Elevator[NUM_ELEVATORS];
 		// TODO: if you defined new fields, make sure to initialize them here
-		offloadPassengers = 0;
 	}
 
 	// TODO: Place all of your code HERE - state methods and helpers...
@@ -137,11 +136,12 @@ public class Building {
 	 * @return true if done, false otherwise
 	 */
 	public boolean step(int stepCnt) {
-		if (!passengersProcessed() || !allElevatorsStopped()) {
-			checkPassengerArrival(stepCnt);
-			checkPassengerGiveup(stepCnt);
-			callMgr.updateCallStatus();
-			updateElevator(stepCnt);
+		checkPassengerArrival(stepCnt);
+		checkPassengerGiveup(stepCnt);
+		callMgr.updateCallStatus();
+		updateElevator(stepCnt);
+		if (!endSim) {
+			endSim = passengersProcessed() && allElevatorsStopped();
 			return false;
 		}
 		closeLogs(stepCnt);
@@ -276,18 +276,7 @@ public class Building {
 	public Passengers giveUpPassengers() {
 		return giveUpPassengers;
 	}
-	
-	/**
-	 * Offload passengers.
-	 *
-	 * @return the int
-	 */
-	public int offloadPassengers() {
-		int temp = offloadPassengers;
-		offloadPassengers = 0;
-		return temp;
-	}
-	
+		
 	/**
 	 * State Machine.
 	 *
@@ -380,7 +369,8 @@ public class Building {
 		if (direction == UP && callMgr.numCallsPendingAbove(floor) > 0 || direction == DOWN && callMgr.numCallsPendingBelow(floor) > 0) {
 			return Elevator.MV1FLR;
 		} else {
-			lift.setDirection(direction == UP ? DOWN : UP);
+			direction = direction * -1;
+			lift.setDirection(direction);
 			if (direction == UP && !floors[floor].goingUpEmpty()
 					|| direction == DOWN && !floors[floor].goingDownEmpty()) {
 				return Elevator.OPENDR;
@@ -456,6 +446,9 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateOpenDr(int time, Elevator lift) {
+		if (lift.getPrevState() == Elevator.OPENDR) {
+			lift.resetPrevFloor();			
+		}
 		lift.setTimeInState(lift.getTimeInState() + 1);
 		if (lift.getTimeInState() < lift.getTicksDoorOpenClose()) {
 			lift.setDoorState(Elevator.DOOR_MOVING);
@@ -488,12 +481,11 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateMvToFlr(int time, Elevator lift) {
-		int currFloor = lift.getCurrFloor();
-		if (currFloor == prioritizedForBoard.getOnFloor()) {
+		lift.moveElevator();
+		if (lift.getCurrFloor() == prioritizedForBoard.getOnFloor()) {
 			lift.setDirection(prioritizedForBoard.getDirection());
 			return Elevator.OPENDR;
 		} else {
-			lift.moveElevator();
 			return Elevator.MVTOFLR;
 		}
 	}
@@ -521,11 +513,11 @@ public class Building {
 			for (Passengers p : passengers) {
 				totalPassengers += p.getNumPass();
 				p.setTimeArrived(time);
-				offloadPassengers += p.getNumPass();
 				logArrival(time, p.getNumPass(), lift.getCurrFloor(), p.getId());
 			}
 			lift.setOffloadDelay((totalPassengers + lift.getPassPerTick() - 1) / lift.getPassPerTick());
 			passSuccess.addAll(passengers);
+			lift.clearFloor(lift.getCurrFloor());
 		}
 		if (lift.getTimeInState() == lift.getOffloadDelay()) {
 			lift.setOffloadDelay(0);
@@ -576,9 +568,9 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateMv1Flr(int time, Elevator lift) {
-		int floor = lift.getCurrFloor();
 		lift.moveElevator();
-		if (lift.getPrevFloor() != lift.getCurrFloor()) {
+		int floor = lift.getCurrFloor();
+		if (lift.getPrevFloor() != floor) {
 			if (lift.getPassByFloor()[floor].size() > 0) {
 				return Elevator.OPENDR;
 			}

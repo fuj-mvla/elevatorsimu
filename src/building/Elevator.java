@@ -99,12 +99,16 @@ public class Elevator {
 		}
 	}
 	
+	public void resetPrevFloor() {
+		prevFloor = currFloor;		
+	}
+	
 	public boolean isStopped() {
 		return currState == STOP;
 	}
 	
 	public boolean didStateChange() {
-		return prevState != currState;
+		return prevState != currState || prevFloor != currFloor;
 	}
 
 	public int getCapacity() {
@@ -214,6 +218,13 @@ public class Elevator {
 	public void addPassengers(Passengers p) {
 		passByFloor[p.getDestFloor()].add(p);
 		passengers += p.getNumPass();
+	}
+	
+	public void clearFloor(int floor) {
+		for (Passengers p : passByFloor[floor]) {
+			passengers -= p.getNumPass();
+		}
+		passByFloor[floor].clear();
 	}
 	
 	public int getMoveToFloor() {

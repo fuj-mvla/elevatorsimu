@@ -26,3 +26,7 @@ hs_err_pid*
 bin/
 JUnitTestLogs/
 *.xlsx
+
+# Some local test files
+kuku/
+
