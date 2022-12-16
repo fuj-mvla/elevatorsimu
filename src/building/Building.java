@@ -91,7 +91,7 @@ public class Building {
 	/** The give up passengers. */
 	private Passengers giveUpPassengers;
 	
-	/** Should we end simulation */
+	/**  Should we end simulation. */
 	private boolean endSim;
 	
 	/**
@@ -275,6 +275,10 @@ public class Building {
 	 */
 	public Passengers giveUpPassengers() {
 		return giveUpPassengers;
+	}
+	
+	public int getCurrNumPass() {
+		return elevators[0].getPassengers();
 	}
 		
 	/**
