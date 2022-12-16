@@ -420,7 +420,6 @@ public class ElevatorSimulation extends Application {
 	 * @param currentfloor from elevator
 	 */
 	public void updateState(int currstate, int currFloor) {
-		System.out.println(currFloor);
 		if (currstate == MV1FLR) {
 			if (this.currFloor < currFloor || this.currFloor > currFloor) {
 				move(this.currFloor < currFloor);
@@ -468,25 +467,25 @@ public class ElevatorSimulation extends Application {
 	 *
 	 * @param passenger the passenger
 	 */
-	public void board(Passengers passenger) {
+	public void board(Passengers[] passenger) {
 		int yCord = 0;
 		int xCord = 0;
 		boolean boarded = false;
-		for (int j = 0; j < passArray.size(); j++) {
-			if (passenger.equals(passArray.get(j))) { //removes circle from the correct floor
-				StackPane x = circArray.remove(j);
-				passArray.remove(j);
-				yCord = gp.getColumnIndex(x);
-				xCord = gp.getRowIndex(x);
-				gp.getChildren().remove(x);
-				boarded = true;
-				floorArray[currFloor]--;
-				passengers += passenger.getNumPass();
-				pLabel.setText("" + passengers);
+		for (int i = 0; i < passenger.length;i++) {
+			for (int j = 0; j < passArray.size(); j++) {
+				if (passenger.equals(passArray.get(j))) { 
+					StackPane x = circArray.remove(j);
+					passArray.remove(j);
+					yCord = gp.getColumnIndex(x);
+					xCord = gp.getRowIndex(x);
+					gp.getChildren().remove(x);
+					boarded = true;
+					floorArray[currFloor]--;
+
 			}
 		}
 		if (boarded) { // shifts the other circles over in the floor
-			for (int i = 0; i < circArray.size(); i++) {
+			for (int n = 0; n < circArray.size(); i++) {
 				StackPane y = circArray.get(i);
 				int sCordy = gp.getRowIndex(y);
 				int sCordX = gp.getColumnIndex(y);
@@ -496,6 +495,8 @@ public class ElevatorSimulation extends Application {
 
 				}
 			}
+		}
+		boarded = false;
 		}
 	}
 
