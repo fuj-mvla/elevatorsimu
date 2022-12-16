@@ -427,8 +427,11 @@ public class Building {
 		}
 		
 		int delay = (lift.getCurrentOnboardingGroups() + lift.getPassPerTick() - 1) / lift.getPassPerTick();
-		if (lift.getTimeInState() == delay) {
+		if (lift.getTimeInState() >= delay) {
 			lift.setCurrentOnboardingGroups(0);
+			if (p != null) {
+				p.setLoggedSkip(false);
+			}
 			return Elevator.CLOSEDR;
 		}
 		return Elevator.BOARD;		
@@ -446,9 +449,7 @@ public class Building {
 	 * @return the int
 	 */
 	protected int currStateOpenDr(int time, Elevator lift) {
-		if (lift.getPrevState() == Elevator.OPENDR) {
-			lift.resetPrevFloor();			
-		}
+		lift.resetPrevFloor();			
 		lift.setTimeInState(lift.getTimeInState() + 1);
 		if (lift.getTimeInState() < lift.getTicksDoorOpenClose()) {
 			lift.setDoorState(Elevator.DOOR_MOVING);
