@@ -85,7 +85,7 @@ public class ElevatorSimulation extends Application {
 	private Button enter = new Button("Enter");
 
 	/** The duration. */
-	private int duration = 1000;
+	private int duration = 500;
 
 	/** The cycle count. */
 	private int cycleCount = 1;
@@ -219,10 +219,9 @@ public class ElevatorSimulation extends Application {
 		bp.setRight(vb);
 		makeElevatorDoors();
 		x.getChildren().addAll(logging, Step, run, timeLabel, stepticks, enter);
-		Step.setOnAction(e -> updateState(1,1));
+		Step.setOnAction(e -> controller.stepSim());
 		logging.setOnAction(e -> enableLogging());
 		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
-		gp.setPrefWidth(50);
 		enter.setOnAction(e -> {
 			setTicks(stepticks.getText());	t.play();});
 		setGridPaneConstraints();
@@ -421,6 +420,7 @@ public class ElevatorSimulation extends Application {
 	 * @param currentfloor from elevator
 	 */
 	public void updateState(int currstate, int currFloor) {
+		System.out.println(currFloor);
 		if (currstate == MV1FLR) {
 			if (this.currFloor < currFloor || this.currFloor > currFloor) {
 				move(this.currFloor < currFloor);
