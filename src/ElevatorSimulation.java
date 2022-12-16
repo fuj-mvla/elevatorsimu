@@ -454,8 +454,9 @@ public class ElevatorSimulation extends Application {
 	 * @param passengers the passengers
 	 * @param currFloor  the curr floor
 	 */
-	public void offLoad(int passengers) {
-		this.passengers -= passengers;
+	public void currentNumPassengers(int passengers) {
+	
+		this.passengers = passengers;
 		int place = 1;
 
 		pLabel.setText("" + this.passengers);
