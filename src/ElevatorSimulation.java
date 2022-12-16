@@ -85,7 +85,7 @@ public class ElevatorSimulation extends Application {
 	private Button enter = new Button("Enter");
 
 	/** The duration. */
-	private int duration = 500;
+	private int duration = 100;
 
 	/** The cycle count. */
 	private int cycleCount = 1;
@@ -420,15 +420,16 @@ public class ElevatorSimulation extends Application {
 	 * @param currentfloor from elevator
 	 */
 	public void updateState(int currstate, int currFloor,int direction) {
+		System.out.println(currFloor);
 		if (currstate == MV1FLR) {
-			if (this.currFloor < currFloor || this.currFloor > currFloor) {
-				move(this.currFloor < currFloor);
+			if (this.currFloor ==currFloor) {
+			move(direction==UP);
 			}
 			stateLabel.setText("MV1FLR");
 		} else if (currstate == MVTOFLR) {
-			if (this.currFloor < currFloor || this.currFloor > currFloor) {
-				move(this.currFloor < currFloor);
-			}
+			if (this.currFloor ==currFloor) {
+				move(direction==UP);
+				}
 			stateLabel.setText("MVTOFR");
 		} else if (currstate == OPENDR) {
 			Opendr();
@@ -473,7 +474,7 @@ public class ElevatorSimulation extends Application {
 		boolean boarded = false;
 		for (int i = 0; i < passenger.length;i++) {
 			for (int j = 0; j < passArray.size(); j++) {
-				if (passenger.equals(passArray.get(j))) { 
+				if (passenger[i].equals(passArray.get(j))) { 
 					StackPane x = circArray.remove(j);
 					passArray.remove(j);
 					yCord = gp.getColumnIndex(x);
@@ -485,8 +486,8 @@ public class ElevatorSimulation extends Application {
 			}
 		}
 		if (boarded) { // shifts the other circles over in the floor
-			for (int n = 0; n < circArray.size(); i++) {
-				StackPane y = circArray.get(i);
+			for (int n = 0; n < circArray.size(); n++) {
+				StackPane y = circArray.get(n);
 				int sCordy = gp.getRowIndex(y);
 				int sCordX = gp.getColumnIndex(y);
 				if (sCordy == xCord && sCordX > yCord) {
