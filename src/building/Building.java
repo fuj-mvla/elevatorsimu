@@ -88,9 +88,6 @@ public class Building {
 	/** The boarding passengers. */
 	private List<Passengers> boardingPassengers;
 	
-	/** The give up passengers. */
-	private List<Passengers> giveUpPassengers;
-	
 	/**  Should we end simulation. */
 	private boolean endSim;
 	
@@ -109,7 +106,6 @@ public class Building {
 		gaveUp = new ArrayList<Passengers>();
 		arrivalPassengers = new ArrayList<Passengers>();
 		boardingPassengers = new ArrayList<Passengers>();
-		giveUpPassengers = new ArrayList<Passengers>();
 		Passengers.resetStaticID();
 		initializeBuildingLogger(logfile);
 		// passDataFile is where you will write all the results for those passengers who
@@ -425,6 +421,28 @@ public class Building {
 				floors[lift.getCurrFloor()].getUpQueue() :
 					floors[lift.getCurrFloor()].getDownQueue();
 		Passengers p = q.peek();
+		loopOverBoarding(time, lift, p, q);
+		
+		int delay = (lift.getCurrentOnboardingGroups() + lift.getPassPerTick() - 1) / lift.getPassPerTick();
+		if (lift.getTimeInState() >= delay) {
+			lift.setCurrentOnboardingGroups(0);
+			if (p != null) {
+				p.setLoggedSkip(false);
+			}
+			return Elevator.CLOSEDR;
+		}
+		return Elevator.BOARD;		
+	}
+	
+	/**
+	 * Loop over boarding.
+	 *
+	 * @param time the time
+	 * @param lift the lift
+	 * @param p the p
+	 * @param q the q
+	 */
+	public void loopOverBoarding(int time, Elevator lift, Passengers p, GenericQueue<Passengers> q) {
 		while (p != null) {
 			if (p.getTimeWillGiveUp() + 1 == time) {
 				q.poll();
@@ -447,16 +465,6 @@ public class Building {
 			}
 			p = q.peek();
 		}
-		
-		int delay = (lift.getCurrentOnboardingGroups() + lift.getPassPerTick() - 1) / lift.getPassPerTick();
-		if (lift.getTimeInState() >= delay) {
-			lift.setCurrentOnboardingGroups(0);
-			if (p != null) {
-				p.setLoggedSkip(false);
-			}
-			return Elevator.CLOSEDR;
-		}
-		return Elevator.BOARD;		
 	}
 
 	/**
