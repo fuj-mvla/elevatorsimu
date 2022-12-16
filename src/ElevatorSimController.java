@@ -241,7 +241,7 @@ public class ElevatorSimController {
 				gui.arrivalPassengers(building.arrivalPassengers());
 				gui.board(building.boardingPassengers());
 				if (building.giveUpPassengers() != null) {
-					//gui.giveUp(building.giveUpPassengers());
+					gui.giveUp(building.giveUpPassengers());
 				}
 				if (endSim) {
 					gui.endSim();
@@ -250,20 +250,6 @@ public class ElevatorSimController {
 		}
 	}
 	/*
-	 * if(gui != null) {
-	 * 
-	 * 
-	 * if(building.passengersProcessed() == false) {
-	 * 
-	 * if(building.getCurrentState() == 3) {
-	 * gui.offLoad(building.getPassengersLeaving(building.getElevator()).length,
-	 * CurrentFloor); } if(building.getCurrentState() == 4) {
-	 * if(building.getPassengersBoarding(building.getElevator()).length == 0) {
-	 * 
-	 * //indicate to gu } else {
-	 * gui.board(building.getPassengersBoarding(building.getElevator())[0]); } } }
-	 * else { building.closeLogs(stepCnt); building.processPassengerData(); }
-	 * 
 	 * // TODO: Write the rest of this method // If simulation is not completed (not
 	 * all passengers have been processed // or elevator(s) are not all in STOP
 	 * state), then // 1) check for arrival of any new passengers // 2) update the
