@@ -162,27 +162,22 @@ public class ElevatorSimulation extends Application {
 	/** The mv1flr. */
 	private final int MV1FLR = Elevator.MV1FLR;
 
-
-
-	
-	
-	
-
 	/**
 	 * Instantiates a new elevator simulation.
 	 */
+	// Reviewed by Tohar Markovich
 	public ElevatorSimulation() {
 		controller = new ElevatorSimController(this);
 		NUM_FLOORS = controller.getNumFloors();
 		NUM_ELEVATORS = controller.getNumElevators();
 		currFloor = controller.getCurrentFloor();
-		
 
 	}
 
 	/**
 	 * Initialize the timeline.
 	 */
+	// Reviewed by Tohar Markovich
 	private void initTimeline() {
 		t = new Timeline(new KeyFrame(Duration.millis(duration), ae -> controller.stepSim()));
 
@@ -194,6 +189,7 @@ public class ElevatorSimulation extends Application {
 	 * @param primaryStage the primary stage
 	 * @throws Exception the exception
 	 */
+	// Reviewed by Tohar Markovich
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		gp = new GridPane();
@@ -213,9 +209,14 @@ public class ElevatorSimulation extends Application {
 		x.getChildren().addAll(logging, Step, run, timeLabel, stepticks, enter);
 		Step.setOnAction(e -> controller.stepSim());
 		logging.setOnAction(e -> enableLogging());
-		run.setOnAction(e -> {t.setCycleCount(Animation.INDEFINITE); t.play();});
+		run.setOnAction(e -> {
+			t.setCycleCount(Animation.INDEFINITE);
+			t.play();
+		});
 		enter.setOnAction(e -> {
-			setTicks(stepticks.getText());	t.play();});
+			setTicks(stepticks.getText());
+			t.play();
+		});
 		setGridPaneConstraints();
 		bp.setCenter(gp);
 		bp.setTop(x);
@@ -225,11 +226,10 @@ public class ElevatorSimulation extends Application {
 		primaryStage.show();
 	}
 
-	
-
 	/**
 	 * Makes a legend so you can know what passengers are going up or down.
 	 */
+	// Reviewed by Tohar Markovich
 	private void makeLegend() {
 		gp.add(new Circle(15, Color.GREEN), 0, 0);
 		gp.add(new Circle(15, Color.RED), 0, 1);
@@ -241,55 +241,57 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * Initializes the elevator at the correct floor with the state
 	 */
+	// Reviewed by Tohar Markovich
 	private void initializeElevatorPosition() {
 		// TODO Auto-generated method stub
 		elevator = new Rectangle(100, 100);
 		elevator.setFill(Color.TRANSPARENT);
 		elevator.setStroke(Color.LIGHTSTEELBLUE);
-		stateLabel  = new Label("STOP");
+		stateLabel = new Label("STOP");
 		stateLabel.setWrapText(true);
 		for (int i = currFloor; i > 1; i--) {
 			cellY -= 2;
-			
+
 		}
 		gp.add(stateLabel, 1, cellY);
 		gp.add(sp, 2, cellY);
 	}
 
-	
 	/**
 	 * Makes the background of the building and elevator, makes the doors aswell
 	 */
+	// Reviewed by Tohar Markovich
 	private void makeHotelDoors() {
 		Rectangle ElevatorBackground = new Rectangle(102, 625);
 		ElevatorBackground.setFill(Color.GRAY);
 		gp.add(ElevatorBackground, 2, 8);
 		int startingBackP = 3;
-		for (int i = 0;i < 6;i++) {
-		Rectangle wall1 = new Rectangle(600, 120);
-		wall1.setFill(Color.DARKGREY);
-		gp.add(wall1, 5, startingBackP);
-		startingBackP +=2;
+		for (int i = 0; i < 6; i++) {
+			Rectangle wall1 = new Rectangle(600, 120);
+			wall1.setFill(Color.DARKGREY);
+			gp.add(wall1, 5, startingBackP);
+			startingBackP += 2;
 		}
 		int startingX = 5;
 		int startingY = 0;
-		for(int x = 0; x < 18; x++) {
-			Rectangle door = new Rectangle(50, 80,Color.SADDLEBROWN);
-			Circle doorKnob = new Circle(5,Color.BLACK);
-			StackPane doorK = new StackPane(door,doorKnob);
+		for (int x = 0; x < 18; x++) {
+			Rectangle door = new Rectangle(50, 80, Color.SADDLEBROWN);
+			Circle doorKnob = new Circle(5, Color.BLACK);
+			StackPane doorK = new StackPane(door, doorKnob);
 			doorK.setAlignment(doorKnob, Pos.CENTER_LEFT);
-			if (x %6==0) {
-				startingX +=3;
-				 startingY = 0;
+			if (x % 6 == 0) {
+				startingX += 3;
+				startingY = 0;
 			}
 			gp.add(doorK, startingX, 2 * startingY + 3);
 			startingY++;
 		}
 	}
-	
+
 	/**
 	 * Make elevator doors.
 	 */
+	// Reviewed by Tohar Markovich
 	private void makeElevatorDoors() {
 
 		door1.setFill(Color.LIGHTGRAY);
@@ -307,6 +309,7 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * Open door function
 	 */
+	// Reviewed by Tohar Markovich
 	private void Opendr() {
 		door1.setWidth(25);
 		door2.setWidth(25);
@@ -315,6 +318,7 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * Close door function
 	 */
+	// Reviewed by Tohar Markovich
 	private void Closedr() {
 		door1.setWidth(50);
 		door2.setWidth(50);
@@ -325,6 +329,7 @@ public class ElevatorSimulation extends Application {
 	 *
 	 * @param ticks the new ticks
 	 */
+	// Reviewed by Tohar Markovich
 	private void setTicks(String ticks) {
 		int tick = Integer.parseInt(ticks);
 		t.setCycleCount(tick);
@@ -334,6 +339,7 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * Sets the grid pane constraints.
 	 */
+	// Reviewed by Tohar Markovich
 	private void setGridPaneConstraints() {
 		for (int i = 0; i < 16; i++)
 			gp.getColumnConstraints().add(new ColumnConstraints(50));
@@ -345,13 +351,14 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * Initialize floors of the building accordingly.
 	 */
+	// Reviewed by Tohar Markovich
 	private void initializeFloors() {
 
 		int startingFloor = 14;
 		int floor = 1;
 		for (int i = 0; i < NUM_FLOORS; i++) {
 
-		Rectangle floorR = new Rectangle(700, 2);
+			Rectangle floorR = new Rectangle(700, 2);
 			floorR.setFill(Color.TAN);
 			;
 			gp.add(floorR, 5, startingFloor);
@@ -367,6 +374,7 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * Enable logging.
 	 */
+	// Reviewed by Tohar Markovich
 	private void enableLogging() {
 		controller.enableLogging();
 	}
@@ -374,8 +382,10 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * Move.
 	 *
-	 * @param Moves the elevator according to the boolean, if true moves up by one, if false moves down.
+	 * @param Moves the elevator according to the boolean, if true moves up by one,
+	 *              if false moves down.
 	 */
+	// Reviewed by Tohar Markovich
 	private void move(boolean up) {
 		if (up) {
 			gp.getChildren().remove(sp);
@@ -392,7 +402,7 @@ public class ElevatorSimulation extends Application {
 			gp.add(stateLabel, 1, cellY);
 			this.currFloor--;
 		}
-		
+
 	}
 
 	/**
@@ -400,6 +410,7 @@ public class ElevatorSimulation extends Application {
 	 *
 	 * @param time the new time
 	 */
+	// Reviewed by Tohar Markovich
 	public void setTime(int time) {
 
 		timeLabel.setText("Time = " + time);
@@ -408,19 +419,20 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * Updates the state, and displays the correct state on the label
 	 *
-	 * @param current state
+	 * @param current      state
 	 * @param currentfloor from elevator
 	 */
-	public void updateState(int currstate, int currFloor,int direction) {
+	// Reviewed by Tohar Markovich
+	public void updateState(int currstate, int currFloor, int direction) {
 		if (currstate == MV1FLR) {
-			if (this.currFloor ==currFloor) {
-			move(direction==UP);
+			if (this.currFloor == currFloor) {
+				move(direction == UP);
 			}
 			stateLabel.setText("MV1FLR");
 		} else if (currstate == MVTOFLR) {
-			if (this.currFloor ==currFloor) {
-				move(direction==UP);
-				}
+			if (this.currFloor == currFloor) {
+				move(direction == UP);
+			}
 			stateLabel.setText("MVTOFR");
 		} else if (currstate == OPENDR) {
 			Opendr();
@@ -430,11 +442,9 @@ public class ElevatorSimulation extends Application {
 			stateLabel.setText("CLOSDR");
 		} else if (currstate == STOP) {
 			stateLabel.setText("STOP");
-		}
-		else if (currstate == BOARD) {
+		} else if (currstate == BOARD) {
 			stateLabel.setText("BOARD");
-		}
-		else if (currstate== OFFLD) {
+		} else if (currstate == OFFLD) {
 			stateLabel.setText("OFFLD");
 		}
 	}
@@ -445,8 +455,9 @@ public class ElevatorSimulation extends Application {
 	 * @param passengers the passengers
 	 * @param currFloor  the curr floor
 	 */
+	// Reviewed by Tohar Markovich
 	public void currentNumPassengers(int passengers) {
-	
+
 		this.passengers = passengers;
 		int place = 1;
 
@@ -455,17 +466,19 @@ public class ElevatorSimulation extends Application {
 	}
 
 	/**
-	 * Boards the correct passenger specified by controller, reflects change onto gui.
+	 * Boards the correct passenger specified by controller, reflects change onto
+	 * gui.
 	 *
 	 * @param passenger the passenger
 	 */
+	// Reviewed by Tohar Markovich
 	public void board(Passengers[] passenger) {
 		int yCord = 0;
 		int xCord = 0;
 		boolean boarded = false;
-		for (int i = 0; i < passenger.length;i++) {
+		for (int i = 0; i < passenger.length; i++) {
 			for (int j = 0; j < passArray.size(); j++) {
-				if (passenger[i].equals(passArray.get(j))) { 
+				if (passenger[i].equals(passArray.get(j))) {
 					StackPane x = circArray.remove(j);
 					passArray.remove(j);
 					yCord = gp.getColumnIndex(x);
@@ -474,36 +487,38 @@ public class ElevatorSimulation extends Application {
 					boarded = true;
 					floorArray[currFloor]--;
 
-			}
-		}
-		if (boarded) { // shifts the other circles over in the floor
-			for (int n = 0; n < circArray.size(); n++) {
-				StackPane y = circArray.get(n);
-				int sCordy = gp.getRowIndex(y);
-				int sCordX = gp.getColumnIndex(y);
-				if (sCordy == xCord && sCordX > yCord) {
-					gp.getChildren().remove(y);
-					gp.add(y, --sCordX, sCordy);
-
 				}
 			}
-		}
-		boarded = false;
+			if (boarded) { // shifts the other circles over in the floor
+				for (int n = 0; n < circArray.size(); n++) {
+					StackPane y = circArray.get(n);
+					int sCordy = gp.getRowIndex(y);
+					int sCordX = gp.getColumnIndex(y);
+					if (sCordy == xCord && sCordX > yCord) {
+						gp.getChildren().remove(y);
+						gp.add(y, --sCordX, sCordy);
+
+					}
+				}
+			}
+			boarded = false;
 		}
 	}
 
 	/**
-	 * if any passengers give up, the controller passes it in and it is reflected by the gui.Similar logic to the board
+	 * if any passengers give up, the controller passes it in and it is reflected by
+	 * the gui.Similar logic to the board
 	 *
 	 * @param passenger the passenger
 	 */
+	// Reviewed by Tohar Markovich
 	public void giveUp(Passengers[] passenger) {
 		int yCord = 0;
 		int xCord = 0;
 		boolean boarded = false;
-		for (int i = 0; i < passenger.length;i++) {
+		for (int i = 0; i < passenger.length; i++) {
 			for (int j = 0; j < passArray.size(); j++) {
-				if (passenger[i].equals(passArray.get(j))) { 
+				if (passenger[i].equals(passArray.get(j))) {
 					StackPane x = circArray.remove(j);
 					passArray.remove(j);
 					yCord = gp.getColumnIndex(x);
@@ -512,21 +527,21 @@ public class ElevatorSimulation extends Application {
 					boarded = true;
 					floorArray[currFloor]--;
 
-			}
-		}
-		if (boarded) { // shifts the other circles over in the floor
-			for (int n = 0; n < circArray.size(); n++) {
-				StackPane y = circArray.get(n);
-				int sCordy = gp.getRowIndex(y);
-				int sCordX = gp.getColumnIndex(y);
-				if (sCordy == xCord && sCordX > yCord) {
-					gp.getChildren().remove(y);
-					gp.add(y, --sCordX, sCordy);
-
 				}
 			}
-		}
-		boarded = false;
+			if (boarded) { // shifts the other circles over in the floor
+				for (int n = 0; n < circArray.size(); n++) {
+					StackPane y = circArray.get(n);
+					int sCordy = gp.getRowIndex(y);
+					int sCordX = gp.getColumnIndex(y);
+					if (sCordy == xCord && sCordX > yCord) {
+						gp.getChildren().remove(y);
+						gp.add(y, --sCordX, sCordy);
+
+					}
+				}
+			}
+			boarded = false;
 		}
 	}
 
@@ -536,6 +551,7 @@ public class ElevatorSimulation extends Application {
 	 *
 	 * @param passengers the passengers
 	 */
+	// Reviewed by Tohar Markovich
 	public void arrivalPassengers(Passengers[] passengers) {
 		for (int i = 0; i < passengers.length; i++) {
 			int floor = MAXFLOORY - ((passengers[i].getOnFloor()) * 2);
@@ -566,10 +582,10 @@ public class ElevatorSimulation extends Application {
 	/**
 	 * End sim.
 	 */
+	// Reviewed by Tohar Markovich
 	public void endSim() {
 		t.stop();
 	}
-
 
 	/**
 	 * The main method.
