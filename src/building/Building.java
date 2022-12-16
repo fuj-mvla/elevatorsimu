@@ -89,7 +89,7 @@ public class Building {
 	private List<Passengers> boardingPassengers;
 	
 	/** The give up passengers. */
-	private Passengers giveUpPassengers;
+	private List<Passengers> giveUpPassengers;
 	
 	/**  Should we end simulation. */
 	private boolean endSim;
@@ -109,6 +109,7 @@ public class Building {
 		gaveUp = new ArrayList<Passengers>();
 		arrivalPassengers = new ArrayList<Passengers>();
 		boardingPassengers = new ArrayList<Passengers>();
+		giveUpPassengers = new ArrayList<Passengers>();
 		Passengers.resetStaticID();
 		initializeBuildingLogger(logfile);
 		// passDataFile is where you will write all the results for those passengers who
@@ -272,12 +273,14 @@ public class Building {
 	}
 	
 	/**
-	 * Leaving passengers.
+	 * Give up passengers.
 	 *
 	 * @return the passengers[]
 	 */
-	public Passengers giveUpPassengers() {
-		return giveUpPassengers;
+	public Passengers[] giveUpPassengers() {
+		Passengers[] p = giveUpPassengers.toArray(new Passengers[giveUpPassengers.size()]);
+		giveUpPassengers.clear();
+		return p;
 	}
 	
 	/**
@@ -427,7 +430,7 @@ public class Building {
 			if (p.getTimeWillGiveUp() + 1 == time) {
 				q.poll();
 				gaveUp.add(p);
-				giveUpPassengers = p;
+				giveUpPassengers.add(p);
 				logGiveUp(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
 			} else if (p.getNumPass() + lift.getPassengers() > lift.getCapacity()) {
 				if (!p.isLoggedSkip()) {
