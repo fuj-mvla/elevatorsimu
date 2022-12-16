@@ -500,24 +500,26 @@ public class ElevatorSimulation extends Application {
 	 *
 	 * @param passenger the passenger
 	 */
-	public void giveUp(Passengers passenger) {
+	public void giveUp(Passengers[] passenger) {
 		int yCord = 0;
 		int xCord = 0;
 		boolean boarded = false;
-		for (int j = 0; j < passArray.size(); j++) {
-			if (passenger.equals(passArray.get(j))) {
-				StackPane x = circArray.remove(j);
-				passArray.remove(j);
-				yCord = gp.getColumnIndex(x);
-				xCord = gp.getRowIndex(x);
-				gp.getChildren().remove(x);
-				boarded = true;
-				floorArray[currFloor]--;
+		for (int i = 0; i < passenger.length;i++) {
+			for (int j = 0; j < passArray.size(); j++) {
+				if (passenger[i].equals(passArray.get(j))) { 
+					StackPane x = circArray.remove(j);
+					passArray.remove(j);
+					yCord = gp.getColumnIndex(x);
+					xCord = gp.getRowIndex(x);
+					gp.getChildren().remove(x);
+					boarded = true;
+					floorArray[currFloor]--;
+
 			}
 		}
-		if (boarded) {
-			for (int i = 0; i < circArray.size(); i++) {
-				StackPane y = circArray.get(i);
+		if (boarded) { // shifts the other circles over in the floor
+			for (int n = 0; n < circArray.size(); n++) {
+				StackPane y = circArray.get(n);
 				int sCordy = gp.getRowIndex(y);
 				int sCordX = gp.getColumnIndex(y);
 				if (sCordy == xCord && sCordX > yCord) {
@@ -526,6 +528,8 @@ public class ElevatorSimulation extends Application {
 
 				}
 			}
+		}
+		boarded = false;
 		}
 	}
 
