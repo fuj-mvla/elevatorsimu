@@ -240,9 +240,7 @@ public class ElevatorSimController {
 				gui.updateState(building.getCurrentState(), building.getCurrentFloor(), building.getCurrDirection());
 				gui.arrivalPassengers(building.arrivalPassengers());
 				gui.board(building.boardingPassengers());
-				if (building.giveUpPassengers() != null) {
-					gui.giveUp(building.giveUpPassengers());
-				}
+				gui.giveUp(building.giveUpPassengers());
 				if (endSim) {
 					gui.endSim();
 				}

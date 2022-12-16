@@ -278,8 +278,7 @@ public class Building {
 	 * @return the passengers[]
 	 */
 	public Passengers[] giveUpPassengers() {
-		Passengers[] p = giveUpPassengers.toArray(new Passengers[giveUpPassengers.size()]);
-		giveUpPassengers.clear();
+		Passengers[] p = gaveUp.toArray(new Passengers[gaveUp.size()]);
 		return p;
 	}
 	
@@ -430,7 +429,6 @@ public class Building {
 			if (p.getTimeWillGiveUp() + 1 == time) {
 				q.poll();
 				gaveUp.add(p);
-				giveUpPassengers.add(p);
 				logGiveUp(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
 			} else if (p.getNumPass() + lift.getPassengers() > lift.getCapacity()) {
 				if (!p.isLoggedSkip()) {
