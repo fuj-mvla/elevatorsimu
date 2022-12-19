@@ -136,7 +136,6 @@ public class Building {
 	// Reviewed by Jack Fu
 	public boolean step(int stepCnt) {
 		checkPassengerArrival(stepCnt);
-		checkPassengerGiveup(stepCnt);
 		callMgr.updateCallStatus();
 		updateElevator(stepCnt);
 		if (!endSim) {
@@ -227,28 +226,6 @@ public class Building {
 			arrivalPassengers.add(p);
 			passQ.remove();
 			p = passQ.peek();
-		}
-	}
-
-	/**
-	 * Check passenger giveup.
-	 *
-	 * @param time the time
-	 * @return true, if successful
-	 */
-	// Reviewed by Jack Fu
-	public void checkPassengerGiveup(int time) {
-		for (Floor f : floors) {
-			Passengers p = f.peekFromUp();
-			if (p != null && p.getTimeWillGiveUp() + 1 == time) {
-				gaveUp.add(p);
-				f.pollFromUp();
-			}
-			p = f.peekFromDown();
-			if (p != null && p.getTimeWillGiveUp() + 1 == time) {
-				gaveUp.add(p);
-				f.pollFromDown();
-			}
 		}
 	}
 
@@ -369,11 +346,10 @@ public class Building {
 			return Elevator.OPENDR;
 		}
 		lift.setTimeInState(lift.getTimeInState() + 1);
-		if (lift.getTimeInState() < lift.getTicksDoorOpenClose()) {
-			lift.setDoorState(Elevator.DOOR_MOVING);
+		lift.setDoorState(lift.getDoorState() - 1);
+		if (lift.getDoorState() > Elevator.DOOR_CLOSED) {
 			return Elevator.CLOSEDR;
 		} else {
-			lift.setDoorState(Elevator.DOOR_CLOSED);
 			if (lift.getPassengers() == 0) {
 				return elevatorEmptyClosed(lift.getDirection(), lift);
 			} else {
@@ -460,7 +436,7 @@ public class Building {
 	// Reviewed by Jack Fu
 	public void loopOverBoarding(int time, Elevator lift, Passengers p, GenericQueue<Passengers> q) {
 		while (p != null) {
-			if (p.getTimeWillGiveUp() + 1 == time) {
+			if (p.getTimeWillGiveUp() + 1 <= time) {
 				q.poll();
 				gaveUp.add(p);
 				logGiveUp(time, p.getNumPass(), lift.getCurrFloor(), lift.getDirection(), p.getId());
@@ -498,11 +474,12 @@ public class Building {
 	protected int currStateOpenDr(int time, Elevator lift) {
 		lift.resetPrevFloor();			
 		lift.setTimeInState(lift.getTimeInState() + 1);
-		if (lift.getTimeInState() < lift.getTicksDoorOpenClose()) {
-			lift.setDoorState(Elevator.DOOR_MOVING);
+		if (lift.getTimeInState() < lift.getTicksDoorOpenClose() 
+				&& lift.getDoorState() < lift.getTicksDoorOpenClose()) {
+			lift.setDoorState(lift.getDoorState()+1);
 			return Elevator.OPENDR;
 		} else {
-			lift.setDoorState(Elevator.DOOR_OPEN);
+			lift.setDoorState(lift.getTicksDoorOpenClose());
 			int floor = lift.getCurrFloor();
 			List<Passengers> pToExit = lift.getPassByFloor()[floor];
 			if (!pToExit.isEmpty()) {

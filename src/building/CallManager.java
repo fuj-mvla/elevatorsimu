@@ -96,7 +96,7 @@ public class CallManager {
 		Passengers p;
 		int floor = lift.getCurrFloor();
 		if (!floors[floor].goingUpEmpty() && !floors[floor].goingDownEmpty()) {
-			if (numUpCallsPending(floor) >= numDownCallsPending(floor)) {
+			if (numCallsPendingAbove(floor) >= numCallsPendingBelow(floor)) {
 				p = floors[floor].peekFromUp();
 			} else {
 				p = floors[floor].peekFromDown();

@@ -15,36 +15,30 @@ import java.util.logging.Logger;
  *         floor...
  */
 public class Elevator {
-	
+
 	/**  Elevator State Variables - These are visible publicly. */
 	public final static int STOP = 0;
-	
+
 	/** The Constant MVTOFLR. */
 	public final static int MVTOFLR = 1;
-	
+
 	/** The Constant OPENDR. */
 	public final static int OPENDR = 2;
-	
+
 	/** The Constant OFFLD. */
 	public final static int OFFLD = 3;
-	
+
 	/** The Constant BOARD. */
 	public final static int BOARD = 4;
-	
+
 	/** The Constant CLOSEDR. */
 	public final static int CLOSEDR = 5;
-	
+
 	/** The Constant MV1FLR. */
 	public final static int MV1FLR = 6;
-	
+
 	/** The Constant DOOR_CLOSED. */
 	final static int DOOR_CLOSED = 0;
-	
-	/** The Constant DOOR_OPEN. */
-	final static int DOOR_OPEN = 1;
-	
-	/** The Constant DOOR_MOVING. */
-	final static int DOOR_MOVING = 2;
 
 	/**
 	 * Default configuration parameters for the elevator. These should be updated in
@@ -54,55 +48,55 @@ public class Elevator {
 
 	/** The ticks per floor. */
 	private int ticksPerFloor = 5; // The time it takes the elevator to move between floors
-	
+
 	/** The ticks door open close. */
 	private int ticksDoorOpenClose = 2; // The time it takes for doors to go from OPEN <=> CLOSED
-	
+
 	/** The pass per tick. */
 	private int passPerTick = 3; // The number of PEOPLE that can enter/exit the elevator per tick
 
 	/**  Finite State Machine State Variables. */
 	private int currState; // current state
-	
+
 	/** The prev state. */
 	private int prevState; // prior state
-	
+
 	/** The prev floor. */
 	private int prevFloor; // prior floor
-	
+
 	/** The curr floor. */
 	private int currFloor; // current floor
-	
+
 	/** The direction. */
 	private int direction; // direction the Elevator is traveling in.
 
 	/** The time in state. */
 	private int timeInState; // represents the time in a given state
-								// reset on state entry, used to determine if
-								// state has completed or if floor has changed
-								// *not* used in all states
+	// reset on state entry, used to determine if
+	// state has completed or if floor has changed
+	// *not* used in all states
 
 	/** The door state. */
-								private int doorState; // used to model the state of the doors - OPEN, CLOSED
-							// or moving
+	private int doorState; // used to model the state of the doors - OPEN, CLOSED
+	// or moving
 
 	/** The passengers. */
-							private int passengers; // the number of people in the elevator
-	
+	private int passengers; // the number of people in the elevator
+
 	/** The pass by floor. */
 	private ArrayList<Passengers>[] passByFloor; // Passengers to exit on the corresponding floor
 
 	/** The move to floor. */
 	private int moveToFloor; // When exiting the STOP state, this is the floor to move to without
-								// stopping.
+	// stopping.
 
 	/** The post move to floor dir. */
-								private int postMoveToFloorDir; // This is the direction that the elevator will travel AFTER reaching
-									// the moveToFloor in MVTOFLR state.
-	
+	private int postMoveToFloorDir; // This is the direction that the elevator will travel AFTER reaching
+	// the moveToFloor in MVTOFLR state.
+
 	/** The offload delay. */
-									private int offloadDelay;
-	
+	private int offloadDelay;
+
 	/** The current onboarding groups. */
 	private int currentOnboardingGroups;
 
@@ -134,7 +128,7 @@ public class Elevator {
 		// initialization of any other private fields, etc.
 		offloadDelay = 0;
 	}
-	
+
 	/**
 	 * Move elevator.
 	 */
@@ -160,14 +154,14 @@ public class Elevator {
 			timeInState = 0;
 		}
 	}
-	
+
 	/**
 	 * Reset prev floor.
 	 */
 	public void resetPrevFloor() {
 		prevFloor = currFloor;		
 	}
-	
+
 	/**
 	 * Checks if is stopped.
 	 *
@@ -176,7 +170,7 @@ public class Elevator {
 	public boolean isStopped() {
 		return currState == STOP;
 	}
-	
+
 	/**
 	 * Did state change.
 	 *
@@ -432,7 +426,7 @@ public class Elevator {
 		passByFloor[p.getDestFloor()].add(p);
 		passengers += p.getNumPass();
 	}
-	
+
 	/**
 	 * Clear floor.
 	 *
@@ -445,7 +439,7 @@ public class Elevator {
 		}
 		passByFloor[floor].clear();
 	}
-	
+
 	/**
 	 * Gets the move to floor.
 	 *
